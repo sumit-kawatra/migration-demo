@@ -1,5 +1,7 @@
 package com.markitserv.ssa.res;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import com.markitserv.rest.RESTResource;
 
 @RESTResource
@@ -14,10 +16,12 @@ public class User {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.someBalony = "Shouldn't be here";
 	}
 	private long id;
 	private String firstName;
 	private String lastName;
+	private String someBalony;
 	
 	public long getId() {
 		return id;
@@ -36,5 +40,14 @@ public class User {
 	}
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	@JsonIgnore 
+	public String getSomeBalony() {
+		return someBalony;
+	}
+
+	public void setSomeBalony(String someBalony) {
+		this.someBalony = someBalony;
 	}
 }
