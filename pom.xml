@@ -23,9 +23,10 @@
 		<validation.version>1.0.0.GA</validation.version>
 		<jackson.version>1.9.10</jackson.version>
 		<hibernate-validation.version>4.3.0.Final</hibernate-validation.version>
+		<jcl-over-slf4.version>1.7.1</jcl-over-slf4.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		
+
 	</properties>
 
 	<dependencyManagement>
@@ -50,6 +51,11 @@
 				<groupId>javax.validation</groupId>
 				<artifactId>validation-api</artifactId>
 				<version>${validation.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jcl-over-slf4j</artifactId>
+				<version>${jcl-over-slf4.version}</version>
 			</dependency>
 
 			<!-- Logging. TODO do we need all of these? -->
