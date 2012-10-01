@@ -15,8 +15,6 @@
 
 	<properties>
 
-
-
 		<aspectj.version>1.6.10</aspectj.version>
 		<cglib.version>2.2.2</cglib.version>
 		<spring.version>3.1.2.RELEASE</spring.version>
@@ -27,6 +25,7 @@
 		<hibernate-validation.version>4.3.0.Final</hibernate-validation.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		
 	</properties>
 
 	<dependencyManagement>
@@ -54,16 +53,7 @@
 			</dependency>
 
 			<!-- Logging. TODO do we need all of these? -->
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>jcl-over-slf4j</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-classic</artifactId>
-				<version>${logback.version}</version>
-			</dependency>
+
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-core</artifactId>
@@ -106,6 +96,11 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
 		</dependency>
 	</dependencies>
 	<build>

@@ -6,14 +6,9 @@
 		</encoder>
 	</appender>
 
-	<logger name="test.myapp.repos">
-		<level value="INFO" />
+	<logger name="com.markitserv">
+		<level value="TRACE" />
 	</logger>
-
-	<logger name="org.springframework">
-		<level value="INFO" />
-	</logger>
-
 	<root>
 		<level value="INFO" />
 		<appender-ref ref="CONSOLE" />
