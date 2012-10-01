@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.markitserv</groupId>
+		<artifactId>ssa-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>ssa-war</artifactId>
+	<packaging>war</packaging>
+	<name>Markitwire Self Service Admin Server</name>
+	<description>Server for the Markitwire Self Service Admin</description>
+
+	<dependencies>
+
+		<!-- Spring MVC.  Loads core and all dependencies -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+	</dependencies>
+
+</project>
