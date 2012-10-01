@@ -15,7 +15,12 @@
 
 	<dependencies>
 
-		<!-- Spring MVC.  Loads core and all dependencies -->
+		<dependency>
+			<groupId>com.markitserv</groupId>
+			<artifactId>ms-rest</artifactId>
+		</dependency>
+
+		<!-- Spring MVC. Loads core and all dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -27,6 +32,15 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- Jackson, for JSON conversion -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+		</dependency>
+
 	</dependencies>
+	<build>
+		<finalName>SSA</finalName>
+	</build>
 
 </project>

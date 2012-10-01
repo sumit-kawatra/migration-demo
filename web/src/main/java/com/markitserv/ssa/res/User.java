@@ -1,5 +1,8 @@
-package com.markitserv.ssa.data;
+package com.markitserv.ssa.res;
 
+import com.markitserv.rest.RESTResource;
+
+@RESTResource
 public class User {
 	
 	public User() {
