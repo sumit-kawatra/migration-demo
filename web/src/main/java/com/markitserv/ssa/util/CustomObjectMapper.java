@@ -1,4 +1,4 @@
-package com.markitserv.ssa.res;
+package com.markitserv.ssa.util;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.stereotype.Service;

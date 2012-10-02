@@ -1,27 +1,28 @@
 package com.markitserv.ssa.res;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 import com.markitserv.rest.RESTResource;
 
 @RESTResource
 public class User {
 	
+	private long id;
+	private Participant participant;
+	private String firstName;
+	private String lastName;
+	boolean isActive;
+
 	public User() {
 		super();
 	}
 	
-	public User(long id, String firstName, String lastName) {
+	public User(long id, String firstName, String lastName, Participant company) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.someBalony = "Shouldn't be here";
+		this.setCompany(company);
+		this.setActive(true);
 	}
-	private long id;
-	private String firstName;
-	private String lastName;
-	private String someBalony;
 	
 	public long getId() {
 		return id;
@@ -41,13 +42,19 @@ public class User {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
-	@JsonIgnore 
-	public String getSomeBalony() {
-		return someBalony;
+	public Participant getCompany() {
+		return participant;
 	}
 
-	public void setSomeBalony(String someBalony) {
-		this.someBalony = someBalony;
+	public void setCompany(Participant company) {
+		this.participant = company;
+	}
+	
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 }
