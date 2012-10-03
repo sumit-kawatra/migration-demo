@@ -1,12 +1,13 @@
 package com.markitserv.ssa.res;
 
+import java.util.Collection;
 import java.util.Map;
 
 public class Participant {
 	
 	private long id;
 	private String name;
-	private Map<Long, Book> books;
+	private Collection<Book> books;
 	
 	public Participant(long id, String name) {
 		super();
@@ -28,10 +29,10 @@ public class Participant {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public void setBooks(Map<Long, Book> availableBooks) {
+	public void setBooks(Collection<Book> availableBooks) {
 		this.books = availableBooks;
 	}
-	public Map<Long, Book> getBooks() {
+	public Collection<Book> getBooks() {
 		return this.books;
 	}
 }

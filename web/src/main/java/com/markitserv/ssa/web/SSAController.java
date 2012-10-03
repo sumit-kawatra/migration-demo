@@ -1,12 +1,11 @@
 package com.markitserv.ssa.web;
 
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,23 +22,9 @@ public class SSAController{
 	@Autowired
 	private HardcodedData data;
 
-	@RequestMapping(value = "/users", method = RequestMethod.GET)
-	public @ResponseBody Map<Long, Participant> getUsers() {
+	@RequestMapping(value = "/participant/{id}", method = RequestMethod.GET)
+	public @ResponseBody Participant getParticipant(@PathVariable("id") long id) {
 		
-		return data.getParticipants();
+		return data.participants.get(id);
 	}
-	
-	/*
-	private void buildFakeData() {
-		users = new HashMap<Long, User>();
-		
-		Participant companya = new Participant(1, "Some Company A");
-		Participant companyb = new Participant(1, "Some Company B");
-		User user1 = new User(1, "Roy", "Truelove", companya);
-		User user2 = new User(2, "Jane", "Truelove", companyb);
-		
-		users.put(1l, user1);
-		users.put(2l, user2);
-	}
-	*/
 }

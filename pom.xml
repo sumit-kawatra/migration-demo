@@ -21,7 +21,7 @@
 		<slf4j.version>1.6.1</slf4j.version>
 		<logback.version>0.9.26</logback.version>
 		<validation.version>1.0.0.GA</validation.version>
-		<jackson.version>1.9.10</jackson.version>
+		<jackson.version>2.0.6</jackson.version>
 		<hibernate-validation.version>4.3.0.Final</hibernate-validation.version>
 		<jcl-over-slf4.version>1.7.1</jcl-over-slf4.version>
 
@@ -81,8 +81,18 @@
 
 			<!-- Jackson, for JSON conversion -->
 			<dependency>
-				<groupId>org.codehaus.jackson</groupId>
-				<artifactId>jackson-mapper-asl</artifactId>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
 				<version>${jackson.version}</version>
 			</dependency>
 
