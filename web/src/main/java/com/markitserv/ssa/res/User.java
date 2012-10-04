@@ -1,7 +1,10 @@
 package com.markitserv.ssa.res;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+
 import com.markitserv.rest.RESTResource;
 
+@JsonAutoDetect(fieldVisibility=JsonAutoDetect.Visibility.ANY)
 @RESTResource
 public class User {
 	
