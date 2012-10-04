@@ -14,6 +14,12 @@ public class CustomObjectMapper extends ObjectMapper implements InitializingBean
 	Logger log = LoggerFactory.getLogger(CustomObjectMapper.class);
 
 	@Override
+	public boolean canSerialize(Class<?> type) {
+		log.debug("Trying to serialize " + type);
+		return super.canSerialize(type);
+	}
+
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		log.info("Using custom Jackson JSON Object Mapper");
 	}

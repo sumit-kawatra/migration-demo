@@ -8,6 +8,7 @@ public class Participant {
 	private long id;
 	private String name;
 	private Collection<Book> books;
+	private Collection<User> users;
 	
 	public Participant(long id, String name) {
 		super();
@@ -34,5 +35,11 @@ public class Participant {
 	}
 	public Collection<Book> getBooks() {
 		return this.books;
+	}
+	public void setUsers(Collection<User> users) {
+		this.users = users;
+	}
+	public Collection<User> getUsers() {
+		return users;
 	}
 }

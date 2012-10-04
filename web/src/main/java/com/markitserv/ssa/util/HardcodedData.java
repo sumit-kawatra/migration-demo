@@ -3,6 +3,7 @@ package com.markitserv.ssa.util;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,9 @@ public class HardcodedData implements InitializingBean {
 
 	public Map<Long, Participant> participants;
 	public Map<Long, Book> books;
+	public Map<Long, User> users;
+
+	private Random rand;
 
 	private void initData() {
 
@@ -32,30 +36,31 @@ public class HardcodedData implements InitializingBean {
 		// only create one for now
 
 		Participant p = new Participant(1l, "Mega Bank");
-
-		Collection<Book> availableBooks = createAvailableBooks(50);
-		p.setBooks(availableBooks);
+		p.setBooks(createAvailableBooks(5));
+		p.setUsers(createAllUsers(10, p));
+		
 		participants.put(1l, p);
 	}
 
-	private Map<Long, User> createAllUsers(int len, Participant p) {
+	private Collection<User> createAllUsers(int len, Participant p) {
 
-		Map<Long, User> users = new HashMap<Long, User>();
+		this.users = new HashMap<Long, User>();
 
-		for (int x = 1; x <= len; x++) {
+		for (long x = 1; x <= len; x++) {
 			User u = new User();
-			u.setFirstName(nameGen.compose(2));
-			u.setLastName(nameGen.compose(3));
+			u.setFirstName(nameGen.compose(rand.nextInt(2) + 2));
+			u.setLastName(nameGen.compose(rand.nextInt(4) + 2));
 			u.setId(x);
 			// avg of 80% of users will be active
 			u.setActive((Math.random() < .8) ? true : false);
-			// TODO not done yet
+			users.put(x,u);
 		}
 
-		return users;
+		return users.values();
 	}
 
 	private Collection<Book> createAvailableBooks(int numOfBooks) {
+		
 		if (numOfBooks > 52) {
 			throw new RuntimeException(
 					"Can't have more than 52 fake books.  Sorry.");
@@ -75,6 +80,7 @@ public class HardcodedData implements InitializingBean {
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		rand = new Random();
 		initData();
 	}
 }
