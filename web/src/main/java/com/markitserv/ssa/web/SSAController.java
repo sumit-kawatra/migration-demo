@@ -25,6 +25,7 @@ public class SSAController{
 	@RequestMapping(value = "/participant/{id}", method = RequestMethod.GET)
 	public @ResponseBody Participant getParticipant(@PathVariable("id") long id) {
 		
+		log.info("cna log");
 		return data.participants.get(id);
 	}
 }

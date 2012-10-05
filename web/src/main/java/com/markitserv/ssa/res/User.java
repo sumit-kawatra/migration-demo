@@ -2,7 +2,7 @@ package com.markitserv.ssa.res;
 
 import com.markitserv.rest.RESTResource;
 
-@RESTResource
+@RESTResource(collectionUri = "/participant/{participantId}/users", uri = "/user")
 public class User {
 	
 	private long id;
@@ -45,15 +45,12 @@ public class User {
 	public Participant getCompany() {
 		return participant;
 	}
-
 	public void setCompany(Participant company) {
 		this.participant = company;
 	}
-	
 	public boolean isActive() {
 		return isActive;
 	}
-
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}

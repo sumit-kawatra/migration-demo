@@ -3,6 +3,10 @@ package com.markitserv.ssa.res;
 import java.util.Collection;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.markitserv.rest.LinkSerializer;
+
+//@JsonSerialize(using=LinkSerializer.class)
 public class Participant {
 	
 	private long id;
@@ -33,6 +37,7 @@ public class Participant {
 	public void setBooks(Collection<Book> availableBooks) {
 		this.books = availableBooks;
 	}
+	
 	public Collection<Book> getBooks() {
 		return this.books;
 	}
