@@ -1,8 +1,7 @@
 package com.markitserv.ssa.res;
 
-import com.markitserv.rest.RESTResource;
+import com.markitserv.rest.RestLink;
 
-@RESTResource(uri = "/participant/{participantId}/book/{id}", collectionUri = "/participant/{participantId}/books")
 public class Book {
 
 	String name;

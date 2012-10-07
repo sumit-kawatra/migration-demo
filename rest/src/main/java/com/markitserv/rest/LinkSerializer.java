@@ -17,12 +17,29 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 public class LinkSerializer extends JsonSerializer<Object> {
 	
 	Logger log = LoggerFactory.getLogger(LinkSerializer.class);
+	private String relUri;
 	
+	public LinkSerializer(String relLink) {
+		super();
+		this.relUri = relLink;
+	}
+	
+	public String getRelUri() {
+		return relUri;
+	}
+
+	public void setRelUri(String relUri) {
+		this.relUri = relUri;
+	}
+
 	@Override
 	public void serialize(Object value, JsonGenerator jgen,
 			SerializerProvider provider) throws IOException,
 			JsonGenerationException {
 		
-		jgen.writeObject(value);
+		jgen.writeStartObject();
+		jgen.writeFieldName("$ref");
+		jgen.writeString(relUri);
+		jgen.writeEndObject();
 	}
 }

@@ -1,13 +1,15 @@
 package com.markitserv.ssa.res;
 
 import java.util.Collection;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.markitserv.rest.LinkSerializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.markitserv.rest.RestLink;
 
-//@JsonSerialize(using=LinkSerializer.class)
 public class Participant {
+	
+	Logger log = LoggerFactory.getLogger(Participant.class);
 	
 	private long id;
 	private String name;
@@ -38,13 +40,16 @@ public class Participant {
 		this.books = availableBooks;
 	}
 	
+	@RestLink(relUri = "books")
 	public Collection<Book> getBooks() {
+		log.info("Books did get called");
 		return this.books;
 	}
 	public void setUsers(Collection<User> users) {
 		this.users = users;
 	}
+	@RestLink(relUri = "users")
 	public Collection<User> getUsers() {
 		return users;
 	}
-}
+} 

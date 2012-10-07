@@ -1,8 +1,7 @@
 package com.markitserv.ssa.res;
 
-import com.markitserv.rest.RESTResource;
+import com.markitserv.rest.RestLink;
 
-@RESTResource(collectionUri = "/participant/{participantId}/users", uri = "/user")
 public class User {
 	
 	private long id;

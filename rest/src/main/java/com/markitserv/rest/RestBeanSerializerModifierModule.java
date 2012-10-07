@@ -3,7 +3,7 @@ package com.markitserv.rest;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.Module;
 
-public class SandboxBeanSerializerModifierModule extends Module {
+public class RestBeanSerializerModifierModule extends Module {
 
 	@Override
 	public String getModuleName() {
@@ -17,7 +17,7 @@ public class SandboxBeanSerializerModifierModule extends Module {
 
 	@Override
 	public void setupModule(SetupContext context) {
-		context.addBeanSerializerModifier(SandboxBeanSerializerModifier
+		context.addBeanSerializerModifier(RestBeanSerializerModifier
 				.instance());
 	}
 
