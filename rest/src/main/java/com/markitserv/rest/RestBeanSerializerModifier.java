@@ -36,6 +36,7 @@ public class RestBeanSerializerModifier extends SafeBeanSerializerModifier {
 		BeanPropertyWriter goodBPW = beanProperties.get(0);
 		
 		for (BeanPropertyDefinition bpw : beanDesc.findProperties()) {
+			serial
 		}
 		
 		return beanProperties;
