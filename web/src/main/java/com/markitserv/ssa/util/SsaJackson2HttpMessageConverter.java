@@ -11,25 +11,26 @@ import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
 
-@Component(value="myMessageConverter")
-public class MyMessageConverter extends MappingJackson2HttpMessageConverter {
+public class SsaJackson2HttpMessageConverter extends MappingJackson2HttpMessageConverter {
 	
-	Logger log = LoggerFactory.getLogger(MyMessageConverter.class);
+	Logger log = LoggerFactory.getLogger(SsaJackson2HttpMessageConverter.class);
 
 	@Override
 	protected void writeInternal(Object object, HttpOutputMessage outputMessage)
 			throws IOException, HttpMessageNotWritableException {
-		log.info("Using my message converter!!!");
-		throw new RuntimeException("WTF");
-		//super.writeInternal(object, outputMessage);
+		
+		// Jackson doesn't seem to log any of its errors, it just silently throws
+		// a 500 to the server.  This will log them, at least, and rethrow.
+		try {
+			super.writeInternal(object, outputMessage);
+		} catch (Exception e) {
+			log.error("Could not serialize object.  Rethrowing the following exception:", e);
+		}
 	}
 
 	@Override
 	protected Object readInternal(Class<?> clazz, HttpInputMessage inputMessage)
 			throws IOException, HttpMessageNotReadableException {
-		log.info("Using my message converter!!!");
 		return super.readInternal(clazz, inputMessage);
 	}
-	
-	
 }

@@ -13,6 +13,13 @@ import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 
+/**
+ * Right now this class does nothing.  Keeping it here for when (if)
+ * we need to extend Jackson.  Should be removed if it turns out not
+ * to be needed.
+ * @author roy.truelove
+ *
+ */
 public class RestBeanSerializerModifier extends SafeBeanSerializerModifier {
 
 	Logger log = LoggerFactory.getLogger(RestBeanSerializerModifier.class);
@@ -30,31 +37,6 @@ public class RestBeanSerializerModifier extends SafeBeanSerializerModifier {
 			SerializationConfig config, BeanDescription beanDesc,
 			List<BeanPropertyWriter> beanProperties) {
 		
-		List<BeanPropertyDefinition> allProps = beanDesc.findProperties();
-		log.debug("Serializing " + beanDesc.getBeanClass().getSimpleName());
-		
-		BeanPropertyWriter goodBPW = beanProperties.get(0);
-		
-		for (BeanPropertyDefinition bpw : beanDesc.findProperties()) {
-			serial
-		}
-		
-		return beanProperties;
-	}
-
-	/**
-	 * If a bean is annotated with RestLink, don't serialize its content,
-	 * but instead serialize it as a link
-	 * @param prop
-	 */
-	private void serializeBeanAsLinkIfAnnotated(
-			BeanPropertyDefinition prop) {
-		RestLink attr = null;
-		attr = prop.getGetter().getAnnotation(RestLink.class);
-		if (attr != null) { // if it's a RESTLink
-			BeanPropertyWriter bpw = new BeanPropertyWriter(
-			prop.assignSerializer(new LinkSerializer(attr
-					.relUri()));
-		}
+		return super.safeChangeProperties(config, beanDesc, beanProperties);
 	}
 } 

@@ -14,9 +14,9 @@ import com.markitserv.ssa.util.HardcodedData;
 
 @Controller
 @RequestMapping("/")
-public class SSAController{
+public class SsaController{
 	
-	Logger log = LoggerFactory.getLogger(SSAController.class);
+	Logger log = LoggerFactory.getLogger(SsaController.class);
 	
 	@Autowired
 	private HardcodedData data;
@@ -24,6 +24,13 @@ public class SSAController{
 	@RequestMapping(value = "/participant/{id}", method = RequestMethod.GET)
 	public @ResponseBody Participant getParticipant(@PathVariable("id") long id) {
 		
-		return data.participants.get(id);
+		Participant participant = null;
+		try {
+			participant = data.participants.get(id);
+		} catch (Exception e) {
+			// TODO handle this correctly!
+			log.error("Shit went wrong", e);
+		}
+		return participant;
 	}
 }

@@ -9,6 +9,10 @@
 	<logger name="com.markitserv">
 		<level value="TRACE" />
 	</logger>
+	<logger name="com.fasterxml.jackson">
+		<level value="TRACE" />
+	</logger>
+	 com.fasterxml.jackson
 	<logger name="org.springframework">
 		<level value="INFO" />
 	</logger>

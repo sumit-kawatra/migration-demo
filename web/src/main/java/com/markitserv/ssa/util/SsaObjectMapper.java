@@ -15,15 +15,21 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.markitserv.rest.RestBeanSerializerModifierModule;
 
-@Service("customObjectMapper")
-public class CustomObjectMapper extends ObjectMapper implements
+@Service(value="SsaObjectMapper")
+public class SsaObjectMapper extends ObjectMapper implements
 		InitializingBean {
 
-	Logger log = LoggerFactory.getLogger(CustomObjectMapper.class);
+	Logger log = LoggerFactory.getLogger(SsaObjectMapper.class);
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		this.registerModule(new RestBeanSerializerModifierModule());
 		log.info("Using custom Jackson JSON Object Mapper");
+	}
+
+	@Override
+	public void writeValue(JsonGenerator jgen, Object value)
+			throws IOException, JsonGenerationException, JsonMappingException {
+		super.writeValue(jgen, value);
 	}
 }

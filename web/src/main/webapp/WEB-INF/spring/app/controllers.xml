@@ -18,8 +18,8 @@
 		<property name="messageConverters">
 			<array>
 				<bean id="jsonConverter"
-					class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-					<property name="objectMapper" ref="customObjectMapper">
+					class="com.markitserv.ssa.util.SsaJackson2HttpMessageConverter">
+					<property name="objectMapper" ref="SsaObjectMapper">
 					</property>
 				</bean>
 			</array>
