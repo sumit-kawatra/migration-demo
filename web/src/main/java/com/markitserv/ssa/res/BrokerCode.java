@@ -1,5 +1,7 @@
 package com.markitserv.ssa.res;
 
+import com.markitserv.rest.RestReference;
+
 public class BrokerCode {
 
 	private long id;
@@ -29,6 +31,7 @@ public class BrokerCode {
 		this.name = name;
 	}
 	
+	@RestReference
 	public Participant getParticipant() {
 		return participant;
 	}

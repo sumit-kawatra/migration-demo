@@ -10,26 +10,31 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.markitserv.ssa.res.LegalEntity;
 import com.markitserv.ssa.res.User;
 import com.markitserv.ssa.util.HardcodedData;
+import com.markitserv.ssa.util.HttpExceptions;
 
 @Controller
-@RequestMapping(value={"/participant/{partId}/user", "participant/{partId}/users"})
-public class SsaUserController{
-	
-	Logger log = LoggerFactory.getLogger(SsaUserController.class);
-	
+@RequestMapping(value = { "/participant/{partId}/legalEntity",
+		"participant/{partId}/legalEntities" })
+public class SsaLegalEntityController {
+
+	Logger log = LoggerFactory.getLogger(SsaLegalEntityController.class);
+
 	@Autowired
 	private HardcodedData data;
-	
-	@RequestMapping(value = "", method = RequestMethod.GET)
-	public @ResponseBody Collection<User> getUsers(@PathVariable("partId") long partId) {
-		return data.participants.get(partId).getUsers();
-	}
 
-	@RequestMapping(value = "{id}", method = RequestMethod.GET)
-	public @ResponseBody User getUser(@PathVariable("id") long id) {
-		return data.users.get(id);
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public @ResponseBody
+	Collection<LegalEntity> getLegalEntities(@PathVariable("partId") long partId) {
+		return data.participants.get(partId).getLegalEntities();
 	}
 	
+	@RequestMapping(value = "{id}", method = RequestMethod.GET)
+	public @ResponseBody
+	LegalEntity get(@PathVariable("id") long id) {
+		return data.legalEntities.get(id);
+	}
 }

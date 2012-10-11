@@ -1,5 +1,7 @@
 package com.markitserv.ssa.res;
 
+import com.markitserv.rest.RestReference;
+
 public class LegalEntity {
 	
 	private long id;
@@ -20,6 +22,7 @@ public class LegalEntity {
 		this.id = id;
 	}
 	
+	@RestReference
 	public Participant getParticipant() {
 		return participant;
 	}
@@ -32,5 +35,4 @@ public class LegalEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
-
 }

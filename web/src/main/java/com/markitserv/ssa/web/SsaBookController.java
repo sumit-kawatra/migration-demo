@@ -1,5 +1,7 @@
 package com.markitserv.ssa.web;
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +17,25 @@ import com.markitserv.ssa.res.User;
 import com.markitserv.ssa.util.HardcodedData;
 import com.markitserv.ssa.util.HttpExceptions;
 
-//@Controller
-@RequestMapping(value={"/book", "/books"})
-public class SsaBooksController{
-	
-	Logger log = LoggerFactory.getLogger(SsaBooksController.class);
-	
+@Controller
+@RequestMapping(value = { "/participant/{partId}/book",
+		"participant/{partId}/books" })
+public class SsaBookController {
+
+	Logger log = LoggerFactory.getLogger(SsaBookController.class);
+
 	@Autowired
 	private HardcodedData data;
 
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public @ResponseBody
+	Collection<Book> getAllForParticipant(@PathVariable("partId") long partId) {
+		return data.participants.get(partId).getBooks();
+	}
+
 	@RequestMapping(value = "{id}", method = RequestMethod.GET)
-	public @ResponseBody Book get(@PathVariable("id") long id) {
+	public @ResponseBody
+	Book get(@PathVariable("id") long id) {
 		return data.books.get(id);
 	}
-	
-	// Request mapping of "" is intentionally not here, so that users
-	// get a 404
 }
