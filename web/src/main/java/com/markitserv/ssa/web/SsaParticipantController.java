@@ -36,21 +36,4 @@ public class SsaParticipantController{
 	public @ResponseBody Participant getParticipant(@PathVariable("id") long id) {
 		return data.participants.get(id);
 	}
-	
-//	@RequestMapping(value = "{id}/books", method = RequestMethod.GET)
-//	public @ResponseBody Collection<Book> geBooks(@PathVariable("id") long id) {
-//		return data.participants.get(id).getBooks();
-//	}
-//	
-//
-//	
-//	@RequestMapping(value = "{id}/legalEntities", method = RequestMethod.GET)
-//	public @ResponseBody Collection<LegalEntity> getLegalEntities(@PathVariable("id") long id) {
-//		return data.participants.get(id).getLegalEntities();
-//	}
-//	
-//	@RequestMapping(value = "{id}/brokerCodes", method = RequestMethod.GET)
-//	public @ResponseBody Collection<BrokerCode> getBrokerCodes(@PathVariable("id") long id) {
-//		return data.participants.get(id).getBrokerCodes();
-//	}
 } 

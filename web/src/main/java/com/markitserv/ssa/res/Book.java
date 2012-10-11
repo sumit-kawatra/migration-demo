@@ -1,18 +1,31 @@
 package com.markitserv.ssa.res;
 
+import com.markitserv.rest.RestReference;
+
 public class Book {
 
-	String name;
-	long id;
+	private String name;
+	private long id;
+	private Participant participant;
+
+	@RestReference
+	public Participant getParticipant() {
+		return participant;
+	}
+
+	public void setParticipant(Participant participant) {
+		this.participant = participant;
+	}
 
 	public Book() {
 		super();
 	}
 
-	public Book(long id, String name) {
+	public Book(long id, String name, Participant participant) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.participant = participant;
 	}
 
 	public long getId() {

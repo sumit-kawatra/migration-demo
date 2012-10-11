@@ -42,7 +42,7 @@ public class HardcodedData implements InitializingBean {
 		// only create one for now
 
 		Participant p = new Participant(1l, "Mega Bank");
-		p.setBooks(createAvailableBooks(5));
+		p.setBooks(createAvailableBooks(5, p));
 		p.setUsers(createAllUsers(50, p));
 		p.setLegalEntities(createAllLegalEntities(10, p));
 		p.setBrokerCodes(createAllBrokerCodes(10, p));
@@ -87,7 +87,7 @@ public class HardcodedData implements InitializingBean {
 		return users.values();
 	}
 
-	private Collection<Book> createAvailableBooks(int numOfBooks) {
+	private Collection<Book> createAvailableBooks(int numOfBooks, Participant p) {
 
 		if (numOfBooks > 52) {
 			throw new RuntimeException(
@@ -97,7 +97,7 @@ public class HardcodedData implements InitializingBean {
 		this.books = new HashMap<Long, Book>();
 		for (int x = 1; x <= numOfBooks; x++) {
 			String name = "Book " + getIncrementalCharFromInt(x);
-			Book b = new Book(x, name);
+			Book b = new Book(x, name, p);
 			this.books.put((long) x, b);
 		}
 		return this.books.values();

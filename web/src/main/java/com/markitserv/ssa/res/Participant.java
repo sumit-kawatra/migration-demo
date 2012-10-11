@@ -29,7 +29,6 @@ public class Participant {
 
 	@JsonIgnore
 	public Collection<Book> getBooks() {
-		log.info("Books did get called");
 		return this.books;
 	}
 
