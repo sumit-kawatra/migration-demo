@@ -5,8 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.markitserv.rest.RestReference;
 
 public class Participant {
 
@@ -19,34 +17,14 @@ public class Participant {
 	private Collection<LegalEntity> legalEntities;
 	private Collection<BrokerCode> brokerCodes;
 
-	public Participant(long id, String name) {
-		super();
-		this.id = id;
-		this.name = name;
-	}
-
 	public Participant() {
 		super();
 	}
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
+	public Participant(long id, String name) {
+		super();
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
 		this.name = name;
-	}
-
-	public void setBooks(Collection<Book> availableBooks) {
-		this.books = availableBooks;
 	}
 
 	@JsonIgnore
@@ -55,13 +33,22 @@ public class Participant {
 		return this.books;
 	}
 
-	@JsonProperty(value = "books")
-	public RestReference getBooksRef() {
-		return new RestReference().withUri("books");
+	@JsonIgnore
+	public Collection<BrokerCode> getBrokerCodes() {
+		return brokerCodes;
 	}
 
-	public void setUsers(Collection<User> users) {
-		this.users = users;
+	public long getId() {
+		return id;
+	}
+
+	@JsonIgnore
+	public Collection<LegalEntity> getLegalEntities() {
+		return legalEntities;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	@JsonIgnore
@@ -69,28 +56,27 @@ public class Participant {
 		return users;
 	}
 
-	@JsonProperty(value = "users")
-	public RestReference getUsersRef() {
-		return new RestReference().withUri("users");
-	}
-	
-	@JsonIgnore
-	public Collection<LegalEntity> getLegalEntities() {
-		return legalEntities;
-	}
-	
-	@JsonProperty(value = "legalEntities")
-	public RestReference getLegalEntitiesRef() {
-		return new RestReference().withUri("legalEntities");
-	}
-
-	public void setLegalEntities(Collection<LegalEntity> legalEntities) {
-		this.legalEntities = legalEntities;
+	public void setBooks(Collection<Book> availableBooks) {
+		this.books = availableBooks;
 	}
 
 	public void setBrokerCodes(Collection<BrokerCode> brokerCodes) {
 		this.brokerCodes = brokerCodes;
 	}
 
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	public void setLegalEntities(Collection<LegalEntity> legalEntities) {
+		this.legalEntities = legalEntities;
+	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setUsers(Collection<User> users) {
+		this.users = users;
+	}
 }

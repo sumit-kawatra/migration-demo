@@ -14,7 +14,7 @@ import com.markitserv.ssa.res.User;
 import com.markitserv.ssa.util.HardcodedData;
 import com.markitserv.ssa.util.HttpExceptions;
 
-@Controller
+//@Controller
 @RequestMapping(value={"/legalEntity", "/legalEntites"})
 public class SsaLegalEntitiesController{
 	

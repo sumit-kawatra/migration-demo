@@ -12,44 +12,47 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.markitserv.ssa.res.Book;
+import com.markitserv.ssa.res.BrokerCode;
 import com.markitserv.ssa.res.LegalEntity;
 import com.markitserv.ssa.res.Participant;
 import com.markitserv.ssa.res.User;
 import com.markitserv.ssa.util.HardcodedData;
 
-//@Controller
-@RequestMapping(value={"/participant","/participants"})
-public class SsaParticipantController{
+@Controller
+public class SsaController{
 	
-	Logger log = LoggerFactory.getLogger(SsaParticipantController.class);
+	Logger log = LoggerFactory.getLogger(SsaController.class);
 	
 	@Autowired
 	private HardcodedData data;
-
-	@RequestMapping(value = "{id}", method = RequestMethod.GET)
-	public @ResponseBody Participant getParticipant(@PathVariable("id") long id) {
-		return data.participants.get(id);
-	}
 	
-	@RequestMapping(value = "", method = RequestMethod.GET)
+	@RequestMapping(value = "/participants", method = RequestMethod.GET)
 	public @ResponseBody Collection<Participant> getParticipants() {
 		return data.participants.values();
 	}
 	
-	// Collections
+	@RequestMapping(value = "/participant/{id}", method = RequestMethod.GET)
+	public @ResponseBody Participant getParticipant(@PathVariable("id") long id) {
+		return data.participants.get(id);
+	}
 	
-	@RequestMapping(value = "{id}/books", method = RequestMethod.GET)
+	@RequestMapping(value = "/participant/{id}/books", method = RequestMethod.GET)
 	public @ResponseBody Collection<Book> geBooks(@PathVariable("id") long id) {
 		return data.participants.get(id).getBooks();
 	}
 	
-	@RequestMapping(value = "{id}/users", method = RequestMethod.GET)
+	@RequestMapping(value = "/participant/{id}/users", method = RequestMethod.GET)
 	public @ResponseBody Collection<User> getUsers(@PathVariable("id") long id) {
 		return data.participants.get(id).getUsers();
 	}
 	
-	@RequestMapping(value = "{id}/legalEntities", method = RequestMethod.GET)
+	@RequestMapping(value = "/participant/{id}/legalEntities", method = RequestMethod.GET)
 	public @ResponseBody Collection<LegalEntity> getLegalEntities(@PathVariable("id") long id) {
 		return data.participants.get(id).getLegalEntities();
+	}
+	
+	@RequestMapping(value = "/participant/{id}/brokerCodes", method = RequestMethod.GET)
+	public @ResponseBody Collection<BrokerCode> getBrokerCodes(@PathVariable("id") long id) {
+		return data.participants.get(id).getBrokerCodes();
 	}
 }

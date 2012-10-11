@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.markitserv.ssa.res.User;
 import com.markitserv.ssa.util.HardcodedData;
-import com.markitserv.ssa.util.HttpExceptions;
 
-@Controller
+//@Controller
 @RequestMapping(value={"/user", "/users"})
 public class SsaUserController{
 	

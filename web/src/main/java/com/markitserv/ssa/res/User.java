@@ -2,7 +2,9 @@ package com.markitserv.ssa.res;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.markitserv.rest.RestReference;
+import com.markitserv.rest.RestReferenceSerializer;
 
 public class User {
 
@@ -59,17 +61,9 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	@JsonIgnore
+	@RestReference
 	public Participant getParticipant() {
 		return participant;
-	}
-
-	@JsonProperty(value = "participant")
-	public RestReference getParticipantRef() {
-		long id = this.participant.getId();
-		RestReference ref = new RestReference().withId(id).withUri(
-				"/participant/" + id);
-		return ref;
 	}
 
 	public void setParticipant(Participant company) {
