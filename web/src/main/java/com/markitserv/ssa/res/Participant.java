@@ -16,6 +16,8 @@ public class Participant {
 	private String name;
 	private Collection<Book> books;
 	private Collection<User> users;
+	private Collection<LegalEntity> legalEntities;
+	private Collection<BrokerCode> brokerCodes;
 
 	public Participant(long id, String name) {
 		super();
@@ -55,7 +57,7 @@ public class Participant {
 
 	@JsonProperty(value = "books")
 	public RestReference getBooksRef() {
-		return new RestReference("books");
+		return new RestReference().withUri("books");
 	}
 
 	public void setUsers(Collection<User> users) {
@@ -69,6 +71,26 @@ public class Participant {
 
 	@JsonProperty(value = "users")
 	public RestReference getUsersRef() {
-		return new RestReference("users");
+		return new RestReference().withUri("users");
 	}
+	
+	@JsonIgnore
+	public Collection<LegalEntity> getLegalEntities() {
+		return legalEntities;
+	}
+	
+	@JsonProperty(value = "legalEntities")
+	public RestReference getLegalEntitiesRef() {
+		return new RestReference().withUri("legalEntities");
+	}
+
+	public void setLegalEntities(Collection<LegalEntity> legalEntities) {
+		this.legalEntities = legalEntities;
+	}
+
+	public void setBrokerCodes(Collection<BrokerCode> brokerCodes) {
+		this.brokerCodes = brokerCodes;
+	}
+
+
 }

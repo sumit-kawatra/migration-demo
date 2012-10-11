@@ -2,20 +2,35 @@ package com.markitserv.rest;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-//@JsonSerialize(using=RestReferenceSerializer.class)
+@JsonSerialize(using = RestReferenceSerializer.class)
 public class RestReference {
-	
-	private InnerRef innerRef = new InnerRef();
 
-	private class InnerRef {
-		public String uri;
+	private long id;
+	private String uri;
+
+	public RestReference withUri(String uri) {
+		this.uri = uri;
+		return this;
 	}
 	
-	public RestReference(String uri) {
-		this.innerRef.uri = uri;
+	public RestReference withId(long id) {
+		this.id = id;
+		return this;
 	}
 	
-	public InnerRef getRef() {
-		return innerRef;
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getUri() {
+		return uri;
+	}
+
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 }

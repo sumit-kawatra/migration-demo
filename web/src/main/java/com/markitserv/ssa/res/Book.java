@@ -1,7 +1,5 @@
 package com.markitserv.ssa.res;
 
-import com.markitserv.rest.RestLink;
-
 public class Book {
 
 	String name;
