@@ -13,6 +13,10 @@
 	<name>Markitwire Self Service Admin Server</name>
 	<description>Server for the Markitwire Self Service Admin</description>
 
+	<properties>
+		<spring.version>3.1.2.RELEASE</spring.version>
+	</properties>
+
 	<dependencies>
 
 		<dependency>
@@ -56,6 +60,32 @@
 			<version>3.0.1</version>
 			<scope>runtime</scope>
 		</dependency>
+		
+		<dependency>
+		  <groupId>commons-codec</groupId>
+		    <artifactId>commons-codec</artifactId>
+		      <version>20041127.091804</version>
+		      </dependency>
+		      
+		      <!-- Spring Security -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+ 
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+ 
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		      
 
 	</dependencies>
 	<build>
