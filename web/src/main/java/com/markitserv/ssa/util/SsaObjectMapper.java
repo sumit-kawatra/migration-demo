@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.markitserv.rest.RestBeanSerializerModifierModule;
 
-@Service(value="SsaObjectMapper")
 public class SsaObjectMapper extends ObjectMapper implements
 		InitializingBean {
 

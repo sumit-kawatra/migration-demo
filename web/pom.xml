@@ -57,7 +57,6 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
 			<scope>runtime</scope>
 		</dependency>
 		
@@ -86,6 +85,11 @@
 			<version>${spring.version}</version>
 		</dependency>
 		      
+
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
 
 	</dependencies>
 	<build>

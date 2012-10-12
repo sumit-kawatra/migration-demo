@@ -5,8 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.markitserv.rest.RestReference;
 
 public class Participant {
 
@@ -16,6 +14,12 @@ public class Participant {
 	private String name;
 	private Collection<Book> books;
 	private Collection<User> users;
+	private Collection<LegalEntity> legalEntities;
+	private Collection<BrokerCode> brokerCodes;
+
+	public Participant() {
+		super();
+	}
 
 	public Participant(long id, String name) {
 		super();
@@ -23,43 +27,27 @@ public class Participant {
 		this.name = name;
 	}
 
-	public Participant() {
-		super();
+	@JsonIgnore
+	public Collection<Book> getBooks() {
+		return this.books;
+	}
+
+	@JsonIgnore
+	public Collection<BrokerCode> getBrokerCodes() {
+		return brokerCodes;
 	}
 
 	public long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	@JsonIgnore
+	public Collection<LegalEntity> getLegalEntities() {
+		return legalEntities;
 	}
 
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setBooks(Collection<Book> availableBooks) {
-		this.books = availableBooks;
-	}
-
-	@JsonIgnore
-	public Collection<Book> getBooks() {
-		log.info("Books did get called");
-		return this.books;
-	}
-
-	@JsonProperty(value = "books")
-	public RestReference getBooksRef() {
-		return new RestReference("books");
-	}
-
-	public void setUsers(Collection<User> users) {
-		this.users = users;
 	}
 
 	@JsonIgnore
@@ -67,8 +55,27 @@ public class Participant {
 		return users;
 	}
 
-	@JsonProperty(value = "users")
-	public RestReference getUsersRef() {
-		return new RestReference("users");
+	public void setBooks(Collection<Book> availableBooks) {
+		this.books = availableBooks;
+	}
+
+	public void setBrokerCodes(Collection<BrokerCode> brokerCodes) {
+		this.brokerCodes = brokerCodes;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	public void setLegalEntities(Collection<LegalEntity> legalEntities) {
+		this.legalEntities = legalEntities;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setUsers(Collection<User> users) {
+		this.users = users;
 	}
 }

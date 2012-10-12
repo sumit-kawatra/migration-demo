@@ -2,26 +2,13 @@ package com.markitserv.ssa.res;
 
 import com.markitserv.rest.RestReference;
 
-public class Book {
+public class BrokerCode {
 
-	private String name;
 	private long id;
+	private String name;
 	private Participant participant;
-
-	@RestReference
-	public Participant getParticipant() {
-		return participant;
-	}
-
-	public void setParticipant(Participant participant) {
-		this.participant = participant;
-	}
-
-	public Book() {
-		super();
-	}
-
-	public Book(long id, String name, Participant participant) {
+	
+	public BrokerCode(long id, String name, Participant participant) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -43,4 +30,13 @@ public class Book {
 	public void setName(String name) {
 		this.name = name;
 	}
-}
+	
+	@RestReference
+	public Participant getParticipant() {
+		return participant;
+	}
+
+	public void setParticipant(Participant participant) {
+		this.participant = participant;
+	}
+} 

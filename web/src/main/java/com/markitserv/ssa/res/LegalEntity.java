@@ -2,44 +2,36 @@ package com.markitserv.ssa.res;
 
 import com.markitserv.rest.RestReference;
 
-public class Book {
-
-	private String name;
+public class LegalEntity {
+	
 	private long id;
 	private Participant participant;
-
+	private String name;
+	
+	public LegalEntity(long id, Participant participant, String name) {
+		super();
+		this.id = id;
+		this.participant = participant;
+		this.name = name;
+	}
+	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
+	
 	@RestReference
 	public Participant getParticipant() {
 		return participant;
 	}
-
 	public void setParticipant(Participant participant) {
 		this.participant = participant;
 	}
-
-	public Book() {
-		super();
-	}
-
-	public Book(long id, String name, Participant participant) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.participant = participant;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
