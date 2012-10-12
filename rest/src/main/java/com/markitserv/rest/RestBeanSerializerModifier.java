@@ -54,8 +54,9 @@ public class RestBeanSerializerModifier extends SafeBeanSerializerModifier {
 	}
 
 	/**
-	 * If the getter is annotated with RestReference, prepend it with
-	 * an at sign, to signify that it is an id
+	 * If the getter is annotated with RestReference, prepend it with an at
+	 * sign, to signify that it is an id
+	 * 
 	 * @param bpw
 	 * @return
 	 */
@@ -73,7 +74,9 @@ public class RestBeanSerializerModifier extends SafeBeanSerializerModifier {
 		}
 
 		if (rr != null) {
-			bpw = bpw.rename(NameTransformer.simpleTransformer("@", ""));
+			// why underscore? Coffeescript doesn't like @, and $ looks
+			// like an Angular global.
+			bpw = bpw.rename(NameTransformer.simpleTransformer("_", ""));
 		}
 		return bpw;
 	}

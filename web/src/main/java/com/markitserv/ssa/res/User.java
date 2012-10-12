@@ -1,5 +1,7 @@
 package com.markitserv.ssa.res;
 
+import java.util.Collection;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -15,6 +17,7 @@ public class User {
 	private String password;
 	private boolean isActive;
 	private boolean isSuperUser;
+	private Collection<UserBook> userBooks;
 
 	public boolean isSuperUser() {
 		return isSuperUser;
@@ -86,4 +89,13 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-}
+
+	@JsonIgnore
+	public Collection<UserBook> getUserBooks() {
+		return this.userBooks;
+	}
+
+	public void setUserBooks(Collection<UserBook> userBooks) {
+		this.userBooks = userBooks;
+	}
+} 

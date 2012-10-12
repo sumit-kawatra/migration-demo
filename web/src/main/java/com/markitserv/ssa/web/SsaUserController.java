@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.markitserv.ssa.res.User;
+import com.markitserv.ssa.res.UserBook;
 import com.markitserv.ssa.util.HardcodedData;
 
 @Controller
@@ -32,4 +33,8 @@ public class SsaUserController{
 		return data.users.get(id);
 	}
 	
+	@RequestMapping(value = "{id}/userBooks", method = RequestMethod.GET)
+	public @ResponseBody Collection<UserBook> getUserBooks(@PathVariable("id") long id) {
+		return data.users.get(id).getUserBooks();
+	}
 }

@@ -2,6 +2,7 @@ package com.markitserv.ssa.util;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 
@@ -17,6 +18,7 @@ import com.markitserv.ssa.res.BrokerCode;
 import com.markitserv.ssa.res.LegalEntity;
 import com.markitserv.ssa.res.Participant;
 import com.markitserv.ssa.res.User;
+import com.markitserv.ssa.res.UserBook;
 
 @Component
 public class HardcodedData implements InitializingBean {
@@ -30,7 +32,8 @@ public class HardcodedData implements InitializingBean {
 	public Map<Long, Book> books;
 	public Map<Long, User> users;
 	public Map<Long, LegalEntity> legalEntities;
-	public HashMap<Long, BrokerCode> brokerCodes;
+	public Map<Long, BrokerCode> brokerCodes;
+	public Map<Long, UserBook> userBooks;
 
 	private Random rand;
 
@@ -38,16 +41,29 @@ public class HardcodedData implements InitializingBean {
 	private void initData() {
 
 		participants = new HashMap<Long, Participant>();
+		participants.put(1l, createMegaBank());
+		//participants.put(2l, createUnpopulatedBank());
+	}
+	
+	private Participant createUnpopulatedBank() {
 
-		// only create one for now
+		Participant p = new Participant(2l, "Unpopulated Bank");
+		p.setBooks(createAvailableBooks(0, p));
+		p.setLegalEntities(createAllLegalEntities(0, p));
+		p.setBrokerCodes(createAllBrokerCodes(0, p));
+		p.setUsers(createAllUsers(0, p));
+		return p;
+	}
+
+	private Participant createMegaBank() {
+		// Mega Bank is the only populated participant
 
 		Participant p = new Participant(1l, "Mega Bank");
 		p.setBooks(createAvailableBooks(5, p));
-		p.setUsers(createAllUsers(50, p));
 		p.setLegalEntities(createAllLegalEntities(10, p));
 		p.setBrokerCodes(createAllBrokerCodes(10, p));
-
-		participants.put(1l, p);
+		p.setUsers(createAllUsers(50, p));
+		return p;
 	}
 
 	/**
@@ -58,6 +74,9 @@ public class HardcodedData implements InitializingBean {
 	private Collection<User> createAllUsers(int len, Participant p) {
 
 		this.users = new HashMap<Long, User>();
+		this.userBooks = new HashMap<Long, UserBook>();
+		
+		long nextUserBookId = 1;
 
 		for (long x = 1; x <= len; x++) {
 			User u = new User();
@@ -68,6 +87,10 @@ public class HardcodedData implements InitializingBean {
 			u.setActive((Math.random() < .8) ? true : false);
 			u.setParticipant(p);
 			u.setPassword(RandomStringUtils.randomAlphanumeric(10));
+			
+			// add books to user
+			nextUserBookId = addUserBooks(p, nextUserBookId, u);
+			
 			users.put(x, u);
 		}
 
@@ -85,6 +108,21 @@ public class HardcodedData implements InitializingBean {
 		users.put(nextId, u);
 
 		return users.values();
+	}
+
+	private long addUserBooks(Participant p, long nextUserBookId, User u) {
+		Collection<Book> allbooks = p.getBooks();
+		Collection<UserBook> thisUsersBooks = new HashSet<UserBook>();
+		for (Book book : allbooks) {
+			if (Math.random() < .4) {
+				UserBook userBook = new UserBook(nextUserBookId, u, book);
+				thisUsersBooks.add(userBook);
+				this.userBooks.put(nextUserBookId, userBook);
+				nextUserBookId++;
+			}
+		}
+		u.setUserBooks(thisUsersBooks);
+		return nextUserBookId;
 	}
 
 	private Collection<Book> createAvailableBooks(int numOfBooks, Participant p) {
