@@ -7,15 +7,16 @@
 	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
  
 	<http auto-config="true">
-		<intercept-url pattern="/secured*" access="ROLE_ADMIN" />
+	    <intercept-url method = "POST" pattern="/secured*" access="ROLE_ADMIN" />
+		<intercept-url method = "GET" pattern="/*" access="ROLE_USER" />
 	</http>
  
+
 	<authentication-manager>
 	  <authentication-provider>
 	    <user-service>
-		<user name="admin" password="admin123" authorities="ROLE_ADMIN" />
-		<!-- <user name="user" password="user123" authorities="ROLE_USER" />
-		<user name="guest" password="guest123" authorities="ROLE_GUEST" /> -->
+			   <user name="admin" password="admin123" authorities="ROLE_ADMIN" />
+			   <user name="user" password="user123" authorities="ROLE_USER" />
 	    </user-service>
 	  </authentication-provider>
 	</authentication-manager>

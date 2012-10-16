@@ -20,9 +20,16 @@ public class SSASecurityTestController{
 	Logger log = LoggerFactory.getLogger(SSASecurityTestController.class);
 	
 	
-	@RequestMapping(value = "/secured", method = RequestMethod.GET) 
+	@RequestMapping(value = "/", method = RequestMethod.GET) 
     public @ResponseBody String secured() {
-		return "SECURED: " + new Date(); 
+		System.out.println("in SSASecurityTestController");
+		return "SECURED GET: " + new Date();
+    }
+	
+	@RequestMapping(value = "/secured", method = RequestMethod.POST)
+    public @ResponseBody String securedPOST() {
+		System.out.println("in SSASecurityTestController");
+		return "SECURED POST: " + new Date(); 
     }
 	
 }
