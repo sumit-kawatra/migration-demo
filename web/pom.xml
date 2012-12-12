@@ -13,10 +13,6 @@
 	<name>Markitwire Self Service Admin Server</name>
 	<description>Server for the Markitwire Self Service Admin</description>
 
-	<properties>
-		<spring.version>3.1.2.RELEASE</spring.version>
-	</properties>
-
 	<dependencies>
 
 		<dependency>
@@ -66,26 +62,22 @@
 		      <version>20041127.091804</version>
 		      </dependency>
 		      
-		      <!-- Spring Security -->
+		 <!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
  
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
  
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
 		      
-
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
