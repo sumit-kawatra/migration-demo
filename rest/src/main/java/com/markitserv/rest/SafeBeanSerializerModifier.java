@@ -46,7 +46,7 @@ public abstract class SafeBeanSerializerModifier extends BeanSerializerModifier 
 		try {
 			safeOrderProperties = this.safeOrderProperties(config, beanDesc, beanProperties);
 		} catch (Exception e) {
-			log.error("Could order properties for bean " + beanDesc, e);
+			log.error("Could not order properties for bean " + beanDesc, e);
 			throw new RestRuntimeException(e);
 		}
 		return safeOrderProperties;
@@ -60,7 +60,7 @@ public abstract class SafeBeanSerializerModifier extends BeanSerializerModifier 
 		try {
 			updateBuilder = this.safeUpdateBuilder(config, beanDesc, builder);
 		} catch (Exception e) {
-			log.error("Could update builder for bean " + beanDesc, e);
+			log.error("Could not update builder for bean " + beanDesc, e);
 			throw new RestRuntimeException(e);
 		}
 		return updateBuilder;
@@ -74,7 +74,7 @@ public abstract class SafeBeanSerializerModifier extends BeanSerializerModifier 
 		try {
 			modifySerializer = super.modifySerializer(config, beanDesc, serializer);
 		} catch (Exception e) {
-			log.error("Could modify serializer for bean " + beanDesc, e);
+			log.error("Could not modify serializer for bean " + beanDesc, e);
 			throw new RestRuntimeException(e);
 		}
 		return modifySerializer;
