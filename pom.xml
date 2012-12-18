@@ -2,14 +2,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.markitserv</groupId>
-	<artifactId>ssa-parent</artifactId>
-	<name>Markitwire Self Service Admin Parent</name>
+	<artifactId>hawthorne-parent</artifactId>
+	<name>Hawthorne Parent</name>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<description>Server for the Markitwire Self Service Admin</description>
+	<description>Server for the Hawthorne project</description>
 
 	<modules>
-		<module>rest</module>
+		<module>msws</module>
 		<module>web</module>
 	</modules>
 
@@ -36,7 +36,7 @@
 
 			<dependency>
 				<groupId>com.markitserv</groupId>
-				<artifactId>ms-rest</artifactId>
+				<artifactId>msws</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 
@@ -147,8 +147,9 @@
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>3.0.1</version>
-				<scope>runtime</scope>
 			</dependency>
+
+			<!-- START TEST DEPENDENCIES -->
 
 		</dependencies>
 	</dependencyManagement>

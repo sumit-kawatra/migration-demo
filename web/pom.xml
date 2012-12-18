@@ -4,20 +4,20 @@
 
 	<parent>
 		<groupId>com.markitserv</groupId>
-		<artifactId>ssa-parent</artifactId>
+		<artifactId>hawthorne-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>ssa-war</artifactId>
+	<artifactId>hawthorne-war</artifactId>
 	<packaging>war</packaging>
-	<name>Markitwire Self Service Admin Server</name>
-	<description>Server for the Markitwire Self Service Admin</description>
+	<name>Hawthorne Server</name>
+	<description>Server for the Hawthorne project</description>
 
 	<dependencies>
 
 		<dependency>
 			<groupId>com.markitserv</groupId>
-			<artifactId>ms-rest</artifactId>
+			<artifactId>msws</artifactId>
 		</dependency>
 
 		<!-- Spring MVC. Loads core and all dependencies -->
@@ -53,7 +53,6 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		
 		<dependency>
@@ -85,7 +84,7 @@
 
 	</dependencies>
 	<build>
-		<finalName>SSA</finalName>
+		<finalName>Hawthorne</finalName>
 	</build>
 
 </project>

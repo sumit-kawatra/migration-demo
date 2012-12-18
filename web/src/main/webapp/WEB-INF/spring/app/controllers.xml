@@ -12,8 +12,8 @@
 
 	<!-- Scans within the base package of the application for @Components to 
 		configure as beans -->
-	<context:component-scan base-package="com.markitserv.ssa.util" />
-	<context:component-scan base-package="com.markitserv.ssa.web" />
+	<context:component-scan base-package="com.markitserv.hawthorne.util" />
+	<context:component-scan base-package="com.markitserv.hawthorne.web" />
 	<!-- <mvc:annotation-driven/> -->
 
  <sec:global-method-security pre-post-annotations="enabled">
@@ -21,11 +21,11 @@
   </sec:global-method-security>
 
   <bean id="expressionHandler"
-      class="com.markitserv.ssa.security.MyCustomSecurityExpressionHandler">
+      class="com.markitserv.hawthorne.security.MyCustomSecurityExpressionHandler">
        <!-- <property name="permissionEvaluator" ref="permissionEvaluator"/> -->
   </bean> 
 		<!-- <bean id="permissionEvaluator" class="org.borislam.security.BasePermissionEvaluator"/> -->
-	<bean id="SsaObjectMapper" class="com.markitserv.ssa.util.SsaObjectMapper">
+	<bean id="HawthorneObjectMapper" class="com.markitserv.hawthorne.util.HawthorneObjectMapper">
 		<property name="serializationInclusion" value="NON_NULL"></property>
 	</bean>
 	
@@ -34,8 +34,8 @@
 		<property name="messageConverters">
 			<array>
 				<bean id="jsonConverter"
-					class="com.markitserv.ssa.util.SsaJackson2HttpMessageConverter">
-					<property name="objectMapper" ref="SsaObjectMapper" />
+					class="com.markitserv.hawthorne.util.HawthorneJackson2HttpMessageConverter">
+					<property name="objectMapper" ref="HawthorneObjectMapper" />
 				</bean>
 			</array>
 		</property>
