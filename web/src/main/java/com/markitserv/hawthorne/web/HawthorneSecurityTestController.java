@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
-@RequestMapping("/")
+// Disabled until we're ready to reintroduce security
+@RequestMapping("/DISABLED")
 public class HawthorneSecurityTestController{
 	
 	Logger log = LoggerFactory.getLogger(HawthorneSecurityTestController.class);
