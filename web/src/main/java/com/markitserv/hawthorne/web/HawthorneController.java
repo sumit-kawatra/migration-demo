@@ -22,7 +22,7 @@ import org.springframework.web.context.request.WebRequest;
 import com.markitserv.hawthorne.util.HardcodedData;
 import com.markitserv.mwws.ActionCommand;
 import com.markitserv.mwws.CommonParamKeys;
-import com.markitserv.mwws.HttpParamsProcessor;
+import com.markitserv.mwws.ActionBuilder;
 import com.markitserv.mwws.MalformedFiltersException;
 import com.markitserv.mwws.MultipleParameterValuesException;
 
@@ -31,7 +31,7 @@ import com.markitserv.mwws.MultipleParameterValuesException;
 public class HawthorneController {
 
 	@Autowired
-	private HttpParamsProcessor filterProc;
+	private ActionBuilder actionBuilder;
 
 	Logger log = LoggerFactory.getLogger(HawthorneController.class);
 
@@ -44,23 +44,18 @@ public class HawthorneController {
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public @ResponseBody
-	String performAction(@RequestParam(value = "Action") String action,
-			WebRequest req) {
+	String performActionReq(WebRequest req) {
 
-		ActionCommand cmd = new ActionCommand();
+		ActionCommand actionCmd = actionBuilder.buildActionFromHttpParams(req
+				.getParameterMap());
 
-		log.info("Called with action:" + action);
-
-		Map<String, Object> processedParams = 
-				filterProc.processParameters(req.getParameterMap());
+		Map<String, Object> processedParams = actionCmd.getParams();
 
 		log.info("Params:");
 		for (String key : processedParams.keySet()) {
 			log.info("Key {}: Value {}", key, processedParams.get(key)
 					.toString());
 		}
-
 		return "Success";
 	}
-
 }

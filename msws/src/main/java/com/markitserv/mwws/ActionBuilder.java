@@ -8,32 +8,47 @@ import java.util.Stack;
 import org.springframework.stereotype.Service;
 
 @Service
-public class HttpParamsProcessor {
+public class ActionBuilder {
 	
-	public Map<String, Object> processParameters(
-			Map<String, String[]> immutableParams) {
+	public ActionCommand buildActionFromHttpParams(
+			Map<String, String[]> httpParams) {
 
 		// Need a mutable copy
 		HashMap<String, String[]> params = new HashMap<String, String[]>(
-				immutableParams);
+				httpParams);
+		
 		Map<String, List<String>> filters = processFilterParams(params);
+		
+		String action = null;
 
 		Map processedParams = new HashMap();
 		for (String key : params.keySet()) {
 			// TODO process other 'list' type params
-			// TODO Ensure there's only one value for each param
 			String[] valueArr = params.get(key);
+			
 			if (valueArr.length != 1) {
 				throw MultipleParameterValuesException.standardException(key);
 			}
+			
 			String value = valueArr[0];
+			
+			if (key.equals(CommonParamKeys.Action.toString())) {
+				action = value;
+				continue; // so that it's not added to the params
+			}
 			processedParams.put(key, value);
 		}
+		
+		// TODO ensure that there's a value
 
 		// add the processed filters back as a single param
-		processedParams.put(CommonParamKeys.Filter.toString(), filters);
+		if (filters.size() != 0) {
+			processedParams.put(CommonParamKeys.Filter.toString(), filters);
+		}
 
-		return processedParams;
+		ActionCommand actionCmd = new ActionCommand(action, processedParams);
+		
+		return actionCmd;
 	}
 
 	/**
