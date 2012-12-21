@@ -10,7 +10,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import com.markitserv.mwws.ActionBuilder;
+import com.markitserv.mwws.ActionCommandBuilder;
 import com.markitserv.mwws.ActionCommand;
 import com.markitserv.mwws.CommonParamKeys;
 import com.markitserv.mwws.exceptions.MalformedFiltersException;
@@ -20,14 +20,14 @@ import com.markitserv.mwws.testutil.Util;
 
 public class ActionBuilderTest {
 
-	private ActionBuilder target;
+	private ActionCommandBuilder target;
 	private static final String ACTION_PARAM_NAME = CommonParamKeys.Action
 			.toString();
 	private static final String ACTION_NAME = "SomeAction";
 
 	@Before
 	public void setupEach() {
-		target = new ActionBuilder();
+		target = new ActionCommandBuilder();
 	}
 
 	// ************************** Building from Http Requests
@@ -38,7 +38,7 @@ public class ActionBuilderTest {
 		Map<String, String[]> p = buildHttpParams(null, "Foo", "Bar");
 
 		ActionCommand expected = buildActionCmd(null, "Foo", "Bar");
-		ActionCommand actual = target.buildActionFromHttpParams(p);
+		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
 
 		// Util.printObjectDiffToConsole(expected, actual);
 		assertEquals(expected, actual);
@@ -49,7 +49,7 @@ public class ActionBuilderTest {
 
 		String[] values = { "Bar", "Baz" };
 		Map<String, String[]> p = buildHttpParamsWithArray(null, "Foo", values);
-		ActionCommand actual = target.buildActionFromHttpParams(p);
+		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
 	}
 
 	@Test(expected=ActionParamMissingException.class)
@@ -60,7 +60,7 @@ public class ActionBuilderTest {
 		// remove action
 		p.remove(ACTION_PARAM_NAME);
 		
-		ActionCommand actual = target.buildActionFromHttpParams(p);
+		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
 	}
 
 	// ************************** Building from Http Requests - Filters
@@ -86,7 +86,7 @@ public class ActionBuilderTest {
 		
 		// Compare
 		ActionCommand expected = buildActionCmd(null, "Filter", filter);
-		ActionCommand actual = target.buildActionFromHttpParams(p);
+		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
 		
 		assertEquals(expected, actual);
 	}
@@ -108,7 +108,7 @@ public class ActionBuilderTest {
 		
 		// Compare
 		ActionCommand expected = buildActionCmd(null, "Filter", filter);
-		ActionCommand actual = target.buildActionFromHttpParams(p);
+		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
 		
 		assertEquals(expected, actual);
 	}
@@ -117,7 +117,7 @@ public class ActionBuilderTest {
 	public void httpParamsFilterWithMissingValue() {
 		
 		Map<String, String[]> p = buildHttpParams(null, "Filter.1.Name", "foo");
-		ActionCommand actual = target.buildActionFromHttpParams(p);
+		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
 	}
 
 	// ************************** Building from Http Requests - Multiple Values
@@ -134,7 +134,7 @@ public class ActionBuilderTest {
 		
 		// Compare
 		ActionCommand expected = buildActionCmd(null, "Foo", values);
-		ActionCommand actual = target.buildActionFromHttpParams(p);
+		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
 		
 		//Util.printObjectDiffToConsole(expected, actual);
 		assertEquals(expected, actual);

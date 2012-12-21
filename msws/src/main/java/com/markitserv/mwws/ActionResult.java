@@ -1,5 +1,5 @@
 package com.markitserv.mwws;
 
-public class Response {
+public class ActionResult {
 
 }

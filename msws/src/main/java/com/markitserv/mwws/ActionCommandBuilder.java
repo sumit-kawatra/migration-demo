@@ -14,9 +14,9 @@ import com.markitserv.mwws.exceptions.MalformedFiltersException;
 import com.markitserv.mwws.exceptions.MultipleParameterValuesException;
 
 @Service
-public class ActionBuilder {
+public class ActionCommandBuilder {
 
-	public ActionCommand buildActionFromHttpParams(
+	public ActionCommand buildActionCommandFromHttpParams(
 			Map<String, String[]> httpParams) {
 
 		// Need a mutable copy

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-public class ActionCommand {
+public class ActionCommand implements ReqRespCommand {
 	
 	private String action;
 	private Map<String, Object> params;
