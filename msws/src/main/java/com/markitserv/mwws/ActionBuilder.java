@@ -1,45 +1,59 @@
 package com.markitserv.mwws;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+
+import com.markitserv.mwws.exceptions.ActionParamMissingException;
+import com.markitserv.mwws.exceptions.MalformedFiltersException;
+import com.markitserv.mwws.exceptions.MultipleParameterValuesException;
 
 @Service
 public class ActionBuilder {
-	
+
 	public ActionCommand buildActionFromHttpParams(
 			Map<String, String[]> httpParams) {
 
 		// Need a mutable copy
 		HashMap<String, String[]> params = new HashMap<String, String[]>(
 				httpParams);
-		
+
 		Map<String, List<String>> filters = processFilterParams(params);
-		
+
 		String action = null;
 
-		Map processedParams = new HashMap();
+		Map<String, Object> processedParams = new HashMap<String, Object>();
 		for (String key : params.keySet()) {
-			// TODO process other 'list' type params
+
 			String[] valueArr = params.get(key);
-			
+
 			if (valueArr.length != 1) {
 				throw MultipleParameterValuesException.standardException(key);
 			}
-			
+
 			String value = valueArr[0];
-			
+
 			if (key.equals(CommonParamKeys.Action.toString())) {
 				action = value;
 				continue; // so that it's not added to the params
 			}
-			processedParams.put(key, value);
+
+			if (isMultiValue(key)) {
+				processedParams = processParamWithMultipleValues(
+						processedParams, key, value);
+			} else {
+				processedParams.put(key, value);
+			}
 		}
-		
-		// TODO ensure that there's a value
+
+		if (action == null) {
+			throw ActionParamMissingException.standardException();
+		}
 
 		// add the processed filters back as a single param
 		if (filters.size() != 0) {
@@ -47,8 +61,34 @@ public class ActionBuilder {
 		}
 
 		ActionCommand actionCmd = new ActionCommand(action, processedParams);
-		
+
 		return actionCmd;
+	}
+
+	private boolean isMultiValue(String key) {
+		return key.matches("(.*)\\.(\\d+)");
+	}
+
+	private Map<String, Object> processParamWithMultipleValues(
+			Map<String, Object> params, String mValKey, String value) {
+
+		// Strip off the last numbers
+		String key = StringUtils.substringBeforeLast(mValKey, ".");
+		int index = Integer.parseInt(StringUtils.substringAfterLast(mValKey,
+				"."));
+
+		if (!params.containsKey(key)) {
+			ArrayList<String> x = new ArrayList<String>();
+			params.put(key, x);
+		}
+
+		@SuppressWarnings({ "unchecked", "unchecked" })
+		List<String> values = (List<String>) params.get(key);
+		values.add(index - 1, value); // start at zero even though params start @ 1
+
+		params.put(key, values);
+
+		return params;
 	}
 
 	/**

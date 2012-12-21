@@ -23,8 +23,8 @@ import com.markitserv.hawthorne.util.HardcodedData;
 import com.markitserv.mwws.ActionCommand;
 import com.markitserv.mwws.CommonParamKeys;
 import com.markitserv.mwws.ActionBuilder;
-import com.markitserv.mwws.MalformedFiltersException;
-import com.markitserv.mwws.MultipleParameterValuesException;
+import com.markitserv.mwws.exceptions.MalformedFiltersException;
+import com.markitserv.mwws.exceptions.MultipleParameterValuesException;
 
 @Controller
 @RequestMapping(value = "/")

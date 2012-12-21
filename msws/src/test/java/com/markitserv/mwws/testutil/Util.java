@@ -14,6 +14,11 @@ public class Util {
 	 */
 	public static void printObjectDiffToConsole(Object expected, Object actual) {
 		
+		System.out.println("Comparing expected:");
+		System.out.println(expected.toString());
+		System.out.println("with");
+		System.out.println(actual.toString());
+		
 		ObjectDiffer differ = ObjectDifferFactory.getInstance();
 		Node diff = differ.compare(expected, actual);
 		diff.visit(new PrintingVisitor(expected, actual));

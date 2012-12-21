@@ -1,4 +1,5 @@
-package com.markitserv.mwws;
+package com.markitserv.mwws.exceptions;
+
 
 /**
  * @author roy.truelove
