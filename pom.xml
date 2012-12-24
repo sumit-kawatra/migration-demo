@@ -184,8 +184,8 @@
 			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
-		
-		<!--  Does a deep diff of objects -->
+
+		<!-- Does a deep diff of objects -->
 		<dependency>
 			<groupId>de.danielbechler</groupId>
 			<artifactId>java-object-diff</artifactId>
@@ -203,6 +203,15 @@
 					<source>1.6</source>
 					<target>1.6</target>
 					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<packagesheader>myPackageHeader</packagesheader>
+					<aggregate>true</aggregate>
 				</configuration>
 			</plugin>
 		</plugins>

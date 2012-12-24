@@ -3,7 +3,8 @@ package com.markitserv.mwws.exceptions;
 /**
  * Used for unexpected internal states that are the cause of a programming error.
  * Not expected to propegate to the end user, but should be used by the development
- * team for debugging.
+ * team for debugging.  If the error is *not* one that the user can fix, it should throw
+ * this exception or a subclass
  * @author roy.truelove
  *
  */
