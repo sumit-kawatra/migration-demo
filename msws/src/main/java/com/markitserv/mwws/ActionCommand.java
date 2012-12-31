@@ -9,6 +9,10 @@ public class ActionCommand implements ReqRespCommand {
 	private String action;
 	private Map<String, Object> params;
 	
+	/**
+	 * @param action
+	 * @param params
+	 */
 	public ActionCommand(String action, Map<String, Object> params) {
 		super();
 		this.action = action;

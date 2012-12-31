@@ -28,19 +28,18 @@ public class DescribeLegalEntities extends Action {
 		Filters filters = (Filters) f;
 
 		ActionResult res = new ActionResult();
-		res.somestring = filters.substr.get(0);
 		return res;
 	}
 	
 	public class Parameters extends ActionParameters {
-		public String id;
-		public int pageNumber;
-		public int pageSize;
+		private String id;
+		private int pageNumber;
+		private int pageSize;
 	}
 
 	public class Filters extends ActionFilters {
 		
-		@Size(min=1, max=1)
+		@Size(max=1)
 		private List<String> substr;
 
 		public List<String> getSubstr() {
@@ -51,5 +50,4 @@ public class DescribeLegalEntities extends Action {
 			this.substr = substr;
 		}
 	}
-
 }

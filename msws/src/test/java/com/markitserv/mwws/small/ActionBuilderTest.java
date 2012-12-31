@@ -16,7 +16,6 @@ import com.markitserv.mwws.CommonParamKeys;
 import com.markitserv.mwws.exceptions.MalformedFiltersException;
 import com.markitserv.mwws.exceptions.MultipleParameterValuesException;
 import com.markitserv.mwws.exceptions.ActionParamMissingException;
-import com.markitserv.mwws.testutil.Util;
 
 public class ActionBuilderTest {
 

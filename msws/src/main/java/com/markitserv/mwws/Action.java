@@ -1,5 +1,6 @@
 package com.markitserv.mwws;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.markitserv.mwws.exceptions.FilterNotApplicableForActionException;
 import com.markitserv.mwws.exceptions.ProgrammaticException;
 import com.markitserv.mwws.filters.ActionFilters;
+import com.markitserv.mwws.internal.ActionHelper;
 import com.markitserv.mwws.parameters.ActionParameters;
 
 public abstract class Action implements InitializingBean {
@@ -31,22 +33,14 @@ public abstract class Action implements InitializingBean {
 	@Autowired
 	private ActionRegistry actionRegistry;
 
+	@Autowired
+	private ActionHelper helper;
+
 	public ActionResult performAction(ActionCommand command) {
 
 		ActionParameters params = buildParamObjFromCommand(command);
-		ActionFilters filters = buildFilterObjFromCommand(command);
-		
-		// TODO figure out how to inject this w/ Spring
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		Validator validator = factory.getValidator();
-		Set<ConstraintViolation<ActionFilters>> violations = validator.validate(filters);
-		
-		for (ConstraintViolation<ActionFilters> constraintViolation : violations) {
-			ConstraintDescriptor<?> desc = constraintViolation.getConstraintDescriptor();
-			String descStr = ReflectionToStringBuilder.toString(desc);
-			throw new ProgrammaticException(descStr);
-		}
-		
+		ActionFilters filters = buildAndValidateFilterObjFromCommand(command);
+
 		return this.performAction(params, filters);
 
 	}
@@ -56,7 +50,8 @@ public abstract class Action implements InitializingBean {
 		return null;
 	}
 
-	private ActionFilters buildFilterObjFromCommand(ActionCommand command) {
+	private ActionFilters buildAndValidateFilterObjFromCommand(
+			ActionCommand command) {
 		ActionFilters filtersBean = instantiateFiltersClass();
 
 		Map<String, List<String>> filtersFromCommand = (Map<String, List<String>>) command
@@ -68,7 +63,8 @@ public abstract class Action implements InitializingBean {
 			List<String> filterValue = filtersFromCommand.get(filterName);
 
 			try {
-				PropertyUtils.setProperty(filtersBean, filterName, filterValue);
+				PropertyUtils.setProperty(filtersBean, filterName,
+						filterValue);
 			} catch (NoSuchMethodException e) {
 				throw FilterNotApplicableForActionException.standardException(
 						filterName, this.getActionName());
@@ -78,6 +74,22 @@ public abstract class Action implements InitializingBean {
 						e, filterName, filtersBean.getClass()
 								.getCanonicalName());
 			}
+		}
+
+		// TODO figure out how to inject this w/ Spring
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		Set<ConstraintViolation<ActionFilters>> violations = validator
+				.validate(filtersBean);
+		
+		validator.vali
+
+		for (ConstraintViolation<ActionFilters> constraintViolation : violations) {
+			// TODO throw something that makes sense
+			ConstraintDescriptor<?> desc = constraintViolation
+					.getConstraintDescriptor();
+			String descStr = ReflectionToStringBuilder.toString(desc);
+			throw new ProgrammaticException(descStr);
 		}
 
 		return filtersBean;
@@ -94,6 +106,7 @@ public abstract class Action implements InitializingBean {
 		return (ActionFilters) this.instantiateInnerClass(FILTERS_CLASS_NAME);
 	}
 
+	// TODO refactor this to ActionHelper and unit test
 	private Object instantiateInnerClass(String innerClassName) {
 
 		Object innerClassInst = null;
@@ -135,6 +148,7 @@ public abstract class Action implements InitializingBean {
 
 	/**
 	 * Where all the fun happens
+	 * 
 	 * @param params
 	 * @param filters
 	 * @return
