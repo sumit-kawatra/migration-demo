@@ -72,12 +72,6 @@
 				<version>${spring.security.version}</version>
 			</dependency>
 
-			<!-- Required for Spring MVC -->
-			<dependency>
-				<groupId>javax.validation</groupId>
-				<artifactId>validation-api</artifactId>
-				<version>${validation.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>jcl-over-slf4j</artifactId>
@@ -97,12 +91,16 @@
 				<version>${logback.version}</version>
 			</dependency>
 
-			<!-- Hibernate validator. Needed for MVC even though we might or might 
-				not use hibernate -->
+			<!--  Validation -->
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-validator</artifactId>
-				<version></version>
+				<version>${hibernate-validation.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.validation</groupId>
+				<artifactId>validation-api</artifactId>
+				<version>${validation.version}</version>
 			</dependency>
 
 			<!-- Jackson, for JSON conversion -->

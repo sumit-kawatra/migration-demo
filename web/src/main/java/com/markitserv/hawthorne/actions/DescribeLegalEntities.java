@@ -11,10 +11,7 @@ import com.markitserv.mwws.ActionCommand;
 import com.markitserv.mwws.ActionResult;
 import com.markitserv.mwws.exceptions.ProgrammaticException;
 import com.markitserv.mwws.filters.ActionFilters;
-import com.markitserv.mwws.filters.TextSearchable;
 import com.markitserv.mwws.parameters.ActionParameters;
-import com.markitserv.mwws.parameters.HasIdentity;
-import com.markitserv.mwws.parameters.HasPagination;
 
 @Service
 /**
@@ -24,20 +21,22 @@ import com.markitserv.mwws.parameters.HasPagination;
  */
 public class DescribeLegalEntities extends Action {
 
-	public class Parameters extends ActionParameters implements HasIdentity,
-			HasPagination {
+	public class Parameters extends ActionParameters {
+		public String id;
+		public int pageNumber;
+		public int pageSize;
 	}
 
-	public class Filters extends ActionFilters implements TextSearchable {
-
+	public class Filters extends ActionFilters {
+		
 		private List<String> substr;
 
 		public List<String> getSubstr() {
-			return this.substr;
+			return substr;
 		}
 
-		public void setSubstr(List<String> str) {
-			this.substr = str;
+		public void setSubstr(List<String> substr) {
+			this.substr = substr;
 		}
 	}
 
@@ -46,7 +45,7 @@ public class DescribeLegalEntities extends Action {
 		Filters filters = (Filters) f;
 
 		ActionResult res = new ActionResult();
-		res.somestring = filters.getSubstr().get(0);
+		res.somestring = filters.substr.get(0);
 		return res;
 	}
 }
