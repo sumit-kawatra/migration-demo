@@ -3,6 +3,8 @@ package com.markitserv.hawthorne.actions;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.constraints.Size;
+
 import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.actions.DescribeLegalEntities.Filters;
@@ -21,6 +23,15 @@ import com.markitserv.mwws.parameters.ActionParameters;
  */
 public class DescribeLegalEntities extends Action {
 
+	@Override
+	protected ActionResult performAction(ActionParameters p, ActionFilters f) {
+		Filters filters = (Filters) f;
+
+		ActionResult res = new ActionResult();
+		res.somestring = filters.substr.get(0);
+		return res;
+	}
+	
 	public class Parameters extends ActionParameters {
 		public String id;
 		public int pageNumber;
@@ -29,6 +40,7 @@ public class DescribeLegalEntities extends Action {
 
 	public class Filters extends ActionFilters {
 		
+		@Size(min=1, max=1)
 		private List<String> substr;
 
 		public List<String> getSubstr() {
@@ -40,12 +52,4 @@ public class DescribeLegalEntities extends Action {
 		}
 	}
 
-	@Override
-	protected ActionResult performAction(ActionParameters p, ActionFilters f) {
-		Filters filters = (Filters) f;
-
-		ActionResult res = new ActionResult();
-		res.somestring = filters.substr.get(0);
-		return res;
-	}
 }

@@ -4,9 +4,18 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import javax.validation.metadata.ConstraintDescriptor;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.beanutils.PropertyUtilsBean;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.springframework.aop.SpringProxy;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,7 +35,18 @@ public abstract class Action implements InitializingBean {
 
 		ActionParameters params = buildParamObjFromCommand(command);
 		ActionFilters filters = buildFilterObjFromCommand(command);
-
+		
+		// TODO figure out how to inject this w/ Spring
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		Set<ConstraintViolation<ActionFilters>> violations = validator.validate(filters);
+		
+		for (ConstraintViolation<ActionFilters> constraintViolation : violations) {
+			ConstraintDescriptor<?> desc = constraintViolation.getConstraintDescriptor();
+			String descStr = ReflectionToStringBuilder.toString(desc);
+			throw new ProgrammaticException(descStr);
+		}
+		
 		return this.performAction(params, filters);
 
 	}
@@ -113,6 +133,12 @@ public abstract class Action implements InitializingBean {
 		return innerClassInst;
 	}
 
+	/**
+	 * Where all the fun happens
+	 * @param params
+	 * @param filters
+	 * @return
+	 */
 	protected abstract ActionResult performAction(ActionParameters params,
 			ActionFilters filters);
 
