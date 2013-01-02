@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.markitserv.hawthorne.security;
+package com.markitserv.hawthorne.disabled;
 
 import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;

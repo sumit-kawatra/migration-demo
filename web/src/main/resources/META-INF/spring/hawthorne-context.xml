@@ -23,11 +23,6 @@
 	<context:component-scan base-package="com.markitserv.hawthorne.web" />
 	<context:component-scan base-package="com.markitserv.mwws" />
 
-	<bean id="expressionHandler"
-		class="com.markitserv.hawthorne.security.MyCustomSecurityExpressionHandler">
-		<!-- <property name="permissionEvaluator" ref="permissionEvaluator"/> -->
-	</bean>
-	<!-- <bean id="permissionEvaluator" class="org.borislam.security.BasePermissionEvaluator"/> -->
 	<bean id="HawthorneObjectMapper" class="com.markitserv.hawthorne.util.HawthorneObjectMapper">
 		<property name="serializationInclusion" value="NON_NULL"></property>
 	</bean>

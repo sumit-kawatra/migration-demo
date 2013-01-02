@@ -1,4 +1,4 @@
-package com.markitserv.mwws;
+package com.markitserv.mwws.command;
 
 public interface Command {
 	

@@ -10,23 +10,37 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import com.markitserv.mwws.ActionCommandBuilder;
-import com.markitserv.mwws.ActionCommand;
-import com.markitserv.mwws.CommonParamKeys;
+import com.markitserv.mwws.action.ActionCommand;
+import com.markitserv.mwws.action.ActionFilters;
+import com.markitserv.mwws.action.ActionParameters;
+import com.markitserv.mwws.action.CommonParamKeys;
 import com.markitserv.mwws.exceptions.MalformedFiltersException;
 import com.markitserv.mwws.exceptions.MultipleParameterValuesException;
 import com.markitserv.mwws.exceptions.ActionParamMissingException;
+import com.markitserv.mwws.internal.DebugUtils;
+import com.markitserv.mwws.web.HttpParamsToActionCommand;
 
-public class ActionBuilderTest {
+public class HttpParamsToActionCommandTest {
 
-	private ActionCommandBuilder target;
 	private static final String ACTION_PARAM_NAME = CommonParamKeys.Action
 			.toString();
 	private static final String ACTION_NAME = "SomeAction";
 
+	private HttpParamsToActionCommand target;
+	private ActionCommand expectedActionCommand;
+
 	@Before
 	public void setupEach() {
-		target = new ActionCommandBuilder();
+		target = new HttpParamsToActionCommand();
+		
+		// Create a new empty ActionCommand that's populated by each test
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		ActionParameters params = new ActionParameters(paramMap);
+		
+		Map<String, List<String>> filtersMap = new HashMap<String, List<String>>();
+		ActionFilters filters = new ActionFilters(filtersMap);
+		
+		expectedActionCommand = new ActionCommand(ACTION_NAME, params, filters);
 	}
 
 	// ************************** Building from Http Requests
@@ -36,11 +50,11 @@ public class ActionBuilderTest {
 
 		Map<String, String[]> p = buildHttpParams(null, "Foo", "Bar");
 
-		ActionCommand expected = buildActionCmd(null, "Foo", "Bar");
+		expectedActionCommand.getParameters().addParameter("Foo", "Bar");
 		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
 
 		// Util.printObjectDiffToConsole(expected, actual);
-		assertEquals(expected, actual);
+		assertEquals(expectedActionCommand, actual);
 	}
 
 	@Test(expected = MultipleParameterValuesException.class)
@@ -51,94 +65,85 @@ public class ActionBuilderTest {
 		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
 	}
 
-	@Test(expected=ActionParamMissingException.class)
-	public void httpParamsWithMissingAction() {
-		
+	@Test(expected = ActionParamMissingException.class)
+	public void httpParamsFailsWithMissingAction() {
+
 		Map<String, String[]> p = buildHttpParams(null, "Foo", "Bar");
-		
+
 		// remove action
 		p.remove(ACTION_PARAM_NAME);
-		
+
 		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
 	}
 
 	// ************************** Building from Http Requests - Filters
-		
+
 	@Test
 	public void canBuildFromHttpParamsWithBasicFilters() {
-		
+
 		Map<String, String[]> p = buildHttpParams(null, "Filter.1.Name", "foo");
 		p = buildHttpParams(p, "Filter.1.Value.1", "bar");
 		p = buildHttpParams(p, "Filter.2.Name", "boo");
 		p = buildHttpParams(p, "Filter.2.Value.1", "baz");
-		
-		// build filters
-		Map<String, List<String>> filter = new HashMap<String, List<String>>();
-		
+
 		List<String> values1 = new ArrayList<String>();
 		values1.add("bar");
-		filter.put("foo", values1);
-		
+		expectedActionCommand.getFilters().addFilter("foo", values1);
+
 		List<String> values2 = new ArrayList<String>();
 		values2.add("baz");
-		filter.put("boo", values2);
-		
+		expectedActionCommand.getFilters().addFilter("boo", values2);
+
 		// Compare
-		ActionCommand expected = buildActionCmd(null, "Filter", filter);
 		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
-		
-		assertEquals(expected, actual);
+		assertEquals(expectedActionCommand, actual);
 	}
 
 	@Test
 	public void canBuildFromHttpParamsWithFilterWithMultipleValues() {
-		
+
 		Map<String, String[]> p = buildHttpParams(null, "Filter.1.Name", "foo");
 		p = buildHttpParams(p, "Filter.1.Value.1", "bar");
 		p = buildHttpParams(p, "Filter.1.Value.2", "baz");
-		
-		// build filters
-		Map<String, List<String>> filter = new HashMap<String, List<String>>();
-		
+
 		List<String> values1 = new ArrayList<String>();
 		values1.add("bar");
 		values1.add("baz");
-		filter.put("foo", values1);
-		
+		expectedActionCommand.getFilters().addFilter("foo", values1);
+
 		// Compare
-		ActionCommand expected = buildActionCmd(null, "Filter", filter);
 		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
 		
-		assertEquals(expected, actual);
+		assertEquals(expectedActionCommand, actual);
 	}
 
 	@Test(expected = MalformedFiltersException.class)
-	public void httpParamsFilterWithMissingValue() {
-		
+	public void httpParamsFilterFailsWithMissingValue() {
+
 		Map<String, String[]> p = buildHttpParams(null, "Filter.1.Name", "foo");
 		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
 	}
 
 	// ************************** Building from Http Requests - Multiple Values
-	
+
 	@Test
 	public void httpParamsFilterWithMultipleValuesForParam() {
-		
+
 		Map<String, String[]> p = buildHttpParams(null, "Foo.1", "bar");
 		p = buildHttpParams(p, "Foo.2", "baz");
-		
+
 		List<String> values = new ArrayList<String>();
 		values.add("bar");
 		values.add("baz");
-		
+
 		// Compare
-		ActionCommand expected = buildActionCmd(null, "Foo", values);
+		expectedActionCommand.getParameters().addParameter("Foo", values);
 		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
-		
-		//Util.printObjectDiffToConsole(expected, actual);
-		assertEquals(expected, actual);
+
+		// Util.printObjectDiffToConsole(expected, actual);
+		assertEquals(expectedActionCommand, actual);
 	}
-	
+
 	@Test
 	@Ignore
 	public void httpParamsFilterWithMultipleValueObjectsForParam() {
@@ -166,24 +171,5 @@ public class ActionBuilderTest {
 		p.put(key, value);
 
 		return p;
-	}
-
-	private ActionCommand buildActionCmd(ActionCommand cmd, String key,
-			Object value) {
-
-		Map<String, Object> p;
-
-		if (cmd == null) {
-			p = new HashMap<String, Object>();
-			cmd = new ActionCommand(ACTION_NAME, p);
-		} else {
-			p = cmd.getParams();
-		}
-
-		p.put(key, value);
-
-		cmd.setParams(p);
-
-		return cmd;
 	}
 }

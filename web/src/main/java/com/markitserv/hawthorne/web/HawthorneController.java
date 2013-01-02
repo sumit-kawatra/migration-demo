@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
-import com.markitserv.mwws.ActionCommand;
-import com.markitserv.mwws.ActionCommandBuilder;
-import com.markitserv.mwws.ActionResult;
-import com.markitserv.mwws.CommandDispatcher;
+import com.markitserv.mwws.action.ActionCommand;
+import com.markitserv.mwws.action.ActionResult;
+import com.markitserv.mwws.command.CommandDispatcher;
+import com.markitserv.mwws.web.HttpParamsToActionCommand;
 
 @Controller
 @RequestMapping(value = "/")
 public class HawthorneController {
 
 	@Autowired
-	private ActionCommandBuilder actionCmdBuilder;
+	private HttpParamsToActionCommand actionCmdBuilder;
 	@Autowired
 	private CommandDispatcher dispatcher;
 

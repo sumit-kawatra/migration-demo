@@ -1,4 +1,4 @@
-package com.markitserv.mwws;
+package com.markitserv.mwws.action;
 
 import java.util.HashMap;
 import java.util.Map;

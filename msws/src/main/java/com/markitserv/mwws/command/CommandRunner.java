@@ -1,4 +1,5 @@
-package com.markitserv.mwws;
+package com.markitserv.mwws.command;
+
 
 /**
  * All CommandRunners should subclass this class

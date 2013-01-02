@@ -1,4 +1,4 @@
-package com.markitserv.mwws;
+package com.markitserv.mwws.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,12 +9,21 @@ import java.util.Stack;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import com.markitserv.mwws.action.ActionCommand;
+import com.markitserv.mwws.action.ActionFilters;
+import com.markitserv.mwws.action.ActionParameters;
+import com.markitserv.mwws.action.CommonParamKeys;
 import com.markitserv.mwws.exceptions.ActionParamMissingException;
 import com.markitserv.mwws.exceptions.MalformedFiltersException;
 import com.markitserv.mwws.exceptions.MultipleParameterValuesException;
 
+/**
+ * Builds an ActionCommand from HTTP paramas.
+ * @author roy.truelove
+ *
+ */
 @Service
-public class ActionCommandBuilder {
+public class HttpParamsToActionCommand {
 
 	public ActionCommand buildActionCommandFromHttpParams(
 			Map<String, String[]> httpParams) {
@@ -23,11 +32,11 @@ public class ActionCommandBuilder {
 		HashMap<String, String[]> params = new HashMap<String, String[]>(
 				httpParams);
 
-		Map<String, List<String>> filters = processFilterParams(params);
+		ActionFilters filters = processFilterParams(params);
 
 		String action = null;
 
-		Map<String, Object> processedParams = new HashMap<String, Object>();
+		Map<String, Object> processedParamsMap = new HashMap<String, Object>();
 		for (String key : params.keySet()) {
 
 			String[] valueArr = params.get(key);
@@ -44,23 +53,19 @@ public class ActionCommandBuilder {
 			}
 
 			if (isMultiValue(key)) {
-				processedParams = processParamWithMultipleValues(
-						processedParams, key, value);
+				processedParamsMap = processParamWithMultipleValues(
+						processedParamsMap, key, value);
 			} else {
-				processedParams.put(key, value);
+				processedParamsMap.put(key, value);
 			}
 		}
 
 		if (action == null) {
 			throw ActionParamMissingException.standardException();
 		}
-
-		// add the processed filters back as a single param
-		if (filters.size() != 0) {
-			processedParams.put(CommonParamKeys.Filter.toString(), filters);
-		}
-
-		ActionCommand actionCmd = new ActionCommand(action, processedParams);
+		
+		ActionParameters actionParams = new ActionParameters(processedParamsMap);
+		ActionCommand actionCmd = new ActionCommand(action, actionParams, filters);
 
 		return actionCmd;
 	}
@@ -99,10 +104,10 @@ public class ActionCommandBuilder {
 	 * @param params
 	 * @return
 	 */
-	private Map<String, List<String>> processFilterParams(
+	private ActionFilters processFilterParams(
 			HashMap<String, String[]> params) {
 
-		Map<String, List<String>> filters = new HashMap<String, List<String>>();
+		Map<String, List<String>> filtersMap = new HashMap<String, List<String>>();
 
 		int nameCounter = 0;
 		boolean stillHaveFilters = true;
@@ -133,13 +138,15 @@ public class ActionCommandBuilder {
 							"Filter number '%d' has no values", nameCounter));
 				}
 
-				filters.put(filterName, allValues);
+				filtersMap.put(filterName, allValues);
 
 			} else {
 				stillHaveFilters = false;
 			}
 
 		} while (stillHaveFilters);
+		
+		ActionFilters filters = new ActionFilters(filtersMap);
 
 		return filters;
 	}

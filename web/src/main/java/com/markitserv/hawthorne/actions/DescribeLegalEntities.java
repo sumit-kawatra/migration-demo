@@ -5,15 +5,16 @@ import java.util.Set;
 
 import javax.validation.constraints.Size;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.markitserv.hawthorne.actions.DescribeLegalEntities.Filters;
-import com.markitserv.mwws.Action;
-import com.markitserv.mwws.ActionCommand;
-import com.markitserv.mwws.ActionResult;
+import com.markitserv.hawthorne.util.HardcodedData;
+import com.markitserv.mwws.action.Action;
+import com.markitserv.mwws.action.ActionCommand;
+import com.markitserv.mwws.action.ActionFilters;
+import com.markitserv.mwws.action.ActionParameters;
+import com.markitserv.mwws.action.ActionResult;
 import com.markitserv.mwws.exceptions.ProgrammaticException;
-import com.markitserv.mwws.filters.ActionFilters;
-import com.markitserv.mwws.parameters.ActionParameters;
 
 @Service
 /**
@@ -22,32 +23,15 @@ import com.markitserv.mwws.parameters.ActionParameters;
  *
  */
 public class DescribeLegalEntities extends Action {
+	
+	@Autowired
+	private HardcodedData data;
 
 	@Override
 	protected ActionResult performAction(ActionParameters p, ActionFilters f) {
-		Filters filters = (Filters) f;
-
-		ActionResult res = new ActionResult();
-		return res;
-	}
-	
-	public class Parameters extends ActionParameters {
-		private String id;
-		private int pageNumber;
-		private int pageSize;
-	}
-
-	public class Filters extends ActionFilters {
 		
-		@Size(max=1)
-		private List<String> substr;
-
-		public List<String> getSubstr() {
-			return substr;
-		}
-
-		public void setSubstr(List<String> substr) {
-			this.substr = substr;
-		}
+		ActionResult res = new ActionResult();
+		res.setCollection(data.getLegalEntities());
+		return res;
 	}
 }

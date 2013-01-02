@@ -21,10 +21,10 @@ public class DebugUtils {
 	 */
 	public static void printObjectDiffToConsole(Object expected, Object actual) {
 
-		System.out.println("Comparing expected:");
-		System.out.println(expected.toString());
-		System.out.println("with");
-		System.out.println(actual.toString());
+		System.err.println("Comparing expected:");
+		System.err.println(expected.toString());
+		System.err.println("with");
+		System.err.println(actual.toString());
 
 		ObjectDiffer differ = ObjectDifferFactory.getInstance();
 		Node diff = differ.compare(expected, actual);
@@ -32,8 +32,17 @@ public class DebugUtils {
 
 	}
 
-	public static String objectDumper(Object obj) {
+	/**
+	 * Modeled after perl's Data::Dumper
+	 * @param obj
+	 * @return
+	 */
+	public static String dumper(Object obj) {
 		return ReflectionToStringBuilder.toString(obj,
 				ToStringStyle.MULTI_LINE_STYLE);
+	}
+	
+	public static void printDumperToConsole(Object obj) {
+		System.err.println(dumper(obj));
 	}
 }

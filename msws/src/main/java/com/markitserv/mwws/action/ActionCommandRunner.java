@@ -1,7 +1,10 @@
-package com.markitserv.mwws;
+package com.markitserv.mwws.action;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.markitserv.mwws.command.Command;
+import com.markitserv.mwws.command.CommandRunner;
 
 @Service
 public class ActionCommandRunner extends CommandRunner {
@@ -10,13 +13,10 @@ public class ActionCommandRunner extends CommandRunner {
 	private ActionRegistry registry;
 
 	@Override
-	protected Object run(Command cmd) {
-		
+	public Object run(Command cmd) {
 		ActionCommand aCmd = (ActionCommand)cmd;
 		String actionName = aCmd.getAction();
 		Action action = registry.getActionWithName(actionName);
 		return action.performAction(aCmd);
-		
-		
 	}
 }
