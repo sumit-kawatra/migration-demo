@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.markitserv.mwws.action.Action;
+import com.markitserv.mwws.action.AbstractAction;
 import com.markitserv.mwws.action.ActionRegistry;
 import com.markitserv.mwws.exceptions.UnknownActionException;
 
@@ -22,16 +22,16 @@ public class ActionRegistryTest {
 	@Test
 	public void canAddActionToRegistry() {
 		
-		Action expected = Mockito.mock(Action.class);
+		AbstractAction expected = Mockito.mock(AbstractAction.class);
 		target.registerAction("someAction", expected);
 		
-		Action actual = target.getActionWithName("someAction");
+		AbstractAction actual = target.getActionWithName("someAction");
 		
 		assertEquals(expected, actual);
 	}
 
 	@Test(expected=UnknownActionException.class)
 	public void missingActionFails() {
-		Action actual = target.getActionWithName("someAction");
+		AbstractAction actual = target.getActionWithName("someAction");
 	}
 } 

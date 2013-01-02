@@ -19,8 +19,9 @@ import com.markitserv.mwws.exceptions.MultipleParameterValuesException;
 
 /**
  * Builds an ActionCommand from HTTP paramas.
+ * 
  * @author roy.truelove
- *
+ * 
  */
 @Service
 public class HttpParamsToActionCommand {
@@ -63,9 +64,10 @@ public class HttpParamsToActionCommand {
 		if (action == null) {
 			throw ActionParamMissingException.standardException();
 		}
-		
+
 		ActionParameters actionParams = new ActionParameters(processedParamsMap);
-		ActionCommand actionCmd = new ActionCommand(action, actionParams, filters);
+		ActionCommand actionCmd = new ActionCommand(action, actionParams,
+				filters);
 
 		return actionCmd;
 	}
@@ -82,6 +84,9 @@ public class HttpParamsToActionCommand {
 		int index = Integer.parseInt(StringUtils.substringAfterLast(mValKey,
 				"."));
 
+		// populate the list @ zero even though we get '1' from the filter
+		index = index - 1;
+
 		if (!params.containsKey(key)) {
 			ArrayList<String> x = new ArrayList<String>();
 			params.put(key, x);
@@ -89,8 +94,16 @@ public class HttpParamsToActionCommand {
 
 		@SuppressWarnings({ "unchecked", "unchecked" })
 		List<String> values = (List<String>) params.get(key);
-		values.add(index - 1, value); // start at zero even though params start @ 1
 
+		// pad everything before the index with null values, since we don't
+		// always start at zero
+		if (values.size() < index) {
+			for (int i = 0; i <= index; i++) {
+				values.add(i, null);
+			}
+		}
+
+		values.set(index, value);
 		params.put(key, values);
 
 		return params;
@@ -104,8 +117,7 @@ public class HttpParamsToActionCommand {
 	 * @param params
 	 * @return
 	 */
-	private ActionFilters processFilterParams(
-			HashMap<String, String[]> params) {
+	private ActionFilters processFilterParams(HashMap<String, String[]> params) {
 
 		Map<String, List<String>> filtersMap = new HashMap<String, List<String>>();
 
@@ -145,7 +157,7 @@ public class HttpParamsToActionCommand {
 			}
 
 		} while (stillHaveFilters);
-		
+
 		ActionFilters filters = new ActionFilters(filtersMap);
 
 		return filters;

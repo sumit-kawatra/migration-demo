@@ -46,7 +46,7 @@ public class HttpParamsToActionCommandTest {
 	// ************************** Building from Http Requests
 
 	@Test
-	public void canBuildFromHttpParamsWithActionAndOneSimpleParam() {
+	public void actionAndOneSimpleParam() {
 
 		Map<String, String[]> p = buildHttpParams(null, "Foo", "Bar");
 
@@ -58,7 +58,7 @@ public class HttpParamsToActionCommandTest {
 	}
 
 	@Test(expected = MultipleParameterValuesException.class)
-	public void httpParamsWithDupedParamsFail() {
+	public void dupedParamFails() {
 
 		String[] values = { "Bar", "Baz" };
 		Map<String, String[]> p = buildHttpParamsWithArray(null, "Foo", values);
@@ -66,7 +66,7 @@ public class HttpParamsToActionCommandTest {
 	}
 
 	@Test(expected = ActionParamMissingException.class)
-	public void httpParamsFailsWithMissingAction() {
+	public void missingActionFails() {
 
 		Map<String, String[]> p = buildHttpParams(null, "Foo", "Bar");
 
@@ -79,7 +79,7 @@ public class HttpParamsToActionCommandTest {
 	// ************************** Building from Http Requests - Filters
 
 	@Test
-	public void canBuildFromHttpParamsWithBasicFilters() {
+	public void basicFilters() {
 
 		Map<String, String[]> p = buildHttpParams(null, "Filter.1.Name", "foo");
 		p = buildHttpParams(p, "Filter.1.Value.1", "bar");
@@ -100,7 +100,7 @@ public class HttpParamsToActionCommandTest {
 	}
 
 	@Test
-	public void canBuildFromHttpParamsWithFilterWithMultipleValues() {
+	public void filterWithMultipleValues() {
 
 		Map<String, String[]> p = buildHttpParams(null, "Filter.1.Name", "foo");
 		p = buildHttpParams(p, "Filter.1.Value.1", "bar");
@@ -118,7 +118,7 @@ public class HttpParamsToActionCommandTest {
 	}
 
 	@Test(expected = MalformedFiltersException.class)
-	public void httpParamsFilterFailsWithMissingValue() {
+	public void filterWithMissingValueFails() {
 
 		Map<String, String[]> p = buildHttpParams(null, "Filter.1.Name", "foo");
 		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
@@ -127,7 +127,7 @@ public class HttpParamsToActionCommandTest {
 	// ************************** Building from Http Requests - Multiple Values
 
 	@Test
-	public void httpParamsFilterWithMultipleValuesForParam() {
+	public void paramWithMultipleValues() {
 
 		Map<String, String[]> p = buildHttpParams(null, "Foo.1", "bar");
 		p = buildHttpParams(p, "Foo.2", "baz");
@@ -144,9 +144,17 @@ public class HttpParamsToActionCommandTest {
 		assertEquals(expectedActionCommand, actual);
 	}
 
+	/**
+	 * eg :
+	 * someItem.1.someItemProp=foo
+	 * someItem.1.anotherItemProp=bar
+	 * someItem.2.someItemProp=boo
+	 * someItem.2.anotherItemProp=baz
+	 * 
+	 */
 	@Test
 	@Ignore
-	public void httpParamsFilterWithMultipleValueObjectsForParam() {
+	public void paramWithMultipleValueObjects() {
 		// Not yet implemented, but must be at some point
 	}
 

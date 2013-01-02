@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.markitserv.mwws.exceptions.ProgrammaticException;
 import com.markitserv.mwws.internal.UuidGenerator;
 
-public abstract class Action implements InitializingBean {
+public abstract class AbstractAction implements InitializingBean {
 
 	@Autowired
 	private ActionRegistry actionRegistry;

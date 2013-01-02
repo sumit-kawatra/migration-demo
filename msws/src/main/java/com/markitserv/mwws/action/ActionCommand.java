@@ -4,6 +4,7 @@ import com.markitserv.mwws.command.ReqRespCommand;
 
 public class ActionCommand implements ReqRespCommand {
 	
+	private static final long serialVersionUID = 1L;
 	private String action;
 	private ActionParameters params;
 	private ActionFilters filters;

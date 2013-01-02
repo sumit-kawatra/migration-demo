@@ -15,9 +15,9 @@ import com.markitserv.mwws.exceptions.UnknownActionException;
 @Service
 public class ActionRegistry {
 	
-	Map<String, Action> registry = new HashMap<String, Action>();
+	Map<String, AbstractAction> registry = new HashMap<String, AbstractAction>();
 	
-	public Action getActionWithName(String name) {
+	public AbstractAction getActionWithName(String name) {
 		
 		if (!registry.containsKey(name)) {
 			throw UnknownActionException.standardException(name);
@@ -26,7 +26,7 @@ public class ActionRegistry {
 		return registry.get(name);
 	}
 	
-	public void registerAction(String name, Action action) {
+	public void registerAction(String name, AbstractAction action) {
 		registry.put(name, action);
 	}
 }

@@ -1,4 +1,4 @@
-package com.markitserv.hawthorne.web;
+package com.markitserv.mwws.web;
 
 import java.util.Map;
 import org.slf4j.Logger;
@@ -17,14 +17,14 @@ import com.markitserv.mwws.web.HttpParamsToActionCommand;
 
 @Controller
 @RequestMapping(value = "/")
-public class HawthorneController {
+public class MwwsController {
 
 	@Autowired
 	private HttpParamsToActionCommand actionCmdBuilder;
 	@Autowired
 	private CommandDispatcher dispatcher;
 
-	Logger log = LoggerFactory.getLogger(HawthorneController.class);
+	Logger log = LoggerFactory.getLogger(MwwsController.class);
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public @ResponseBody

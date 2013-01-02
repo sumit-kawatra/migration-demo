@@ -6,7 +6,7 @@ package com.markitserv.mwws.command;
  * @author roy.truelove
  *
  */
-public abstract class CommandRunner {
+public abstract class AbstractCommandRunner {
 
 	/**
 	 * Runs the command.  Async commands should return null.
