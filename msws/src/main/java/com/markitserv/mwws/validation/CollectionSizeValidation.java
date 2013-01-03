@@ -5,14 +5,14 @@ import java.util.Map;
 
 import com.markitserv.mwws.exceptions.ProgrammaticException;
 
-public class SizeValidation implements Validation {
+public class CollectionSizeValidation implements Validation {
 
 	public static final int UNLIMITED = -1;
 
 	private int max = UNLIMITED;
 	private int min = UNLIMITED;
 
-	public SizeValidation(int min, int max) {
+	public CollectionSizeValidation(int min, int max) {
 		super();
 		this.max = max;
 		this.min = min;
@@ -22,9 +22,13 @@ public class SizeValidation implements Validation {
 	public ValidationResponse isValid(Object target,
 			Map<String, ? extends Object> map) {
 
-		if (!(target instanceof Collection<?>)) {
-			return ValidationResponse
-					.createInvalidResponse("Expected a collection");
+		if (target == null) {
+			return ValidationResponse.createValidResponse();
+		}
+		
+		ValidationResponse isCollection = new CollectionValidation().isValid(target, map);
+		if (!isCollection.isValid()) {
+			return isCollection;
 		}
 
 		Collection<?> col = (Collection<?>) target;

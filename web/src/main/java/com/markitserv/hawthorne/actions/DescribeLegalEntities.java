@@ -9,9 +9,12 @@ import com.markitserv.mwws.action.ActionFilters;
 import com.markitserv.mwws.action.ActionParameters;
 import com.markitserv.mwws.action.ActionResult;
 import com.markitserv.mwws.definition.ParamsAndFiltersDefinition;
+import com.markitserv.mwws.validation.CollectionValidation;
+import com.markitserv.mwws.validation.ForEachValidator;
+import com.markitserv.mwws.validation.IntegerValidation;
 import com.markitserv.mwws.validation.OptionalValidation;
 import com.markitserv.mwws.validation.RequiredValidation;
-import com.markitserv.mwws.validation.SizeValidation;
+import com.markitserv.mwws.validation.CollectionSizeValidation;
 
 @Service
 /**
@@ -30,14 +33,19 @@ public class DescribeLegalEntities extends AbstractAction {
 		// Add validation
 		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
 
-		def.addValidation("foo",
-				new SizeValidation(1, SizeValidation.UNLIMITED));
-		def.addValidation("foo",
-				new RequiredValidation());
-		def.addValidation("be",
-				new RequiredValidation());
-		def.addValidation("bar",
-				new OptionalValidation());
+		def.addValidation("foo", new RequiredValidation());
+		def.addValidation("foo", new CollectionSizeValidation(1,
+				CollectionSizeValidation.UNLIMITED));
+		
+		def.addValidation("be", new RequiredValidation());
+		def.addValidation("be", new CollectionValidation());
+		def.addValidation("be", new ForEachValidator(new IntegerValidation()));
+		def.addValidation("be", new CollectionSizeValidation(1,
+				CollectionSizeValidation.UNLIMITED));
+		
+		def.addValidation("bar", new OptionalValidation());
+		def.addValidation("bar", new IntegerValidation());
+		
 		return def;
 	}
 
