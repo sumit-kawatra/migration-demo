@@ -16,6 +16,10 @@ public class ActionParameters {
 	public void addParameter(String key, Object value) {
 		params.put(key, value);
 	}
+	
+	public Map<String, Object> getAllParameters() {
+		return params;
+	}
 
 	@Override
 	public int hashCode() {

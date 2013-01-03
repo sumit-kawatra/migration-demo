@@ -9,15 +9,15 @@ import com.markitserv.mwws.exceptions.AssertionException;
  */
 public class MwwsAssert {
 	
-	static void mwwsAssert(boolean exp) {
+	static public void mwwsAssert(boolean exp) {
 		mwwsAssert(exp, null);
 	}
 	
-	static void mwwsAssert(boolean exp, String message) {
+	static public void mwwsAssert(boolean exp, String message) {
 		mwwsAssert(exp, message, new Object[0]);
 	}
 	
-	static void mwwsAssert(boolean exp, String message, Object... args) {
+	static public void mwwsAssert(boolean exp, String message, Object... args) {
 		
 		String fullMsg = "Assertion failed";
 		if (message != null) {

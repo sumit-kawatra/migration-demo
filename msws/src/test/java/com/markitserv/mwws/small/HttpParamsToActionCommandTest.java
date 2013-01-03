@@ -10,6 +10,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
 import com.markitserv.mwws.action.ActionCommand;
 import com.markitserv.mwws.action.ActionFilters;
 import com.markitserv.mwws.action.ActionParameters;
@@ -140,7 +141,25 @@ public class HttpParamsToActionCommandTest {
 		expectedActionCommand.getParameters().addParameter("Foo", values);
 		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
 
-		// Util.printObjectDiffToConsole(expected, actual);
+		DebugUtils.printObjectDiffToConsole(expectedActionCommand, actual);
+		assertEquals(expectedActionCommand, actual);
+	}
+	
+	@Test(expected = MultipleParameterValuesException.class)
+	public void paramWithBothCollectionAndSingleValueFails() {
+
+		Map<String, String[]> p = buildHttpParams(null, "Foo", "bar");
+		p = buildHttpParams(p, "Foo.1", "baz");
+
+		List<String> values = new ArrayList<String>();
+		values.add("bar");
+		values.add("baz");
+
+		// Compare
+		expectedActionCommand.getParameters().addParameter("Foo", values);
+		ActionCommand actual = target.buildActionCommandFromHttpParams(p);
+
+		DebugUtils.printObjectDiffToConsole(expectedActionCommand, actual);
 		assertEquals(expectedActionCommand, actual);
 	}
 

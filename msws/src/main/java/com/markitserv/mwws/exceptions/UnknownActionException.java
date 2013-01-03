@@ -28,7 +28,7 @@ public class UnknownActionException extends MwwsException {
 	}
 
 	public static UnknownActionException standardException(String actionName) {
-		throw new UnknownActionException(
+		return new UnknownActionException(
 				"Cannot find action with the name '%s'", actionName);
 	}
 }

@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
-			<!--  doesn't play nice with Spring 3.2 -->
+			<!-- doesn't play nice with Spring 3.2 -->
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>
@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<!--  doesn't play nice with Spring 3.2 -->
+			<!-- doesn't play nice with Spring 3.2 -->
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>
@@ -87,7 +87,7 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<!--  doesn't play nice with Spring 3.2 -->
+			<!-- doesn't play nice with Spring 3.2 -->
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>
@@ -102,6 +102,7 @@
 		</dependency>
 
 		<!-- Validation -->
+		<!--
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
@@ -109,6 +110,14 @@
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
+		</dependency>
+		 -->
+
+		<!-- TODO move this to the appropriate places if we end up using it -->
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.4.0</version>
 		</dependency>
 
 	</dependencies>

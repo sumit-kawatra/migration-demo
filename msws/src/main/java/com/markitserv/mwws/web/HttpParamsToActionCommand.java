@@ -92,13 +92,17 @@ public class HttpParamsToActionCommand {
 			params.put(key, x);
 		}
 
-		@SuppressWarnings({ "unchecked", "unchecked" })
+		// If they do something like 'foo.1' and then 'foo'
+		if ((params.get(key) instanceof String)) {
+			throw MultipleParameterValuesException.standardException(key);
+		}
+		
 		List<String> values = (List<String>) params.get(key);
 
 		// pad everything before the index with null values, since we don't
 		// always start at zero
-		if (values.size() < index) {
-			for (int i = 0; i <= index; i++) {
+		if (values.size() <= index) {
+			for (int i = values.size(); i <= index; i++) {
 				values.add(i, null);
 			}
 		}

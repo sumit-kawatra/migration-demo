@@ -86,4 +86,13 @@ public class ActionCommand implements ReqRespCommand {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ActionCommand [action=").append(action)
+				.append(", params=").append(params).append(", filters=")
+				.append(filters).append("]");
+		return builder.toString();
+	}
 } 

@@ -26,6 +26,10 @@ public class ActionFilters {
 		filters.put(key, values);
 	}
 	
+	public Map<String, List<String>> getAllFilters() {
+		return filters;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -74,5 +78,4 @@ public class ActionFilters {
 		builder.append("]");
 		return builder.toString();
 	}
-
 }
