@@ -234,6 +234,25 @@
 		</plugins>
 	</build>
 
+		<distributionManagement>
+		<repository>
+			<id>markitserv-nexus-releases</id>
+			<name>MarkitSERV Nexus Repository - Releases</name>
+			<url> http://devsrcp1:8083/nexus/content/repositories/releases </url>
+		</repository>
+		<snapshotRepository>
+			<id>markitserv-nexus-snapshots</id>
+			<name>MarkitSERV Nexus Repository - Snapshots</name>
+			<url> http://devsrcp1:8083/nexus/content/repositories/snapshots </url>
+		</snapshotRepository>
+
+		<site>
+			<id>developer-docs-server</id>
+			<url>scp://devsrcp1/var/www/html/developerDocumentation/crossplatform/fxclearconn-master</url>
+		</site>
+
+	</distributionManagement>
+
 
 	<profiles>
 		<!-- See http://goo.gl/IgvL2 for more information on test sizing -->
