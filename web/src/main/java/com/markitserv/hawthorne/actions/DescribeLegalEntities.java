@@ -13,6 +13,7 @@ import com.markitserv.mwws.validation.CollectionValidation;
 import com.markitserv.mwws.validation.ForEachValidator;
 import com.markitserv.mwws.validation.IntegerValidation;
 import com.markitserv.mwws.validation.OptionalValidation;
+import com.markitserv.mwws.validation.RequiredIfProvidedValidation;
 import com.markitserv.mwws.validation.RequiredValidation;
 import com.markitserv.mwws.validation.CollectionSizeValidation;
 
@@ -28,6 +29,19 @@ public class DescribeLegalEntities extends AbstractAction {
 	private HardcodedData data;
 
 	@Override
+	protected ParamsAndFiltersDefinition getFilterDefinition() {
+
+		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
+
+		def.addValidation("substr", new OptionalValidation());
+		def.addValidation("substr", new ForEachValidator(
+				new IntegerValidation()));
+
+		return def;
+
+	}
+
+	@Override
 	protected ParamsAndFiltersDefinition getParameterDefinition() {
 
 		// Add validation
@@ -36,16 +50,19 @@ public class DescribeLegalEntities extends AbstractAction {
 		def.addValidation("foo", new RequiredValidation());
 		def.addValidation("foo", new CollectionSizeValidation(1,
 				CollectionSizeValidation.UNLIMITED));
-		
+
 		def.addValidation("be", new RequiredValidation());
 		def.addValidation("be", new CollectionValidation());
 		def.addValidation("be", new ForEachValidator(new IntegerValidation()));
 		def.addValidation("be", new CollectionSizeValidation(1,
 				CollectionSizeValidation.UNLIMITED));
-		
+
 		def.addValidation("bar", new OptionalValidation());
 		def.addValidation("bar", new IntegerValidation());
 		
+		String[] reqIf = {"foo"};
+		def.addValidation("shit", new RequiredIfProvidedValidation(reqIf);
+
 		return def;
 	}
 

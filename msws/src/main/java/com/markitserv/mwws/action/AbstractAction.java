@@ -33,7 +33,7 @@ public abstract class AbstractAction implements InitializingBean {
 		ActionParameters parameters = command.getParameters();
 		ActionFilters filters = command.getFilters();
 
-		//applyDefaults(parameters, filters);
+		// applyDefaults(parameters, filters);
 		validateParametersAndFilters(parameters, filters);
 
 		ActionResult result = this.performAction(parameters, filters);
@@ -82,6 +82,9 @@ public abstract class AbstractAction implements InitializingBean {
 	protected abstract ActionResult performAction(ActionParameters params,
 			ActionFilters filters);
 
+	/**
+	 * Registers this action w/ the Registry upon startup
+	 */
 	private void registerWithActionRegistry() {
 		actionRegistry.registerAction(this.getActionName(), this);
 	}
@@ -93,11 +96,6 @@ public abstract class AbstractAction implements InitializingBean {
 	 */
 	protected String getActionName() {
 		return this.getClass().getSimpleName();
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		this.registerWithActionRegistry();
 	}
 
 	/**
@@ -125,21 +123,26 @@ public abstract class AbstractAction implements InitializingBean {
 
 		ValidationExceptionBuilder veb = new ValidationExceptionBuilder();
 
-		veb = validateParameters(p, veb);
-		// veb = validateFilters(f, veb);
+		veb = validateParameters(InvalidType.param, p.getAllParameters(),
+				getParameterDefinition().getValidations(), veb);
+		veb = validateParameters(InvalidType.filter, f.getAllFilters(),
+				getFilterDefinition().getValidations(), veb);
 
 		veb.buildAndThrowIfInvalid();
 	}
 
-	private ValidationExceptionBuilder validateParameters(ActionParameters p,
+	/**
+	 * Validates inputs for this action
+	 * @param type
+	 * @param reqParams
+	 * @param validations
+	 * @param veb
+	 * @return
+	 */
+	private ValidationExceptionBuilder validateParameters(InvalidType type,
+			Map<String, ? extends Object> reqParams,
+			Map<String, List<Validation>> validations,
 			ValidationExceptionBuilder veb) {
-
-		// all validations for this action
-		Map<String, List<Validation>> validations = getParameterDefinition()
-				.getValidations();
-
-		// all parameters / filters that were provided on the request
-		Map<String, Object> reqParams = p.getAllParameters();
 
 		// Tracks what validations have not been done. If anything is left over
 		// in this set, it means that the user didn't provide it on the request.
@@ -155,7 +158,7 @@ public abstract class AbstractAction implements InitializingBean {
 						.createInvalidResponse(String.format(
 								"Not applicable for action '%s'.",
 								this.getActionName()));
-				veb.addInvalidValidation(InvalidType.param, resp, key);
+				veb.addInvalidValidation(type, resp, key);
 			} else {
 
 				unprocessedValidationKeys.remove(key);
@@ -167,7 +170,7 @@ public abstract class AbstractAction implements InitializingBean {
 					Object value = reqParams.get(key);
 					ValidationResponse resp = v.isValid(value, reqParams);
 					if (!resp.isValid()) {
-						veb.addInvalidValidation(InvalidType.param, resp, key);
+						veb.addInvalidValidation(type, resp, key);
 					}
 				}
 			}
@@ -187,7 +190,7 @@ public abstract class AbstractAction implements InitializingBean {
 					ValidationResponse resp = validation.isValid(null,
 							reqParams);
 					if (!resp.isValid()) {
-						veb.addInvalidValidation(InvalidType.param, resp,
+						veb.addInvalidValidation(type, resp,
 								unprocessedValidationKey);
 					}
 				}
@@ -195,4 +198,10 @@ public abstract class AbstractAction implements InitializingBean {
 		}
 		return veb;
 	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		this.registerWithActionRegistry();
+	}
+
 }
