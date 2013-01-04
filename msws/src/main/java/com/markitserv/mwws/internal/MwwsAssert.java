@@ -21,8 +21,8 @@ public class MwwsAssert {
 		
 		String fullMsg = "Assertion failed";
 		if (message != null) {
-			fullMsg.concat(": ");
-			fullMsg.concat(String.format(message, args));
+			fullMsg = fullMsg.concat(": ");
+			fullMsg = fullMsg.concat(String.format(message, args));
 		}
 		
 		if (!exp) {

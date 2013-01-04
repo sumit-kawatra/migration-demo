@@ -1,14 +1,16 @@
 package com.markitserv.mwws.action;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Encapsulates filters for an action.  Delegates some of the Map functions
+ * Encapsulates filters for an action. Delegates some of the Map functions
+ * 
  * @author roy.truelove
- *
+ * 
  */
 public class ActionFilters {
 
@@ -21,15 +23,15 @@ public class ActionFilters {
 	public int size() {
 		return filters.size();
 	}
-	
+
 	public void addFilter(String key, List<String> values) {
 		filters.put(key, values);
 	}
-	
+
 	public Map<String, List<String>> getAllFilters() {
 		return filters;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -1,4 +1,4 @@
-package com.markitserv.mwws.small;
+package com.markitserv.mwws.action.small;
 
 import static org.junit.Assert.*;
 

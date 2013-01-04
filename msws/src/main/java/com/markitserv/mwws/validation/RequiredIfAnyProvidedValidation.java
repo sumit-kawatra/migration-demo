@@ -17,10 +17,6 @@ public class RequiredIfAnyProvidedValidation extends RequiredValidation {
 
 		boolean isTargetSet = super.isValid(target, map).isValid();
 
-		if (target == null) {
-			return ValidationResponse.createValidResponse();
-		}
-
 		for (String other : otherParams) {
 			Object otherVal = map.get(other);
 			ValidationResponse resp = super.isValid(otherVal, map);

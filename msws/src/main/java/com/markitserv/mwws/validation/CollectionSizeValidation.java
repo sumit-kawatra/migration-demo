@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.markitserv.mwws.exceptions.ProgrammaticException;
 
-public class CollectionSizeValidation implements Validation {
+public class CollectionSizeValidation extends AbstractOptionalValidation {
 
 	public static final int UNLIMITED = -1;
 
@@ -22,10 +22,6 @@ public class CollectionSizeValidation implements Validation {
 	public ValidationResponse isValid(Object target,
 			Map<String, ? extends Object> map) {
 
-		if (target == null) {
-			return ValidationResponse.createValidResponse();
-		}
-		
 		ValidationResponse isCollection = new CollectionValidation().isValid(target, map);
 		if (!isCollection.isValid()) {
 			return isCollection;

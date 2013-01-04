@@ -1,6 +1,9 @@
 package com.markitserv.mwws.action;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.markitserv.mwws.command.ReqRespCommand;
+import com.markitserv.mwws.internal.MwwsAssert;
 
 public class ActionCommand implements ReqRespCommand {
 	
@@ -20,11 +23,15 @@ public class ActionCommand implements ReqRespCommand {
 		this.action = action;
 		this.params = params;
 		this.filters = filters;
+		
+		MwwsAssert.mwwsAssert(!StringUtils.isBlank(action), "Action must be set.");
+		MwwsAssert.mwwsAssert(params != null, "Params must be set.");
+		MwwsAssert.mwwsAssert(filters != null, "Filters must be set.");
 	}
 
-	public ActionCommand() {
-		super();
-	}
+//	public ActionCommand() {
+//		super();
+//	}
 
 	public String getAction() {
 		return action;

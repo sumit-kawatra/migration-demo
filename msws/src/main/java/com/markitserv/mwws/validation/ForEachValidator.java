@@ -4,21 +4,17 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-public class ForEachValidator implements Validation {
+public class ForEachValidator extends AbstractOptionalValidation {
 
-	private Validation forEachElement;
+	private AbstractValidation forEachElement;
 
-	public ForEachValidator(Validation forEachElement) {
+	public ForEachValidator(AbstractValidation forEachElement) {
 		this.forEachElement = forEachElement;
 	}
 
 	@Override
 	public ValidationResponse isValid(Object target,
 			Map<String, ? extends Object> map) {
-
-		if (target == null) {
-			return ValidationResponse.createValidResponse();
-		}
 
 		ValidationResponse isCollection = new CollectionValidation().isValid(
 				target, map);

@@ -2,7 +2,7 @@ package com.markitserv.mwws.validation;
 
 import java.util.Map;
 
-public class OptionalValidation implements Validation {
+public class OptionalValidation extends AbstractOptionalValidation {
 
 	@Override
 	public ValidationResponse isValid(Object target,

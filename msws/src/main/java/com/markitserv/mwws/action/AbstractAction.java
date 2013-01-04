@@ -15,7 +15,7 @@ import com.markitserv.mwws.exceptions.NotYetImplementedException;
 import com.markitserv.mwws.exceptions.ProgrammaticException;
 import com.markitserv.mwws.internal.UuidGenerator;
 import com.markitserv.mwws.validation.RequiredValidation;
-import com.markitserv.mwws.validation.Validation;
+import com.markitserv.mwws.validation.AbstractValidation;
 import com.markitserv.mwws.validation.ValidationExceptionBuilder;
 import com.markitserv.mwws.validation.ValidationExceptionBuilder.InvalidType;
 import com.markitserv.mwws.validation.ValidationResponse;
@@ -141,7 +141,7 @@ public abstract class AbstractAction implements InitializingBean {
 	 */
 	private ValidationExceptionBuilder validateParameters(InvalidType type,
 			Map<String, ? extends Object> reqParams,
-			Map<String, List<Validation>> validations,
+			Map<String, List<AbstractValidation>> validations,
 			ValidationExceptionBuilder veb) {
 
 		// Tracks what validations have not been done. If anything is left over
@@ -163,12 +163,12 @@ public abstract class AbstractAction implements InitializingBean {
 
 				unprocessedValidationKeys.remove(key);
 
-				List<Validation> validationsForThisParam = validations.get(key);
+				List<AbstractValidation> validationsForThisParam = validations.get(key);
 
 				// validate this param with all validations. Track failures
-				for (Validation v : validationsForThisParam) {
+				for (AbstractValidation v : validationsForThisParam) {
 					Object value = reqParams.get(key);
-					ValidationResponse resp = v.isValid(value, reqParams);
+					ValidationResponse resp = v.isValidInternal(value, reqParams);
 					if (!resp.isValid()) {
 						veb.addInvalidValidation(type, resp, key);
 					}
@@ -179,15 +179,15 @@ public abstract class AbstractAction implements InitializingBean {
 		// see if any of the unprocessed keys are required. These are keys that
 		// are in the validation rules but were not on the request.
 		for (String unprocessedValidationKey : unprocessedValidationKeys) {
-			List<Validation> vals = validations.get(unprocessedValidationKey);
+			List<AbstractValidation> vals = validations.get(unprocessedValidationKey);
 
-			for (Validation validation : vals) {
+			for (AbstractValidation validation : vals) {
 				// note - if a field is required, even optionally, it MUST
 				// subclass RequiredValidation!
 
 				if (validation instanceof RequiredValidation) {
 					// null because it was provided by in the request
-					ValidationResponse resp = validation.isValid(null,
+					ValidationResponse resp = validation.isValidInternal(null,
 							reqParams);
 					if (!resp.isValid()) {
 						veb.addInvalidValidation(type, resp,
@@ -202,6 +202,14 @@ public abstract class AbstractAction implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		this.registerWithActionRegistry();
+	}
+
+	public UuidGenerator getUuidGenerator() {
+		return uuidGenerator;
+	}
+
+	public void setUuidGenerator(UuidGenerator uuidGenerator) {
+		this.uuidGenerator = uuidGenerator;
 	}
 
 }

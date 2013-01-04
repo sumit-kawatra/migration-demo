@@ -13,7 +13,6 @@ import com.markitserv.mwws.validation.CollectionValidation;
 import com.markitserv.mwws.validation.ForEachValidator;
 import com.markitserv.mwws.validation.IntegerValidation;
 import com.markitserv.mwws.validation.OptionalValidation;
-import com.markitserv.mwws.validation.RequiredIfProvidedValidation;
 import com.markitserv.mwws.validation.RequiredValidation;
 import com.markitserv.mwws.validation.CollectionSizeValidation;
 
@@ -38,7 +37,6 @@ public class DescribeLegalEntities extends AbstractAction {
 				new IntegerValidation()));
 
 		return def;
-
 	}
 
 	@Override
@@ -59,9 +57,8 @@ public class DescribeLegalEntities extends AbstractAction {
 
 		def.addValidation("bar", new OptionalValidation());
 		def.addValidation("bar", new IntegerValidation());
-		
-		String[] reqIf = {"foo"};
-		def.addValidation("shit", new RequiredIfProvidedValidation(reqIf);
+
+		String[] reqIf = { "foo" };
 
 		return def;
 	}
