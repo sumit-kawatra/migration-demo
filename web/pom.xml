@@ -13,6 +13,11 @@
 	<name>Hawthorne Server</name>
 	<description>Server for the Hawthorne project</description>
 
+	<properties>
+		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+		<liquibase.debug></liquibase.debug>
+	</properties>
+
 	<dependencies>
 
 		<dependency>
@@ -120,9 +125,47 @@
 			<version>1.4.0</version>
 		</dependency>
 
+		<!-- Jetty, and it's dependencies. These are expanded into the root dir 
+			when creating a dist with the 'dist' profile -->
+		<dependency>
+			<groupId>org.glassfish.main.external</groupId>
+			<artifactId>ant</artifactId>
+			<version>3.1.2.2</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jsp-2.1-glassfish</artifactId>
+			<version>2.1.v20100127</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>7.6.8.v20121106</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>7.6.8.v20121106</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 	<build>
-		<finalName>Hawthorne</finalName>
+		<finalName>hawthorne-server</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>git.properties</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
@@ -133,4 +176,140 @@
 
 	</build>
 
+		<profiles>
+		<!-- Creates a distribution. In practice only Jenkins will run this. -->
+		<profile>
+			<id>dist</id>
+			<build>
+		<finalName>hawthorne-server</finalName>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+					</resource>
+					<resource>
+						<directory>src/main/resources</directory>
+						<includes>
+							<include>git.properties</include>
+						</includes>
+						<filtering>true</filtering>
+					</resource>
+				</resources>
+				<plugins>
+					<!-- Makes manifest file -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.1.1</version>
+						<executions>
+							<execution>
+								<id>default-war</id>
+								<phase>none</phase>
+							</execution>
+							<execution>
+								<id>createExplodedWar</id>
+								<phase>package</phase>
+								<configuration>
+									<!-- <archive> <manifest> <mainClass>EmbeddedJettyServer</mainClass> 
+										</manifest> </archive> -->
+								</configuration>
+								<goals>
+									<goal>exploded</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<!-- Moves jetty startup class to a place in the war file where Java 
+								can find it. -->
+							<execution>
+								<id>main-class-placement</id>
+								<phase>prepare-package</phase>
+								<configuration>
+									<tasks>
+										<move todir="${project.build.directory}/${project.build.finalName}">
+											<fileset dir="${project.build.directory}/classes">
+												<include name="EmbeddedJettyServer.class" />
+											</fileset>
+										</move>
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								</execution>
+							<execution>
+								<id>create_zip</id>
+								<!-- This needs to run *after* the war file is created, but there's 
+									no way in maven to ensure that that will happen... Generally it works this 
+									way, but.. -->
+								<phase>package</phase>
+								<configuration>
+									<tasks>
+
+										<copy todir="${project.build.directory}/dist" overwrite="true">
+											<fileset dir="src/main/scripts/" />
+										</copy>
+
+										<copy
+											todir="${project.build.directory}/dist/${project.build.finalName}"
+											overwrite="true">
+											<fileset
+												dir="${project.build.directory}/${project.build.finalName}" />
+										</copy>
+
+										<zip
+											destfile="${project.build.directory}/${project.build.finalName}.zip"
+											basedir="${project.build.directory}/dist" />
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- Expands jetty to the root dir of the warfile so that it's in the 
+						executable classpath -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>jetty-classpath</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>unpack-dependencies</goal>
+								</goals>
+								<configuration>
+									<includeGroupIds>org.eclipse.jetty,javax.servlet,org.mortbay.jetty,org.glassfish.main.external</includeGroupIds>
+									<outputDirectory>
+										${project.build.directory}/${project.build.finalName}
+									</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- Add git SHA to properties file -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>buildnumber-maven-plugin</artifactId>
+						<version>1.0</version>
+						<executions>
+							<execution>
+								<phase>validate</phase>
+								<goals>
+									<goal>create</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<doCheck>false</doCheck>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

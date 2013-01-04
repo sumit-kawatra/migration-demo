@@ -26,6 +26,11 @@
 		<hibernate-validation.version>4.3.0.Final</hibernate-validation.version>
 		<jcl-over-slf4.version>1.7.1</jcl-over-slf4.version>
 
+		<!-- Plugin Versions -->
+		<version.plugin.jaxb>0.7.5</version.plugin.jaxb>
+		<version.plugin.jaxb-xjc>2.2.4-1</version.plugin.jaxb-xjc>
+		<version.plugin.tests>2.9</version.plugin.tests> <!-- xxx means both surefire and failsafe -->
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 	</properties>
@@ -198,6 +203,13 @@
 			<version>${spring.version}</version>
 		</dependency>
 	</dependencies>
+
+	<scm>
+		<connection>scm:git:ssh://git@usmtpdevapp001.mserv.local/crossplatform/HawthorneServer.git
+		</connection>
+		<developerConnection>scm:git:ssh://git@usmtpdevapp001.mserv.local/crossplatform/HawthorneServer.git
+		</developerConnection>
+	</scm>
 	<build>
 		<plugins>
 			<plugin>
@@ -221,5 +233,98 @@
 			</plugin>
 		</plugins>
 	</build>
+
+
+	<profiles>
+		<!-- See http://goo.gl/IgvL2 for more information on test sizing -->
+		<profile>
+			<id>includeSmallTests</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>${version.plugin.tests}</version>
+						<configuration>
+							<includes>
+								<include>**/small/*.java</include>
+							</includes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>includeMediumTests</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>${version.plugin.tests}</version>
+						<configuration>
+							<includes>
+								<include>**/small/*.java</include>
+								<include>**/med/*.java</include>
+							</includes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>includeLargeTests</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>${version.plugin.tests}</version>
+						<configuration>
+							<includes>
+								<!-- large tests are handled by the failsafe plugin below -->
+								<include>**/small/*.java</include>
+								<include>**/med/*.java</include>
+							</includes>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>${version.plugin.tests}</version>
+						<configuration>
+							<!-- large tests are run here -->
+							<includes>
+								<include>**/large/*.java</include>
+							</includes>
+						</configuration>
+						<executions>
+							<execution>
+								<id>integration-test</id>
+								<goals>
+									<goal>integration-test</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>verify</id>
+								<goals>
+									<goal>verify</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
