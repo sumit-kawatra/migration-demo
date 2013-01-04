@@ -45,20 +45,8 @@ public class DescribeLegalEntities extends AbstractAction {
 		// Add validation
 		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
 
-		def.addValidation("foo", new RequiredValidation());
-		def.addValidation("foo", new CollectionSizeValidation(1,
-				CollectionSizeValidation.UNLIMITED));
-
-		def.addValidation("be", new RequiredValidation());
-		def.addValidation("be", new CollectionValidation());
-		def.addValidation("be", new ForEachValidator(new IntegerValidation()));
-		def.addValidation("be", new CollectionSizeValidation(1,
-				CollectionSizeValidation.UNLIMITED));
-
-		def.addValidation("bar", new OptionalValidation());
-		def.addValidation("bar", new IntegerValidation());
-
-		String[] reqIf = { "foo" };
+		def.addValidation("ParticipantId", new RequiredValidation());
+		def.addValidation("ParticipantId",new IntegerValidation());
 
 		return def;
 	}
