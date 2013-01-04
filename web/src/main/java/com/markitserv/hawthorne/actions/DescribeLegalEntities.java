@@ -28,25 +28,13 @@ public class DescribeLegalEntities extends AbstractAction {
 	private HardcodedData data;
 
 	@Override
-	protected ParamsAndFiltersDefinition getFilterDefinition() {
-
-		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
-
-		def.addValidation("substr", new OptionalValidation());
-		def.addValidation("substr", new ForEachValidator(
-				new IntegerValidation()));
-
-		return def;
-	}
-
-	@Override
 	protected ParamsAndFiltersDefinition getParameterDefinition() {
 
 		// Add validation
 		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
 
 		def.addValidation("ParticipantId", new RequiredValidation());
-		def.addValidation("ParticipantId",new IntegerValidation());
+		def.addValidation("ParticipantId", new IntegerValidation());
 
 		return def;
 	}
