@@ -238,12 +238,12 @@
 		<repository>
 			<id>markitserv-nexus-releases</id>
 			<name>MarkitSERV Nexus Repository - Releases</name>
-			<url> http://devsrcp1:8083/nexus/content/repositories/releases </url>
+			<url> http://devsrca01:8083/nexus/content/repositories/releases </url>
 		</repository>
 		<snapshotRepository>
 			<id>markitserv-nexus-snapshots</id>
 			<name>MarkitSERV Nexus Repository - Snapshots</name>
-			<url> http://devsrcp1:8083/nexus/content/repositories/snapshots </url>
+			<url> http://devsrca01:8083/nexus/content/repositories/snapshots </url>
 		</snapshotRepository>
 
 		<site>
