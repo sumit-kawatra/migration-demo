@@ -9,7 +9,7 @@ public class RequiredValidation extends AbstractValidation {
 			Map<String, ? extends Object> map) {
 		ValidationResponse resp;
 
-		if (isProvided(target)) {
+		if (!isProvided(target)) {
 			resp = ValidationResponse
 					.createInvalidResponse("Required but not provided.");
 		} else {

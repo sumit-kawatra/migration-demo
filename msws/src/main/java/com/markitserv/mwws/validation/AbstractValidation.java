@@ -23,19 +23,19 @@ public abstract class AbstractValidation {
 	 */
 	public boolean isProvided(Object target) {
 		
-		boolean isBlank = false;
+		boolean isProvided = false;
 		
 		if (target == null) {
-			isBlank = true;
+			isProvided = false;
 		} else if (target instanceof String
 				&& StringUtils.isBlank((String) target)) {
-			isBlank = true;
+			isProvided = false;
 		} else if (target instanceof Collection<?>
 				&& ((Collection<?>) target).size() == 0) {
-			isBlank = true;
+			isProvided = false;
 		} else {
-			isBlank = false;
+			isProvided = true;
 		}
-		return isBlank;
+		return isProvided;
 	}
 }

@@ -3,7 +3,7 @@ package com.markitserv.mwws.validation;
 public class ValidationResponse {
 	
 	private boolean isValid = false;
-	private String msgTemplate = null;
+	private String msg = null;
 	
 	public static ValidationResponse createInvalidResponse(String msg) {
 		return new ValidationResponse(false, msg);
@@ -16,13 +16,13 @@ public class ValidationResponse {
 	private ValidationResponse(boolean isValid, String msgTemplate) {
 		super();
 		this.isValid = isValid;
-		this.msgTemplate = msgTemplate;
+		this.msg = msgTemplate;
 	}
 
 	public boolean isValid() {
 		return isValid;
 	}
 	public String getMessage() {
-		return msgTemplate;
+		return msg;
 	}
 }

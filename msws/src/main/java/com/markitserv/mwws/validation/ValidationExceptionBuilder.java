@@ -1,6 +1,8 @@
 package com.markitserv.mwws.validation;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class ValidationExceptionBuilder {
 	}
 
 	private Stack<String> errorMsgs = new Stack<String>();
+	private Set<String> alreadyProcessed = new HashSet<String> ();
 
 	private static final long serialVersionUID = 1L;
 
@@ -34,9 +37,16 @@ public class ValidationExceptionBuilder {
 
 	public ValidationExceptionBuilder addInvalidValidation(InvalidType type,
 			ValidationResponse resp, String name) {
+	
+		// report only a single validation for each
+		if (alreadyProcessed.contains(name)) {
+			return this;
+		}
+		
 		String msg = String.format("Invalid %s '%s'.  %s", type.toString(),
-				name, resp.getMessage());
+				name, resp.getMessage()+ "");
 		errorMsgs.push(msg);
+		alreadyProcessed.add(name);
 		return this;
 	}
 
@@ -45,6 +55,7 @@ public class ValidationExceptionBuilder {
 
 		for (String msg : errorMsgs) {
 			sb.append(msg);
+			sb.append("  ");
 		}
 
 		return new ValidationException(sb.toString(), errorMsgs);
