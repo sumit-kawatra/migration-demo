@@ -26,7 +26,7 @@ public final class EmbeddedJettyServer {
 
 		WebAppContext context = new WebAppContext();
 		context.setServer(server);
-		context.setContextPath("/fxclearconn-master");
+		context.setContextPath("/hawthorne-server");
 
 		ProtectionDomain protectionDomain = EmbeddedJettyServer.class.getProtectionDomain();
 		URL location = protectionDomain.getCodeSource().getLocation();
