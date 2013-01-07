@@ -1,12 +1,9 @@
-package com.markitserv.mwws.validation.small;
+package com.markitserv.mwws.testutil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.junit.Before;
-import org.mockito.Mockito;
 
 import com.markitserv.mwws.Type;
 import com.markitserv.mwws.action.AbstractAction;
@@ -15,18 +12,11 @@ import com.markitserv.mwws.action.ActionFilters;
 import com.markitserv.mwws.action.ActionParameters;
 import com.markitserv.mwws.action.ActionResult;
 import com.markitserv.mwws.definition.ParamsAndFiltersDefinition;
-import com.markitserv.mwws.internal.UuidGenerator;
 import com.markitserv.mwws.validation.AbstractValidation;
 
-public abstract class AbstractValidationTest {
-
-	protected TestActionCommandBuilder cmdBuilder;
-	protected TestAction action;
-
-	// dependencies
-	private UuidGenerator uuidGenerator;
-
-	private class BooleanType extends Type {
+public class ActionAndActionCommandHelpers {
+	
+	public class BooleanType extends Type {
 
 		public boolean successful;
 
@@ -35,7 +25,7 @@ public abstract class AbstractValidationTest {
 		}
 	}
 
-	protected class TestAction extends AbstractAction {
+	public class TestAction extends AbstractAction {
 
 		private ParamsAndFiltersDefinition paramDef;
 		private ParamsAndFiltersDefinition filterDef;
@@ -77,10 +67,19 @@ public abstract class AbstractValidationTest {
 			}
 			
 			return filterDef;
+		
+		}
+
+		public void addParameterDefault(String key, String value) {
+			this.getParameterDefinition().addDefaultParam(key, value);
+		}
+		
+		public void setParameterDefinition(ParamsAndFiltersDefinition def) {
+			this.paramDef = def;
 		}
 	}
-
-	protected class TestActionCommandBuilder {
+	
+	public class TestActionCommandBuilder {
 
 		private ActionCommand cmd;
 
@@ -120,19 +119,5 @@ public abstract class AbstractValidationTest {
 		public ActionCommand build() {
 			return cmd;
 		}
-	}
-
-	@Before
-	public void setupEach() {
-
-		// Stubs
-		uuidGenerator = Mockito.mock(UuidGenerator.class);
-		Mockito.when(uuidGenerator.generateUuid()).thenReturn("Stubbed UUID");
-
-		cmdBuilder = new TestActionCommandBuilder();
-		action = new TestAction();
-
-		action.setUuidGenerator(uuidGenerator);
-
 	}
 }

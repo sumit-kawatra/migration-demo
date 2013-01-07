@@ -53,9 +53,15 @@ public class ValidationExceptionBuilder {
 	private ValidationException build() {
 		StringBuilder sb = new StringBuilder();
 
+		int counter = 1;
 		for (String msg : errorMsgs) {
+			sb.append("[Validation error # ");
+			sb.append(counter);
+			sb.append(".  ");
 			sb.append(msg);
-			sb.append("  ");
+			sb.append("]  ");
+			
+			counter++;
 		}
 
 		return new ValidationException(sb.toString(), errorMsgs);

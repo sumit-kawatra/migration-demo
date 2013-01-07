@@ -33,8 +33,8 @@ public abstract class AbstractAction implements InitializingBean {
 		ActionParameters parameters = command.getParameters();
 		ActionFilters filters = command.getFilters();
 
-		// applyDefaults(parameters, filters);
-		validateParametersAndFilters(parameters, filters);
+		applyDefaults(parameters, filters);
+		validate(parameters, filters);
 
 		ActionResult result = this.performAction(parameters, filters);
 
@@ -47,7 +47,17 @@ public abstract class AbstractAction implements InitializingBean {
 
 	private void applyDefaults(ActionParameters parameters,
 			ActionFilters filters) {
-		throw NotYetImplementedException.standardException();
+
+		Map<String, Object> paramDefaults = this.getParameterDefinition()
+				.getDefaultParams();
+		
+		Map<String, Object> params = parameters.getAllParameters();
+		
+		for (String defaultKey : paramDefaults.keySet()) {
+			if (!params.containsKey(defaultKey)) {
+				parameters.addParameter(defaultKey, paramDefaults.get(defaultKey));
+			}
+		}
 	}
 
 	/**
@@ -118,8 +128,7 @@ public abstract class AbstractAction implements InitializingBean {
 		return new ParamsAndFiltersDefinition();
 	}
 
-	private void validateParametersAndFilters(ActionParameters p,
-			ActionFilters f) {
+	private void validate(ActionParameters p, ActionFilters f) {
 
 		ValidationExceptionBuilder veb = new ValidationExceptionBuilder();
 
@@ -133,6 +142,7 @@ public abstract class AbstractAction implements InitializingBean {
 
 	/**
 	 * Validates inputs for this action
+	 * 
 	 * @param type
 	 * @param reqParams
 	 * @param validations
@@ -163,12 +173,14 @@ public abstract class AbstractAction implements InitializingBean {
 
 				unprocessedValidationKeys.remove(key);
 
-				List<AbstractValidation> validationsForThisParam = validations.get(key);
+				List<AbstractValidation> validationsForThisParam = validations
+						.get(key);
 
 				// validate this param with all validations. Track failures
 				for (AbstractValidation v : validationsForThisParam) {
 					Object value = reqParams.get(key);
-					ValidationResponse resp = v.isValidInternal(value, reqParams);
+					ValidationResponse resp = v.isValidInternal(value,
+							reqParams);
 					if (!resp.isValid()) {
 						veb.addInvalidValidation(type, resp, key);
 					}
@@ -179,7 +191,8 @@ public abstract class AbstractAction implements InitializingBean {
 		// see if any of the unprocessed keys are required. These are keys that
 		// are in the validation rules but were not on the request.
 		for (String unprocessedValidationKey : unprocessedValidationKeys) {
-			List<AbstractValidation> vals = validations.get(unprocessedValidationKey);
+			List<AbstractValidation> vals = validations
+					.get(unprocessedValidationKey);
 
 			for (AbstractValidation validation : vals) {
 				// note - if a field is required, even optionally, it MUST

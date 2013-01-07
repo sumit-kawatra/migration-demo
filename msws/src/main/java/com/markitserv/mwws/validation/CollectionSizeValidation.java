@@ -21,7 +21,7 @@ public class CollectionSizeValidation extends AbstractOptionalValidation {
 	@Override
 	public ValidationResponse isValid(Object target,
 			Map<String, ? extends Object> map) {
-
+		
 		ValidationResponse isCollection = new CollectionValidation().isValid(target, map);
 		if (!isCollection.isValid()) {
 			return isCollection;

@@ -8,12 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 public abstract class AbstractValidation {
 	
 	abstract public ValidationResponse isValid(Object target,
-			Map<String, ? extends Object> map);
+			Map<String, ? extends Object> otherValues);
 	
 	public ValidationResponse isValidInternal(Object target,
-			Map<String, ? extends Object> map) {
+			Map<String, ? extends Object> otherValues) {
 		
-		return isValid(target, map);
+		return isValid(target, otherValues);
 	}
 	
 	/**

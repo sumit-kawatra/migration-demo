@@ -61,8 +61,7 @@ public class RandomNameGenerator implements InitializingBean {
 	ArrayList<String> mid = new ArrayList<String>();
 	ArrayList<String> sur = new ArrayList<String>();
 
-	final private static char[] Vowels = { 'a', 'e', 'i', 'o', 'u', 'ä', 'ö',
-			'õ', 'ü', 'y' };
+	final private static char[] Vowels = { 'a', 'e', 'i', 'o', 'u', 'y' };
 	final private static char[] consonants = { 'b', 'c', 'd', 'f', 'g', 'h',
 			'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x',
 			'y' };

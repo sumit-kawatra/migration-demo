@@ -4,24 +4,25 @@ import org.junit.Test;
 
 import com.markitserv.mwws.action.ActionCommand;
 import com.markitserv.mwws.exceptions.ValidationException;
+import com.markitserv.mwws.testutil.AbstractMswsTest;
 import com.markitserv.mwws.validation.RequiredValidation;
 
-public class RequiredValidationTest extends AbstractValidationTest {
+public class RequiredValidationTest extends AbstractMswsTest {
 
 	@Test
 	public void succeedsIfRequiredParamProvided() {
 
-		ActionCommand cmd = cmdBuilder.addParam("Required", "foo").build();
-		action.addParameterValdiation("Required", new RequiredValidation());
-		action.performAction(cmd);
+		ActionCommand cmd = actionCommandBuilder.addParam("Required", "foo").build();
+		testAction.addParameterValdiation("Required", new RequiredValidation());
+		testAction.performAction(cmd);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void failsIfRequiredParamNotProvided() {
 		
-		action.addParameterValdiation("Required", new RequiredValidation());
+		testAction.addParameterValdiation("Required", new RequiredValidation());
 
-		ActionCommand cmd = cmdBuilder.build();
-		action.performAction(cmd);
+		ActionCommand cmd = actionCommandBuilder.build();
+		testAction.performAction(cmd);
 	}
 }
