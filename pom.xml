@@ -222,6 +222,7 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
+			<!-- TODO clean this up.  PT#42134179 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
@@ -234,38 +235,9 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>cobertura-maven-plugin</artifactId>
-					<version>2.5.2</version>
-					<configuration>
-						<formats>
-							<format>html</format>
-							<format>xml</format>
-						</formats>
-					</configuration>
-					<executions>
-						<execution>
-							<phase>package</phase>
-							<goals>
-								<goal>cobertura</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.5.2</version>
-			</plugin>
-		</plugins>
-	</reporting>
 
 	<distributionManagement>
 		<repository>
@@ -281,7 +253,7 @@
 
 		<site>
 			<id>developer-docs-server</id>
-			<url>scp://devsrcp1/var/www/html/developerDocumentation/crossplatform/fxclearconn-master</url>
+			<url>scp://devsrcp1/var/www/html/developerDocumentation/crossplatform/hawthorne</url>
 		</site>
 
 	</distributionManagement>
@@ -334,6 +306,10 @@
 			<id>includeLargeTests</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
+				<!-- will make this trigger in Jenkins -->
+				<property>
+					<name>env.BUILD_NUMBER</name>
+				</property>
 			</activation>
 			<build>
 				<plugins>
@@ -370,6 +346,25 @@
 								<id>verify</id>
 								<goals>
 									<goal>verify</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>cobertura-maven-plugin</artifactId>
+						<version>2.5.2</version>
+						<configuration>
+							<formats>
+								<format>xml</format>
+							</formats>
+							<aggregate>true</aggregate>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>cobertura</goal>
 								</goals>
 							</execution>
 						</executions>
