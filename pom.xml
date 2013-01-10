@@ -6,6 +6,7 @@
 	<name>Hawthorne Parent</name>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	
 	<description>Server for the Hawthorne project</description>
 
 	<modules>
