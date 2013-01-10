@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.markitserv.mwws.internal.MwwsAssert;
+
 /**
  * Encapsulates filters for an action. Delegates some of the Map functions
  * 
@@ -30,6 +32,28 @@ public class ActionFilters {
 
 	public Map<String, List<String>> getAllFilters() {
 		return filters;
+	}
+
+	public boolean isFilterSet(String key) {
+		return filters.containsKey(key);
+	}
+
+	public List<String> getFilter(String key) {
+		return filters.get(key);
+	}
+
+	/**
+	 * Assumes that there's only one value for this filter
+	 * @param key
+	 * @return
+	 */
+	public String getSingleFilter(String key) {
+		
+		List<String> filtersForKey = filters.get(key);
+		MwwsAssert.mwwsAssert(filtersForKey.size() == 1,
+				"Expected filter '%s' to have only one value.", key);
+		
+		return filtersForKey.get(0);
 	}
 
 	@Override

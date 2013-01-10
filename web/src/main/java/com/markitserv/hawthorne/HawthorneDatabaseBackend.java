@@ -1,5 +1,6 @@
 package com.markitserv.hawthorne;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.context.annotation.Profile;
@@ -19,12 +20,12 @@ import com.markitserv.mwws.exceptions.NotYetImplementedException;
 public class HawthorneDatabaseBackend implements HawthorneBackend {
 
 	@Override
-	public Set<LegalEntity> getLegalEntities() {
+	public List<LegalEntity> getLegalEntities() {
 		throw NotYetImplementedException.standardException();
 	}
 
 	@Override
-	public Set<TradingRequestStatus> getTradingRequestStatuses() {
+	public List<TradingRequestStatus> getTradingRequestStatuses() {
 		throw NotYetImplementedException.standardException();
 	}
 }

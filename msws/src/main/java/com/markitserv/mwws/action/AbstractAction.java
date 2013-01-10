@@ -28,6 +28,10 @@ public abstract class AbstractAction implements InitializingBean {
 	@Autowired
 	private UuidGenerator uuidGenerator;
 
+	private ParamsAndFiltersDefinition parameterDefinition;
+
+	private ParamsAndFiltersDefinition filterDefinition;
+
 	public ActionResult performAction(ActionCommand command) {
 
 		ActionParameters parameters = command.getParameters();
@@ -70,13 +74,13 @@ public abstract class AbstractAction implements InitializingBean {
 		String failureMsg = "Failed to validate ActionResult.  ";
 
 		// either collection OR item needs to be set.
-		if (result.getCollection() == null && result.getItem() == null) {
+		if (result.getList() == null && result.getItem() == null) {
 			throw new ProgrammaticException(failureMsg
 					+ "Either the collection or the item must be set.");
 		}
 
 		// cannot have both collection and item set at the same time.
-		if (result.getCollection() != null && result.getItem() != null) {
+		if (result.getList() != null && result.getItem() != null) {
 			throw new ProgrammaticException(failureMsg
 					+ "Cannot set both the collection and the item.");
 		}
@@ -114,7 +118,7 @@ public abstract class AbstractAction implements InitializingBean {
 	 * 
 	 * @return
 	 */
-	protected ParamsAndFiltersDefinition getParameterDefinition() {
+	protected ParamsAndFiltersDefinition createParameterDefinition() {
 		return new ParamsAndFiltersDefinition();
 	}
 
@@ -124,7 +128,7 @@ public abstract class AbstractAction implements InitializingBean {
 	 * 
 	 * @return
 	 */
-	protected ParamsAndFiltersDefinition getFilterDefinition() {
+	protected ParamsAndFiltersDefinition createFilterDefinition() {
 		return new ParamsAndFiltersDefinition();
 	}
 
@@ -138,6 +142,21 @@ public abstract class AbstractAction implements InitializingBean {
 				getFilterDefinition().getValidations(), veb);
 
 		veb.buildAndThrowIfInvalid();
+	}
+
+	private ParamsAndFiltersDefinition getFilterDefinition() {
+		// TODO Auto-generated method stub
+		if (this.filterDefinition == null) {
+			filterDefinition = this.createFilterDefinition();
+		}
+		return filterDefinition;
+	}
+
+	private ParamsAndFiltersDefinition getParameterDefinition() {
+		if (this.parameterDefinition == null) {
+			parameterDefinition = this.createParameterDefinition();
+		}
+		return parameterDefinition;
 	}
 
 	/**

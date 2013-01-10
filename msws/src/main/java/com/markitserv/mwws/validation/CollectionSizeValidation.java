@@ -40,7 +40,7 @@ public class CollectionSizeValidation extends AbstractOptionalValidation {
 			return ValidationResponse.createInvalidResponse(String.format(
 					"Expected a collection "
 							+ "with a maximum of %d elements, but got a "
-							+ "collection with %d elements.", min, col.size()));
+							+ "collection with %d elements.", max, col.size()));
 		}
 
 		return ValidationResponse.createValidResponse();

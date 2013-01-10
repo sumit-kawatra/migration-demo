@@ -34,36 +34,35 @@ public class ActionAndActionCommandHelpers {
 		protected ActionResult performAction(ActionParameters params,
 				ActionFilters filters) {
 
-			ActionResult res = new ActionResult();
 			BooleanType payload = new BooleanType();
 			payload.setSuccessful(true);
-			res.setItem(payload);
+			ActionResult res = new ActionResult(payload);
 
 			return res;
 		}
 
 		public void addParameterValdiation(String key, AbstractValidation value) {
-			getParameterDefinition().addValidation(key, value);
+			createParameterDefinition().addValidation(key, value);
 		}
 
 		public void addFilterValdiation(String key, AbstractValidation value) {
-			getFilterDefinition().addValidation(key, value);
+			createFilterDefinition().addValidation(key, value);
 		}
 
 		@Override
-		protected ParamsAndFiltersDefinition getParameterDefinition() {
+		protected ParamsAndFiltersDefinition createParameterDefinition() {
 			if (paramDef == null) {
-				paramDef = super.getParameterDefinition();
+				paramDef = super.createParameterDefinition();
 			}
 			
 			return paramDef;
 		}
 
 		@Override
-		protected ParamsAndFiltersDefinition getFilterDefinition() {
+		protected ParamsAndFiltersDefinition createFilterDefinition() {
 			
 			if (filterDef == null) {
-				filterDef = super.getFilterDefinition();
+				filterDef = super.createFilterDefinition();
 			}
 			
 			return filterDef;
@@ -71,7 +70,7 @@ public class ActionAndActionCommandHelpers {
 		}
 
 		public void addParameterDefault(String key, String value) {
-			this.getParameterDefinition().addDefaultParam(key, value);
+			this.createParameterDefinition().addDefaultParam(key, value);
 		}
 		
 		public void setParameterDefinition(ParamsAndFiltersDefinition def) {

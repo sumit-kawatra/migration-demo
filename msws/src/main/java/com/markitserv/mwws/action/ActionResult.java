@@ -1,5 +1,6 @@
 package com.markitserv.mwws.action;
 
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,17 +11,27 @@ import com.markitserv.mwws.Type;
 public class ActionResult {
 	
 	private ActionResponseMetadata metaData = new ActionResponseMetadata();
-	private Set<? extends Type> collection;
+	private List<? extends Type> list;
 	private Type item;
-
-	@JsonInclude(Include.NON_NULL)
-	@JsonProperty(value="set")
-	public Set<? extends Type> getCollection() {
-		return collection;
+	
+	public ActionResult(Type item) {
+		super();
+		this.item = item;
 	}
 
-	public void setCollection(Set<? extends Type> collection) {
-		this.collection = collection;
+	public ActionResult(List<? extends Type> list) {
+		super();
+		this.list = list;
+	}
+
+	@JsonInclude(Include.NON_NULL)
+	@JsonProperty(value="list")
+	public List<? extends Type> getList() {
+		return list;
+	}
+
+	public void setList(List<? extends Type> collection) {
+		this.list = collection;
 	}
 
 	@JsonInclude(Include.NON_NULL)

@@ -1,6 +1,8 @@
 package com.markitserv.hawthorne.util;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,11 +22,12 @@ import com.markitserv.hawthorne.types.TradingRequestStatus;
  * 
  */
 @Service
-public class HardcodedHawthorneBackend implements InitializingBean, HawthorneBackend {
+public class HardcodedHawthorneBackend implements InitializingBean,
+		HawthorneBackend {
 
 	@Autowired
 	private RandomNameGenerator nameGen;
-	private Set<LegalEntity> legalEntities = new HashSet<LegalEntity>();
+	private List<LegalEntity> legalEntities = new ArrayList<LegalEntity>();
 
 	private void initData() {
 		populateLegalEntities(20);
@@ -52,28 +55,28 @@ public class HardcodedHawthorneBackend implements InitializingBean, HawthorneBac
 		le.setId(id);
 		le.setName(name);
 		le.setBic(bic);
-		
+
 		return le;
 	}
-	
+
 	@Override
-	public Set<TradingRequestStatus> getTradingRequestStatuses() {
-		
-		HashSet<TradingRequestStatus> statuses = new HashSet<TradingRequestStatus>();
+	public List<TradingRequestStatus> getTradingRequestStatuses() {
+
+		ArrayList<TradingRequestStatus> statuses = new ArrayList<TradingRequestStatus>();
 		statuses.add(new TradingRequestStatus(1, "Cancelled"));
 		statuses.add(new TradingRequestStatus(1, "Live"));
 		statuses.add(new TradingRequestStatus(1, "No Relationship"));
 		statuses.add(new TradingRequestStatus(1, "On Hold"));
 		statuses.add(new TradingRequestStatus(1, "Else"));
-		
+
 		return statuses;
 	}
-	
-	public Set<LegalEntity> getLegalEntities() {
+
+	public List<LegalEntity> getLegalEntities() {
 		return legalEntities;
 	}
 
-	public void setLegalEntities(Set<LegalEntity> legalEntities) {
+	public void setLegalEntities(List<LegalEntity> legalEntities) {
 		this.legalEntities = legalEntities;
 	}
 
