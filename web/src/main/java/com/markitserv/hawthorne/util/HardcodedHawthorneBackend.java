@@ -8,7 +8,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.markitserv.hawthorne.HawthorneBackend;
 import com.markitserv.hawthorne.types.LegalEntity;
+import com.markitserv.hawthorne.types.TradingRequestStatus;
 
 /**
  * Hardcodes data that will eventually come from the server. This class will not
@@ -18,7 +20,7 @@ import com.markitserv.hawthorne.types.LegalEntity;
  * 
  */
 @Service
-public class HardcodedData implements InitializingBean {
+public class HardcodedHawthorneBackend implements InitializingBean, HawthorneBackend {
 
 	@Autowired
 	private RandomNameGenerator nameGen;
@@ -54,6 +56,19 @@ public class HardcodedData implements InitializingBean {
 		return le;
 	}
 	
+	@Override
+	public Set<TradingRequestStatus> getTradingRequestStatuses() {
+		
+		HashSet<TradingRequestStatus> statuses = new HashSet<TradingRequestStatus>();
+		statuses.add(new TradingRequestStatus(1, "Cancelled"));
+		statuses.add(new TradingRequestStatus(1, "Live"));
+		statuses.add(new TradingRequestStatus(1, "No Relationship"));
+		statuses.add(new TradingRequestStatus(1, "On Hold"));
+		statuses.add(new TradingRequestStatus(1, "Else"));
+		
+		return statuses;
+	}
+	
 	public Set<LegalEntity> getLegalEntities() {
 		return legalEntities;
 	}
@@ -62,9 +77,9 @@ public class HardcodedData implements InitializingBean {
 		this.legalEntities = legalEntities;
 	}
 
-
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		initData();
 	}
+
 }

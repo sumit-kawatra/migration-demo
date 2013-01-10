@@ -25,9 +25,9 @@ import com.markitserv.mwws.validation.RequiredValidation;
  * @author roy.truelove
  *
  */
-public class DescribeLegalEntities extends AbstractAction {
+public class DescribeTradingRequestStatuses extends AbstractAction {
 
-	Logger log = LoggerFactory.getLogger(DescribeLegalEntities.class);
+	Logger log = LoggerFactory.getLogger(DescribeTradingRequestStatuses.class);
 
 	@Autowired
 	private HawthorneBackend data;
@@ -38,14 +38,6 @@ public class DescribeLegalEntities extends AbstractAction {
 		// Add validation
 		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
 
-		def.addValidation("ParticipantId", new RequiredValidation());
-		def.addValidation("ParticipantId", new IntegerValidation());
-
-		SortingPresetDefinitionBuilder sortBuilder = new SortingPresetDefinitionBuilder();
-		sortBuilder = sortBuilder.setDefaultSort("Id", SortOrder.Asc);
-		sortBuilder = sortBuilder.addSortOption("StartDate");
-
-		def.mergeWith(sortBuilder.build());
 		def.mergeWith(new PaginationPresetDefintion());
 
 		return def;
@@ -59,6 +51,7 @@ public class DescribeLegalEntities extends AbstractAction {
 
 		ActionResult res = new ActionResult();
 		res.setCollection(data.getLegalEntities());
+		res.setCollection(data.getTradingRequestStatuses());
 		return res;
 	}
 
