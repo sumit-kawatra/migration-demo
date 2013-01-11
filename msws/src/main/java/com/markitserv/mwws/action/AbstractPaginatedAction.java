@@ -4,6 +4,7 @@ import com.markitserv.mwws.Util.Constants;
 import com.markitserv.mwws.definition.ParamsAndFiltersDefinition;
 import static com.markitserv.mwws.internal.MwwsAssert.mwwsAssert;
 import com.markitserv.mwws.validation.IntegerMaxMinValidation;
+import com.markitserv.mwws.validation.PaginationPageSizeValidation;
 import com.markitserv.mwws.validation.RequiredValidation;
 
 public abstract class AbstractPaginatedAction extends AbstractAction {
@@ -40,7 +41,7 @@ public abstract class AbstractPaginatedAction extends AbstractAction {
 
 		def.addValidation(CommonParamKeys.PageSize, new RequiredValidation());
 		def.addValidation(CommonParamKeys.PageSize,
-				new IntegerMaxMinValidation(1, this.getMaxPageSize()));
+				new PaginationPageSizeValidation(this.getMaxPageSize()));
 
 		def.addDefaultParam(CommonParamKeys.PageNumber.toString(), "1");
 		def.addDefaultParam(CommonParamKeys.PageSize.toString(),
