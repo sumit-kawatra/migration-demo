@@ -49,8 +49,8 @@ public class SubstringReflectionFilter<T extends Type> extends
 		this.substr = substr;
 		this.caseSentitive = caseSenstitive;
 
-		if (caseSenstitive) {
-			this.propertyName = this.propertyName.toUpperCase();
+		if (!caseSenstitive) {
+			this.substr = this.substr.toUpperCase();
 		}
 	}
 
@@ -76,7 +76,7 @@ public class SubstringReflectionFilter<T extends Type> extends
 					propertyName, item.getClass().getSimpleName());
 		}
 
-		if (caseSentitive) {
+		if (!caseSentitive) {
 			propValue = propValue.toUpperCase();
 		}
 

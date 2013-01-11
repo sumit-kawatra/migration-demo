@@ -30,7 +30,7 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	private Stack<TradingRequestStatus> tradingRequestStatuses;
 
 	private void initData() {
-		populateLegalEntities(100);
+		populateLegalEntities(100000);
 		populateTradingRequestStatuses();
 	}
 
@@ -48,10 +48,10 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		tradingRequestStatuses = new Stack<TradingRequestStatus>();
 		
 		tradingRequestStatuses.add(new TradingRequestStatus(1, "Cancelled"));
-		tradingRequestStatuses.add(new TradingRequestStatus(1, "Live"));
-		tradingRequestStatuses.add(new TradingRequestStatus(1, "No Relationship"));
-		tradingRequestStatuses.add(new TradingRequestStatus(1, "On Hold"));
-		tradingRequestStatuses.add(new TradingRequestStatus(1, "Else"));
+		tradingRequestStatuses.add(new TradingRequestStatus(2, "Live"));
+		tradingRequestStatuses.add(new TradingRequestStatus(3, "No Relationship"));
+		tradingRequestStatuses.add(new TradingRequestStatus(4, "On Hold"));
+		tradingRequestStatuses.add(new TradingRequestStatus(5, "Else"));
 	}
 
 	private LegalEntity createLegalEntity(String id) {
@@ -60,7 +60,8 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 
 		String firstName = nameGen.compose(3);
 		String secondName = nameGen.compose(2);
-		String name = firstName + " " + secondName + " LLC";
+		String thirdName = nameGen.compose(4);
+		String name = firstName + " " + secondName + " " + thirdName + " LLC";
 
 		// first 4 letters of first and second name
 		String bic = StringUtils.upperCase(StringUtils.left(firstName, 4))

@@ -1,5 +1,6 @@
 package com.markitserv.mwws.web;
 
+import java.security.Principal;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ public class MwwsController {
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public @ResponseBody
 	ActionResult performActionReq(WebRequest req) {
-
+		
 		ActionCommand actionCmd = actionCmdBuilder.buildActionCommandFromHttpParams(req
 				.getParameterMap());
 		

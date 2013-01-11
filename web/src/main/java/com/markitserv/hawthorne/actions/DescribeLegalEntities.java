@@ -34,7 +34,8 @@ import com.markitserv.mwws.validation.RequiredValidation;
  */
 public class DescribeLegalEntities extends AbstractPaginatedAction {
 
-	private static final String FILTER_NAME_SUBSTR = "substr";
+	private static final String FILTER_NAME_SUBSTR_NAME = "substrName";
+	private static final String FILTER_NAME_SUBSTR_BIC = "substrBic";
 
 	Logger log = LoggerFactory.getLogger(DescribeLegalEntities.class);
 
@@ -65,7 +66,10 @@ public class DescribeLegalEntities extends AbstractPaginatedAction {
 	protected ParamsAndFiltersDefinition createFilterDefinition() {
 		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
 
-		def.addValidation(FILTER_NAME_SUBSTR, new CollectionSizeValidation(
+		def.addValidation(FILTER_NAME_SUBSTR_NAME, new CollectionSizeValidation(
+				CollectionSizeValidation.UNLIMITED, 1));
+		
+		def.addValidation(FILTER_NAME_SUBSTR_BIC, new CollectionSizeValidation(
 				CollectionSizeValidation.UNLIMITED, 1));
 
 		return def;
@@ -89,10 +93,16 @@ public class DescribeLegalEntities extends AbstractPaginatedAction {
 	private List<LegalEntity> applyFilters(ActionParameters p, ActionFilters f,
 			List<LegalEntity> legalEntities) {
 		
-		if (f.isFilterSet(FILTER_NAME_SUBSTR)) {
+		if (f.isFilterSet(FILTER_NAME_SUBSTR_NAME)) {
 
 			legalEntities = SubstringReflectionFilter.filter(legalEntities,
-					"name", f.getSingleFilter(FILTER_NAME_SUBSTR));
+					"name", f.getSingleFilter(FILTER_NAME_SUBSTR_NAME));
+		}
+		
+		if (f.isFilterSet(FILTER_NAME_SUBSTR_BIC)) {
+
+			legalEntities = SubstringReflectionFilter.filter(legalEntities,
+					"bic", f.getSingleFilter(FILTER_NAME_SUBSTR_BIC));
 		}
 		
 		int pageNumber = p.getParameterAsInt(CommonParamKeys.PageNumber.toString());
