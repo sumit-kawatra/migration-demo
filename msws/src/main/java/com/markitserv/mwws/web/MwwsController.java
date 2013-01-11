@@ -39,17 +39,21 @@ public class MwwsController {
 	GenericResult performActionReq(WebRequest req) {
 		GenericResult result = null;
 		String uuid = null;
+		
+		uuid = (String) req.getAttribute(CommonConstants.UUID,
+				RequestAttributes.SCOPE_REQUEST);
+		
 		try {
-			uuid = (String) req.getAttribute(CommonConstants.UUID,
-					RequestAttributes.SCOPE_REQUEST);
 			ActionCommand actionCmd = actionCmdBuilder
 					.buildActionCommandFromHttpParams(req.getParameterMap());
 			result = (ActionResult) dispatcher
 					.dispatchReqRespCommand(actionCmd);
+			
+		// TODO catch all exceptions
 		} catch (MwwsException exception) {
-			result = new ExceptionResult(exception.getErrorCode(),
-					exception.getErrorMessage());
+			result = new ExceptionResult(exception);
 		}
+		
 		log.info("Uuid from requestRegistry is " + uuid);
 		result.getMetaData().setRequestId(uuid);
 		return result;

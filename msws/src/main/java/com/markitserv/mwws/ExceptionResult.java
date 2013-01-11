@@ -1,37 +1,63 @@
 package com.markitserv.mwws;
 
+import java.util.List;
+import java.util.Stack;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.markitserv.mwws.exceptions.MultipleErrorsException;
+import com.markitserv.mwws.exceptions.MwwsException;
 
 public class ExceptionResult extends GenericResult {
 
-	private String errorCode;
-	private String errorMessage;
+	private MwwsException exception;
+	private Stack<MwwsError> errors = new Stack<MwwsError>();
 
-	@JsonInclude(Include.NON_NULL)
-	@JsonProperty(value = "Code")
-	public String getErrorCode() {
-		return errorCode;
+	private class MwwsError extends GenericResult {
+
+		private String errorCode;
+		private String errorMessage;
+
+		@JsonInclude(Include.NON_NULL)
+		@JsonProperty(value = "Code")
+		public String getErrorCode() {
+			return errorCode;
+		}
+
+		@JsonInclude(Include.NON_NULL)
+		@JsonProperty(value = "Message")
+		public String getErrorMessage() {
+			return errorMessage;
+		}
+
+		public MwwsError(String errorCode, String errorMessage) {
+			this.errorCode = errorCode;
+			this.errorMessage = errorMessage;
+		}
 	}
 
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
+	public ExceptionResult(MwwsException exception) {
+
+		super();
+		this.exception = exception;
+
+		if (exception instanceof MultipleErrorsException) {
+			MultipleErrorsException mException = (MultipleErrorsException) exception;
+
+			// TODO
+			// iterate over messages in mException
+			
+		} else {
+
+			errors.push(new MwwsError(exception.getErrorCode(), exception
+					.getMessage()));
+		}
 	}
 
-	@JsonInclude(Include.NON_NULL)
 	@JsonProperty(value = "Message")
-	public String getErrorMessage() {
-		return errorMessage;
+	public List<MwwsError> errors() {
+		return errors;
 	}
-
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
-	}
-
-	public ExceptionResult(String errorCode, String errorMessage) {
-		this.errorCode = errorCode;
-		this.errorMessage = errorMessage;
-	}
-
 }

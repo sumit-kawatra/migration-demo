@@ -16,4 +16,5 @@ public class ValidationException extends MwwsException {
 	public List<String> getValidationMsgs() {
 		return validationMsgs;
 	}
+
 }

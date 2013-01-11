@@ -8,17 +8,13 @@ package com.markitserv.mwws.exceptions;
  */
 public class MwwsException extends RuntimeException {
 
-	
-	private String errorCode;
 	private String errorMessage;
-	
 	
 	public MwwsException() {
 	}
 
 	public MwwsException(String message) {
 		super(message);
-		this.errorCode = getClass().getSimpleName();
 		this.errorMessage = message;
 	}
 
@@ -27,11 +23,7 @@ public class MwwsException extends RuntimeException {
 	}
 
 	public String getErrorCode() {
-		return errorCode;
-	}
-
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
+		return getClass().getSimpleName();
 	}
 
 	public String getErrorMessage() {
