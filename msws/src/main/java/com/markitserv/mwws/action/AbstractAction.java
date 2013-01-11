@@ -1,17 +1,13 @@
 package com.markitserv.mwws.action;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.markitserv.mwws.definition.ParamsAndFiltersDefinition;
-import com.markitserv.mwws.exceptions.NotYetImplementedException;
 import com.markitserv.mwws.exceptions.ProgrammaticException;
 import com.markitserv.mwws.internal.UuidGenerator;
 import com.markitserv.mwws.validation.RequiredValidation;
@@ -42,10 +38,15 @@ public abstract class AbstractAction implements InitializingBean {
 
 		ActionResult result = this.performAction(parameters, filters);
 
-		result.getMetadata().setRequestId(uuidGenerator.generateUuid());
+		result = addResponseMetadata(result);
 
 		validateResult(result);
 
+		return result;
+	}
+
+	protected ActionResult addResponseMetadata(ActionResult result) {
+		result.getMetadata().setRequestId(uuidGenerator.generateUuid());
 		return result;
 	}
 
@@ -54,12 +55,13 @@ public abstract class AbstractAction implements InitializingBean {
 
 		Map<String, Object> paramDefaults = this.getParameterDefinition()
 				.getDefaultParams();
-		
+
 		Map<String, Object> params = parameters.getAllParameters();
-		
+
 		for (String defaultKey : paramDefaults.keySet()) {
 			if (!params.containsKey(defaultKey)) {
-				parameters.addParameter(defaultKey, paramDefaults.get(defaultKey));
+				parameters.addParameter(defaultKey,
+						paramDefaults.get(defaultKey));
 			}
 		}
 	}
@@ -69,9 +71,9 @@ public abstract class AbstractAction implements InitializingBean {
 	 * 
 	 * @param result
 	 */
-	private void validateResult(ActionResult result) {
+	protected void validateResult(ActionResult result) {
 
-		String failureMsg = "Failed to validate ActionResult.  ";
+		String failureMsg = "Failed to validate ActionResult.";
 
 		// either collection OR item needs to be set.
 		if (result.getList() == null && result.getItem() == null) {
@@ -145,7 +147,7 @@ public abstract class AbstractAction implements InitializingBean {
 	}
 
 	private ParamsAndFiltersDefinition getFilterDefinition() {
-		// TODO Auto-generated method stub
+
 		if (this.filterDefinition == null) {
 			filterDefinition = this.createFilterDefinition();
 		}
@@ -155,8 +157,21 @@ public abstract class AbstractAction implements InitializingBean {
 	private ParamsAndFiltersDefinition getParameterDefinition() {
 		if (this.parameterDefinition == null) {
 			parameterDefinition = this.createParameterDefinition();
+			parameterDefinition = this
+					.addAdditionalParameterDefinitions(parameterDefinition);
 		}
 		return parameterDefinition;
+	}
+
+	/**
+	 * Allows subclasses to modify the parameter def upon creation
+	 * 
+	 * @param def
+	 * @return
+	 */
+	protected ParamsAndFiltersDefinition addAdditionalParameterDefinitions(
+			ParamsAndFiltersDefinition def) {
+		return def;
 	}
 
 	/**

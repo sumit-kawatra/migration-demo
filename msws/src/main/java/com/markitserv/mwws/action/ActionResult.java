@@ -14,6 +14,10 @@ public class ActionResult {
 	private List<? extends Type> list;
 	private Type item;
 	
+	public ActionResult () {
+		super();
+	}
+	
 	public ActionResult(Type item) {
 		super();
 		this.item = item;
@@ -47,9 +51,5 @@ public class ActionResult {
 	@JsonProperty(value="responseMetadata")
 	public ActionResponseMetadata getMetadata() {
 		return metaData;
-	}
-
-	public void setMetaData(ActionResponseMetadata metaData) {
-		this.metaData = metaData;
 	}
 }

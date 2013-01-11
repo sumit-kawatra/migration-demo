@@ -1,9 +1,8 @@
 package com.markitserv.hawthorne.util;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Stack;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -27,17 +26,32 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 
 	@Autowired
 	private RandomNameGenerator nameGen;
-	private List<LegalEntity> legalEntities = new ArrayList<LegalEntity>();
+	private List<LegalEntity> legalEntities; 
+	private Stack<TradingRequestStatus> tradingRequestStatuses;
 
 	private void initData() {
-		populateLegalEntities(20);
+		populateLegalEntities(100);
+		populateTradingRequestStatuses();
 	}
 
 	private void populateLegalEntities(int count) {
+		
+		legalEntities = new ArrayList<LegalEntity>();
 
 		for (int i = 1; i <= count; i++) {
 			legalEntities.add(createLegalEntity("" + i));
 		}
+	}
+
+	private void populateTradingRequestStatuses() {
+		
+		tradingRequestStatuses = new Stack<TradingRequestStatus>();
+		
+		tradingRequestStatuses.add(new TradingRequestStatus(1, "Cancelled"));
+		tradingRequestStatuses.add(new TradingRequestStatus(1, "Live"));
+		tradingRequestStatuses.add(new TradingRequestStatus(1, "No Relationship"));
+		tradingRequestStatuses.add(new TradingRequestStatus(1, "On Hold"));
+		tradingRequestStatuses.add(new TradingRequestStatus(1, "Else"));
 	}
 
 	private LegalEntity createLegalEntity(String id) {
@@ -59,30 +73,16 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		return le;
 	}
 
-	@Override
-	public List<TradingRequestStatus> getTradingRequestStatuses() {
-
-		ArrayList<TradingRequestStatus> statuses = new ArrayList<TradingRequestStatus>();
-		statuses.add(new TradingRequestStatus(1, "Cancelled"));
-		statuses.add(new TradingRequestStatus(1, "Live"));
-		statuses.add(new TradingRequestStatus(1, "No Relationship"));
-		statuses.add(new TradingRequestStatus(1, "On Hold"));
-		statuses.add(new TradingRequestStatus(1, "Else"));
-
-		return statuses;
-	}
-
 	public List<LegalEntity> getLegalEntities() {
 		return legalEntities;
 	}
-
-	public void setLegalEntities(List<LegalEntity> legalEntities) {
-		this.legalEntities = legalEntities;
+	
+	public List<TradingRequestStatus> getTradingRequestStatuses() {
+		return this.tradingRequestStatuses;
 	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		initData();
 	}
-
 }

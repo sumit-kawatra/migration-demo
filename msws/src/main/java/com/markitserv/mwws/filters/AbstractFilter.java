@@ -29,5 +29,7 @@ public abstract class AbstractFilter<T extends Type> {
 		return newList;
 	}
 
-	protected abstract boolean shouldBeFilteredOut(T item);
+	protected boolean shouldBeFilteredOut(T item) {
+		return false;
+	}
 }

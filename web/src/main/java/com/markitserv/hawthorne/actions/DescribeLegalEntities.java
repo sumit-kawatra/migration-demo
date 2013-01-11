@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.HawthorneBackend;
 import com.markitserv.hawthorne.types.LegalEntity;
-import com.markitserv.mwws.action.AbstractAction;
+import com.markitserv.mwws.action.AbstractPaginatedAction;
 import com.markitserv.mwws.action.ActionFilters;
 import com.markitserv.mwws.action.ActionParameters;
 import com.markitserv.mwws.action.ActionResult;
+import com.markitserv.mwws.action.PaginatedActionResult;
 import com.markitserv.mwws.action.SortOrder;
-import com.markitserv.mwws.definition.PaginationPresetDefintion;
 import com.markitserv.mwws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.mwws.definition.SortingPresetDefinitionBuilder;
 import com.markitserv.mwws.filters.SubstringReflectionFilter;
@@ -29,7 +29,7 @@ import com.markitserv.mwws.validation.RequiredValidation;
  * @author roy.truelove
  *
  */
-public class DescribeLegalEntities extends AbstractAction {
+public class DescribeLegalEntities extends AbstractPaginatedAction {
 
 	private static final String FILTER_NAME_SUBSTR = "substr";
 
@@ -54,7 +54,6 @@ public class DescribeLegalEntities extends AbstractAction {
 		sortBuilder = sortBuilder.addSortOption("StartDate");
 
 		def.mergeWith(sortBuilder.build());
-		def.mergeWith(new PaginationPresetDefintion());
 
 		return def;
 	}
@@ -79,8 +78,10 @@ public class DescribeLegalEntities extends AbstractAction {
 			legalEntities = SubstringReflectionFilter.filter(legalEntities,
 					"name", f.getSingleFilter(FILTER_NAME_SUBSTR));
 		}
-
-		ActionResult res = new ActionResult(legalEntities);
+		
+		PaginatedActionResult res = new PaginatedActionResult(legalEntities);
+		res.setTotalRecords(legalEntities.size());
+		
 		return res;
 	}
 }

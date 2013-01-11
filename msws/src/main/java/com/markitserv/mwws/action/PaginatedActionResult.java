@@ -1,18 +1,28 @@
 package com.markitserv.mwws.action;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.markitserv.mwws.Type;
 import com.markitserv.mwws.Util.Constants;
 
-public class ActionResponseMetadata {
+public class PaginatedActionResult extends ActionResult {
 	
 	// using Integer and not int so that they can be null
 	private int totalRecords = Constants.INTEGER_NOT_SET;
 	private int approxTotalRecords = Constants.INTEGER_NOT_SET;
 	
-	private String requestId;
+	public PaginatedActionResult(List<? extends Type> list) {
+		super(list);
+	}
+	
+	public PaginatedActionResult() {
+		super();
+	}
 
-	@JsonInclude(Include.NON_DEFAULT)
+	@JsonIgnore
 	public int getTotalRecords() {
 		return totalRecords;
 	}
@@ -21,7 +31,7 @@ public class ActionResponseMetadata {
 		this.totalRecords = totalRecords;
 	}
 
-	@JsonInclude(Include.NON_DEFAULT)
+	@JsonIgnore
 	public int getApproxTotalRecords() {
 		return approxTotalRecords;
 	}
@@ -29,13 +39,5 @@ public class ActionResponseMetadata {
 	public void setApproxTotalRecords(int approxTotalRecords) {
 		this.approxTotalRecords = approxTotalRecords;
 	}
-
-	@JsonInclude(Include.NON_DEFAULT)
-	public String getRequestId() {
-		return requestId;
-	}
-
-	public void setRequestId(String requestId) {
-		this.requestId = requestId;
-	}
-}
+	
+} 
