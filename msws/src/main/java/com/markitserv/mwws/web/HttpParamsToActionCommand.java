@@ -16,6 +16,7 @@ import com.markitserv.mwws.action.CommonParamKeys;
 import com.markitserv.mwws.exceptions.ActionParamMissingException;
 import com.markitserv.mwws.exceptions.MalformedFiltersException;
 import com.markitserv.mwws.exceptions.MultipleParameterValuesException;
+import com.markitserv.mwws.exceptions.MwwsException;
 
 /**
  * Builds an ActionCommand from HTTP paramas.
@@ -27,7 +28,7 @@ import com.markitserv.mwws.exceptions.MultipleParameterValuesException;
 public class HttpParamsToActionCommand {
 
 	public ActionCommand buildActionCommandFromHttpParams(
-			Map<String, String[]> httpParams) {
+			Map<String, String[]> httpParams) throws MwwsException {
 
 		// Need a mutable copy
 		HashMap<String, String[]> params = new HashMap<String, String[]>(
@@ -77,7 +78,7 @@ public class HttpParamsToActionCommand {
 	}
 
 	private Map<String, Object> processParamWithMultipleValues(
-			Map<String, Object> params, String mValKey, String value) {
+			Map<String, Object> params, String mValKey, String value) throws MwwsException {
 
 		// Strip off the last numbers
 		String key = StringUtils.substringBeforeLast(mValKey, ".");
@@ -121,7 +122,7 @@ public class HttpParamsToActionCommand {
 	 * @param params
 	 * @return
 	 */
-	private ActionFilters processFilterParams(HashMap<String, String[]> params) {
+	private ActionFilters processFilterParams(HashMap<String, String[]> params) throws MwwsException {
 
 		Map<String, List<String>> filtersMap = new HashMap<String, List<String>>();
 
@@ -168,7 +169,7 @@ public class HttpParamsToActionCommand {
 	}
 
 	private List<String> processFilterValues(HashMap<String, String[]> params,
-			int nameCounter) {
+			int nameCounter) throws MwwsException {
 		// iterate through the values of the filter and push them to a stack
 
 		int valueCounter = 0;

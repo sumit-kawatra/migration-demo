@@ -38,15 +38,13 @@ public abstract class AbstractAction implements InitializingBean {
 
 		ActionResult result = this.performAction(parameters, filters);
 
-		result = addResponseMetadata(result);
-
 		validateResult(result);
 
 		return result;
 	}
 
 	protected ActionResult addResponseMetadata(ActionResult result) {
-		result.getMetadata().setRequestId(uuidGenerator.generateUuid());
+		result.getMetaData().setRequestId(uuidGenerator.generateUuid());
 		return result;
 	}
 

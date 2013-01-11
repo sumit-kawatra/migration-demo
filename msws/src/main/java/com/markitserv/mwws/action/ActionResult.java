@@ -1,14 +1,14 @@
 package com.markitserv.mwws.action;
 
 import java.util.List;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.markitserv.mwws.GenericResult;
 import com.markitserv.mwws.Type;
 
-public class ActionResult {
+public class ActionResult extends GenericResult {
 	
 	private ActionResponseMetadata metaData = new ActionResponseMetadata();
 	private List<? extends Type> list;

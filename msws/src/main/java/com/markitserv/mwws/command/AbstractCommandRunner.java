@@ -1,5 +1,7 @@
 package com.markitserv.mwws.command;
 
+import com.markitserv.mwws.exceptions.MwwsException;
+
 
 /**
  * All CommandRunners should subclass this class
@@ -13,5 +15,5 @@ public abstract class AbstractCommandRunner {
 	 * @param cmd The command to run
 	 * @return The result of the command
 	 */
-	protected abstract Object run(Command cmd);
+	protected abstract Object run(Command cmd) throws MwwsException;
 }

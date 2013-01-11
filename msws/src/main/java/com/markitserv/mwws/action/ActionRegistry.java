@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.markitserv.mwws.exceptions.MwwsException;
 import com.markitserv.mwws.exceptions.UnknownActionException;
 
 /** 
@@ -17,7 +18,7 @@ public class ActionRegistry {
 	
 	Map<String, AbstractAction> registry = new HashMap<String, AbstractAction>();
 	
-	public AbstractAction getActionWithName(String name) {
+	public AbstractAction getActionWithName(String name) throws MwwsException {
 		
 		if (!registry.containsKey(name)) {
 			throw UnknownActionException.standardException(name);

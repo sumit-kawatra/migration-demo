@@ -10,12 +10,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 
+import com.markitserv.mwws.CommonConstants;
+import com.markitserv.mwws.ExceptionResult;
+import com.markitserv.mwws.GenericResult;
 import com.markitserv.mwws.action.ActionCommand;
 import com.markitserv.mwws.action.ActionResult;
 import com.markitserv.mwws.command.CommandDispatcher;
-import com.markitserv.mwws.web.HttpParamsToActionCommand;
+import com.markitserv.mwws.exceptions.MwwsException;
 
 @Controller
 @RequestMapping(value = "/")
@@ -32,11 +36,22 @@ public class MwwsController {
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public @ResponseBody
-	ActionResult performActionReq(WebRequest req) {
-		
-		ActionCommand actionCmd = actionCmdBuilder.buildActionCommandFromHttpParams(req
-				.getParameterMap());
-		
-		return (ActionResult) dispatcher.dispatchReqRespCommand(actionCmd);
+	GenericResult performActionReq(WebRequest req) {
+		GenericResult result = null;
+		String uuid = null;
+		try {
+			uuid = (String) req.getAttribute(CommonConstants.UUID,
+					RequestAttributes.SCOPE_REQUEST);
+			ActionCommand actionCmd = actionCmdBuilder
+					.buildActionCommandFromHttpParams(req.getParameterMap());
+			result = (ActionResult) dispatcher
+					.dispatchReqRespCommand(actionCmd);
+		} catch (MwwsException exception) {
+			result = new ExceptionResult(exception.getErrorCode(),
+					exception.getErrorMessage());
+		}
+		log.info("Uuid from requestRegistry is " + uuid);
+		result.getMetaData().setRequestId(uuid);
+		return result;
 	}
 }

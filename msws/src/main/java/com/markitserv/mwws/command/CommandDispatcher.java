@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.markitserv.mwws.action.ActionCommand;
 import com.markitserv.mwws.action.ActionCommandRunner;
+import com.markitserv.mwws.exceptions.MwwsException;
 import com.markitserv.mwws.exceptions.ProgrammaticException;
 
 @Service
@@ -13,7 +14,7 @@ public class CommandDispatcher {
 	@Autowired
 	public ActionCommandRunner actionCommandRunner;
 
-	public Object dispatchReqRespCommand(ReqRespCommand cmd) {
+	public Object dispatchReqRespCommand(ReqRespCommand cmd) throws MwwsException {
 		// At some point this will be refactored to handle different types
 		// of commands dynamically instead of having to know all of the runners
 		// upfront

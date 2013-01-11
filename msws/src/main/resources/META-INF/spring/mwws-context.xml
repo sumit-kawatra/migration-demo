@@ -12,4 +12,8 @@
 
 	<context:component-scan base-package="com.markitserv.mwws" />
 	<mvc:annotation-driven />
+	
+	<mvc:interceptors>
+	 <bean class="com.markitserv.mwws.web.CommandInterceptor" />
+	</mvc:interceptors>
 </beans>
