@@ -32,7 +32,7 @@ public class MultipleParameterValuesException extends MwwsException {
 	public static MultipleParameterValuesException standardException(
 			String paramName) {
 		return new MultipleParameterValuesException(
-				"Multiple values provdied for parameter '%s'.  "
+				"Multiple values provided for parameter '%s'.  "
 						+ "Only one value per parameter is supported",
 				paramName);
 	}
