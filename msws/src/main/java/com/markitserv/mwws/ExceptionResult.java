@@ -4,18 +4,19 @@ import java.util.List;
 import java.util.Stack;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.markitserv.mwws.exceptions.MultipleErrorsException;
 import com.markitserv.mwws.exceptions.MwwsException;
 
+@JsonPropertyOrder(alphabetic=true)
 public class ExceptionResult extends GenericResult {
 
 	private MwwsException exception;
 	private Stack<MwwsError> errors = new Stack<MwwsError>();
 
-	private class MwwsError extends GenericResult {
+	private class MwwsError {
 
 		private String errorCode;
 		private String errorMessage;
@@ -45,18 +46,16 @@ public class ExceptionResult extends GenericResult {
 
 		if (exception instanceof MultipleErrorsException) {
 			MultipleErrorsException mException = (MultipleErrorsException) exception;
-
-			// TODO
-			// iterate over messages in mException
-			
+			for(String message : mException.getMessages()) {
+				errors.push(new MwwsError(exception.getErrorCode(), message));
+			}
 		} else {
-
 			errors.push(new MwwsError(exception.getErrorCode(), exception
 					.getMessage()));
 		}
 	}
 
-	@JsonProperty(value = "Message")
+	@JsonProperty(value = "Errors")
 	public List<MwwsError> errors() {
 		return errors;
 	}
