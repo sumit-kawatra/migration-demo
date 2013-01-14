@@ -39,7 +39,7 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		legalEntities = new ArrayList<LegalEntity>();
 
 		for (int i = 1; i <= count; i++) {
-			legalEntities.add(createLegalEntity("" + i));
+			legalEntities.add(createLegalEntity(i));
 		}
 	}
 
@@ -54,7 +54,7 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		tradingRequestStatuses.add(new TradingRequestStatus(5, "Else"));
 	}
 
-	private LegalEntity createLegalEntity(String id) {
+	private LegalEntity createLegalEntity(int id) {
 
 		LegalEntity le = new LegalEntity();
 
