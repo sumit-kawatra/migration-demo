@@ -43,7 +43,6 @@ public class MwwsController {
 		uuid = (String) req.getAttribute(CommonConstants.UUID,
 				RequestAttributes.SCOPE_REQUEST);
 		try {
-			int b = 5/0;
 			ActionCommand actionCmd = actionCmdBuilder
 					.buildActionCommandFromHttpParams(req.getParameterMap());
 			result = (ActionResult) dispatcher
