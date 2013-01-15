@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.HawthorneBackend;
 import com.markitserv.hawthorne.types.LegalEntity;
+import com.markitserv.hawthorne.types.TradingRequest;
 import com.markitserv.hawthorne.types.TradingRequestStatus;
 
 /**
@@ -28,10 +29,12 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	private RandomNameGenerator nameGen;
 	private List<LegalEntity> legalEntities; 
 	private Stack<TradingRequestStatus> tradingRequestStatuses;
+	private List<TradingRequest> tradingRequests;
 
 	private void initData() {
 		populateLegalEntities(100000);
 		populateTradingRequestStatuses();
+		populateTradingRequests(10);
 	}
 
 	private void populateLegalEntities(int count) {
@@ -53,6 +56,14 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		tradingRequestStatuses.add(new TradingRequestStatus(4, "On Hold"));
 		tradingRequestStatuses.add(new TradingRequestStatus(5, "Else"));
 	}
+	
+	private void populateTradingRequests(int count) {
+		tradingRequests = new ArrayList<TradingRequest>();
+		for (int i = 0, j=0; i <= count; i++,j++) {
+			j = j == 4 ? 0 : j;
+			tradingRequests.add(createTradingRequest(j));
+		}
+	}
 
 	private LegalEntity createLegalEntity(String id) {
 
@@ -73,6 +84,17 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 
 		return le;
 	}
+	
+	private TradingRequest createTradingRequest(long id) {
+		TradingRequest tr = new TradingRequest();
+		tr.setId(id);
+		try {
+			tr.setRequestStatus(tradingRequestStatuses.get((int) id));
+		} catch (Exception exception) {
+			tr.setRequestStatus(tradingRequestStatuses.get(0));
+		}
+		return tr;
+	}
 
 	public List<LegalEntity> getLegalEntities() {
 		return legalEntities;
@@ -85,5 +107,10 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		initData();
+	}
+
+	@Override
+	public List<TradingRequest> getTradingRequests() {
+		return this.tradingRequests;
 	}
 }

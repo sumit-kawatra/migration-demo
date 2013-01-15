@@ -30,9 +30,9 @@ public class CommandInterceptor  extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, 
 			HttpServletResponse response, Object handler)
 	    throws Exception {		
-		String Uuid = uuidGenerator.generateUuid();
-		request.setAttribute(CommonConstants.UUID, Uuid);
-		log.info("Uuid from requestRegistry is " + Uuid);
+		String uuid = uuidGenerator.generateUuid();
+		request.setAttribute(CommonConstants.UUID, uuid);
+		log.info("Uuid is " + uuid);
 		return true;
 	}
 	

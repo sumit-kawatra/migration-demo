@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.types.LegalEntity;
+import com.markitserv.hawthorne.types.TradingRequest;
 import com.markitserv.hawthorne.types.TradingRequestStatus;
 import com.markitserv.mwws.exceptions.NotYetImplementedException;
 
@@ -26,6 +27,11 @@ public class HawthorneDatabaseBackend implements HawthorneBackend {
 
 	@Override
 	public List<TradingRequestStatus> getTradingRequestStatuses() {
+		throw NotYetImplementedException.standardException();
+	}
+
+	@Override
+	public List<TradingRequest> getTradingRequests() {
 		throw NotYetImplementedException.standardException();
 	}
 }
