@@ -5,6 +5,7 @@ package com.markitserv.mwws;
  * Application specific common constants
  *
  */
+//TODO incorporate all constants to existing class - Constants.java
 public final class CommonConstants {
 
 	public static final String UUID = "UUID";
