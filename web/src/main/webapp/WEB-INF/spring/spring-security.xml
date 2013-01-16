@@ -26,7 +26,8 @@
 	auto-config="false" create-session="stateless" entry-point-ref="CustomAuthenticationEntryPoint">
     <sec:custom-filter ref="authenticationTokenProcessingFilter" position="PRE_AUTH_FILTER" />
    	<!--  <security:intercept-url pattern="/authenticate" access="permitAll"/> -->
-    <sec:intercept-url pattern="/*" access="isAuthenticated()" />
+    <!--  <sec:intercept-url pattern="/*" access="isAuthenticated()" />-->
+    <sec:intercept-url pattern="/*" access="permitAll" />
 	</sec:http>
 
 <sec:authentication-manager alias="authenticationManager"/>
