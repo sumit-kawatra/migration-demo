@@ -53,6 +53,10 @@ public class ActionParameters {
 		return params;
 	}
 
+	public boolean isParameterSet(String key) {
+		return params.containsKey(key);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

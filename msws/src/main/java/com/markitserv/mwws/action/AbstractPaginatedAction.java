@@ -82,13 +82,13 @@ public abstract class AbstractPaginatedAction extends AbstractAction {
 	 */
 	@Override
 	protected ActionResult addResponseMetadata(ActionResult result) {
-
 		PaginatedActionResult pResult = (PaginatedActionResult) result;
 		ActionResponseMetadata metaD = pResult.getMetadata();
 		metaD.setApproxTotalRecords(pResult.getApproxTotalRecords());
 		metaD.setTotalRecords(pResult.getTotalRecords());
 
-		result = super.addResponseMetadata(pResult);
+		//TODO verify this. commenting the below line as resultId is set from Interceptor. 
+		//result = super.addResponseMetadata(pResult);
 
 		return result;
 	}

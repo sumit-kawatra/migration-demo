@@ -16,7 +16,6 @@ public final class EmbeddedJettyServer {
 		Server server = new Server();
 		SocketConnector connector = new SocketConnector();
 
-		// connector.setHost("127.0.0.1");
 		connector.setMaxIdleTime(1000 * 60 * 3);
 		connector.setSoLingerTime(-1);
 		connector.setPort(Integer.parseInt(portStr));
