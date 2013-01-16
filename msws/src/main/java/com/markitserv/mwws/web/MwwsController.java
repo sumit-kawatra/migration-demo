@@ -20,6 +20,7 @@ import com.markitserv.mwws.action.ActionCommand;
 import com.markitserv.mwws.action.ActionResult;
 import com.markitserv.mwws.command.CommandDispatcher;
 import com.markitserv.mwws.exceptions.MwwsException;
+import com.markitserv.mwws.exceptions.ProgrammaticException;
 
 @Controller
 @RequestMapping(value = "/")
@@ -39,22 +40,19 @@ public class MwwsController {
 	GenericResult performActionReq(WebRequest req) {
 		GenericResult result = null;
 		String uuid = null;
-		
 		uuid = (String) req.getAttribute(CommonConstants.UUID,
 				RequestAttributes.SCOPE_REQUEST);
-		
 		try {
 			ActionCommand actionCmd = actionCmdBuilder
 					.buildActionCommandFromHttpParams(req.getParameterMap());
 			result = (ActionResult) dispatcher
 					.dispatchReqRespCommand(actionCmd);
-			
-		// TODO catch all exceptions
-		} catch (MwwsException exception) {
+		} catch (MwwsException mwwsException) {
+			result = new ExceptionResult(mwwsException);
+		} catch (Exception exception) {
 			result = new ExceptionResult(exception);
 		}
-		
-		log.info("Uuid from requestRegistry is " + uuid);
+		log.info("Uuid is " + uuid);
 		result.getMetaData().setRequestId(uuid);
 		return result;
 	}

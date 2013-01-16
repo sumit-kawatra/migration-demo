@@ -12,6 +12,10 @@ public class ActionCommand implements ReqRespCommand {
 	private ActionParameters params;
 	private ActionFilters filters;
 	
+	public ActionCommand() {
+		super();
+	}
+	
 	/**
 	 * @param action
 	 * @param params

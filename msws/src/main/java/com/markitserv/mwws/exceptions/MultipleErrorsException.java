@@ -13,5 +13,14 @@ public class MultipleErrorsException extends MwwsException {
 	public void setMessages(List<String> messages) {
 		this.messages = messages;
 	}
+	
+	public MultipleErrorsException(String msg) {
+		super(msg);
+	}
+	
+	public MultipleErrorsException(String msg, List<String> allMsgs) {
+		super(msg);
+		this.messages = allMsgs;
+	}
 
 }
