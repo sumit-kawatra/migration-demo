@@ -13,6 +13,7 @@ import com.markitserv.hawthorne.HawthorneBackend;
 import com.markitserv.hawthorne.types.LegalEntity;
 import com.markitserv.hawthorne.types.TradingRequest;
 import com.markitserv.hawthorne.types.TradingRequestStatus;
+import com.markitserv.hawthorne.types.User;
 
 /**
  * Hardcodes data that will eventually come from the server. This class will not
@@ -30,11 +31,44 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	private List<LegalEntity> legalEntities; 
 	private Stack<TradingRequestStatus> tradingRequestStatuses;
 	private List<TradingRequest> tradingRequests;
+	private List<User> legalEntityUsers;
+	
 
 	private void initData() {
 		populateLegalEntities(100000);
 		populateTradingRequestStatuses();
 		populateTradingRequests(10);
+		populateLegalEntityUsers(10000);
+	}
+
+	private void populateLegalEntityUsers(int count) {
+		int i =1;
+		int j = 1000;
+		legalEntityUsers = new ArrayList<User>();
+		
+		for (int k = 0; k < count; k++) {
+			legalEntityUsers.add(createUser(k));
+		}
+		
+		
+		for (User user : legalEntityUsers) {			
+			user.setLegalEntityId(j);
+			if(i ==10){
+				i=1;
+				j=j+1;
+			}
+			i++;			
+		}	
+	}
+
+	private User createUser(int j) {
+		User user = new User();
+		user.setUserId(j);
+		user.setFirstName("First Name"+j);
+		user.setLastName("LastName"+j);
+		user.setUserName(user.getFirstName()+" "+user.getLastName());
+		user.setLegalEntityId(j);
+		return user;
 	}
 
 	private void populateLegalEntities(int count) {
@@ -112,5 +146,10 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	@Override
 	public List<TradingRequest> getTradingRequests() {
 		return this.tradingRequests;
+	}
+
+	@Override
+	public List<User> getUsersForLegalEntity() {		
+		return this.legalEntityUsers;
 	}
 }
