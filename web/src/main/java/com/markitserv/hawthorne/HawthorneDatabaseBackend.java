@@ -37,7 +37,7 @@ public class HawthorneDatabaseBackend implements HawthorneBackend {
 	}
 
 	@Override
-	public List<User> getLegalEntityUsers() {
+	public List<User> getUsersForLegalEntity() {
 		throw NotYetImplementedException.standardException();
 	}
 	
