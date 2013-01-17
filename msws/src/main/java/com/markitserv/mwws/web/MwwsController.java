@@ -42,35 +42,22 @@ public class MwwsController {
 
 		try {
 			ActionCommand actionCmd = actionCmdBuilder
-					.buildActionCommandFromHttpParams(req.getParameterMap());
+					.buildActionCommandFromHttpParams(req.getParameterMap()); 
 			result = (ActionResult) dispatcher
 					.dispatchReqRespCommand(actionCmd);
 		} catch (MwwsException mwwsException) {
-			// TODO send exception in an ErrorCommand to the dispatcher. Logging
-			// for now
+			// TODO send exception in an ErrorCommand to the dispatcher. Logging for now
 			log.error("Unknown Exception", mwwsException);
 			result = new ExceptionResult(mwwsException);
 		} catch (Exception exception) {
-			// TODO send exception in an ErrorCommand to the dispatcher. Logging
-			// for now
+			// TODO send exception in an ErrorCommand to the dispatcher. Logging for now
 			log.error("Unknown Exception", exception);
 			ProgrammaticException programmaticException = new ProgrammaticException(
 					"Unknwon error occured.", exception);
 			result = new ExceptionResult(programmaticException);
 		}
 
-		result = setUuidInRequest(result, uuid);
-		return result;
-	}
-
-	private GenericResult setUuidInRequest(GenericResult result, String uuid) {
-		try {
-			result.getMetaData().setRequestId(uuid);
-		} catch (Exception exception) {
-			ProgrammaticException programmaticException = new ProgrammaticException(
-					"Unknown error occured.", exception);
-			result = new ExceptionResult(programmaticException);
-		}
+		result.getMetaData().setRequestId(uuid);
 		return result;
 	}
 

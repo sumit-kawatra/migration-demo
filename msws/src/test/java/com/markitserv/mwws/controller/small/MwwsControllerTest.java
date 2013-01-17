@@ -8,6 +8,7 @@ import static org.mockito.Mockito.RETURNS_SMART_NULLS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,7 +16,6 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartHttpServletRequest;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
@@ -101,6 +101,32 @@ public class MwwsControllerTest extends AbstractMswsTest {
 	}
 
 	/**
+	 * Test if it returns ProgrammaticException(PE) in Exception result when
+	 * main exception(other than MwwsException) is thrown, and if non-MwwsExceptions are caught correctly
+	 */
+	@Test
+	public void returnNPEExceptionResultIfDispatcherThrowException()
+			throws Exception {
+
+		when(dispatcher.dispatchReqRespCommand(any(ReqRespCommand.class)))
+				.thenThrow(new NullPointerException("NPE thrown"));
+
+		WebRequest req = new ServletWebRequest(new HttpServletRequestWrapper(
+				new MockMultipartHttpServletRequest()));
+
+		GenericResult result = controller.performActionReq(req);
+		assertTrue(result instanceof ExceptionResult);
+		ExceptionResult er = (ExceptionResult) result;
+		assertEquals(1, er.getErrors().size());
+		assertEquals(ExceptionResult.ERRORCODE_GENERIC, er.getErrors().get(0)
+				.getErrorCode());
+		assertEquals(ExceptionResult.ERRORMESSAGE_GENERIC, er.getErrors().get(0)
+				.getErrorMessage());
+
+	}
+	
+
+	/**
 	 * Test if it returns multiple ValidationException(VE) in Exception result
 	 */
 	@Test
@@ -132,7 +158,5 @@ public class MwwsControllerTest extends AbstractMswsTest {
 		assertEquals("validation exception message2", er.getErrors().get(1)
 				.getErrorMessage());
 	}
-	
-	
 
 }
