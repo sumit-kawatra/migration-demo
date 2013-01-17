@@ -2,6 +2,11 @@ package com.markitserv.hawthorne.authentication;
 
 import java.util.ArrayList;
 
+/**
+ * 
+ * @author swati.choudhari
+ *
+ */
 public class AuthenticationUtils {
 	
 	public boolean validateToken(String token, ArrayList<HawthornLoginUser> authenticatedUserList){

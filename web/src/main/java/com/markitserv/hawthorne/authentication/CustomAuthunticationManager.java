@@ -21,14 +21,14 @@ public class CustomAuthunticationManager implements AuthenticationManager {
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		if(StringUtils.isBlank((String) authentication.getPrincipal()) || StringUtils.isBlank((String) authentication.getCredentials())){
 			throw new BadCredentialsException("Invalid username/password");
-	}
+	    }
 
 
 	User user = null;
     List<MyGrantedAuthority> grantedAuthorities = new ArrayList<MyGrantedAuthority>();
     grantedAuthorities.add(new MyGrantedAuthority());
 	try{
-	  user =  new User("user1", "abc", grantedAuthorities);
+	  user =  new User(authentication.getPrincipal().toString(), authentication.getCredentials().toString(), grantedAuthorities);
 	
 	}
 	catch(Exception e){

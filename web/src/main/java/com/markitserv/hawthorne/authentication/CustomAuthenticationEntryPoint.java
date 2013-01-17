@@ -5,19 +5,19 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import com.markitserv.hawthorne.actions.DescribeLegalEntities;
 
+/**
+  * @author swati.choudhari
+  */
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	Logger log = LoggerFactory.getLogger(DescribeLegalEntities.class);
     @Override
@@ -25,17 +25,17 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             AuthenticationException authException) throws IOException, ServletException {
     	String username = request.getHeader("username");
     	String password = request.getHeader("psw");
-    	String usertoken = request.getHeader("usertoken");
+    	String jSessionId = request.getHeader("jsessionid");
     	log.info("username = "+username);
 		log.info("psw ="+password);
-		log.info("usertoken ="+usertoken);
+		log.info("jsessionid ="+jSessionId);
     	boolean isLoginCredentialGiven = false;
 
-    	if((StringUtils.isBlank(username) && StringUtils.isBlank(password)) && StringUtils.isNotBlank(usertoken)){
+    	if((StringUtils.isBlank(username) && StringUtils.isBlank(password)) && StringUtils.isNotBlank(jSessionId)){
     		isLoginCredentialGiven = true;
-    	}else if((StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) && StringUtils.isBlank(usertoken)){
+    	}else if((StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) && StringUtils.isBlank(jSessionId)){
     		isLoginCredentialGiven = true;
-    	}else if((StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) && StringUtils.isNotBlank(usertoken)){
+    	}else if((StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) && StringUtils.isNotBlank(jSessionId)){
     		isLoginCredentialGiven = true;
     	}
     	if(!isLoginCredentialGiven){
