@@ -1,6 +1,7 @@
 package com.markitserv.mwws.exception.small;
 
 import static org.junit.Assert.assertEquals;
+
 import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
@@ -15,6 +16,8 @@ import com.markitserv.mwws.exceptions.MultipleErrorsException;
 import com.markitserv.mwws.exceptions.MwwsException;
 import com.markitserv.mwws.testutil.AbstractMswsTest;
 import com.markitserv.mwws.web.MwwsController;
+
+//TODO Incomplete
 /**
  * 
  * @author prasanth.sudarsanan
@@ -29,11 +32,7 @@ public class ExceptionResultTest extends AbstractMswsTest {
 		//mock container and call with a request and get validation exception
 		//ValidationException exception = new ValidationException(msg, allMsgs);
 		
-
 		ExceptionResult result = new ExceptionResult(exception);
-		
-
-		// add additional test code here
 		assertNotNull(result);
 	}
 
@@ -44,7 +43,6 @@ public class ExceptionResultTest extends AbstractMswsTest {
 
 		ExceptionResult result = new ExceptionResult(exception);
 
-		// add additional test code here
 		assertNotNull(result);
 	}
 
@@ -55,19 +53,6 @@ public class ExceptionResultTest extends AbstractMswsTest {
 				new ManagedList());
 
 		ExceptionResult result = new ExceptionResult(exception);
-
-		// add additional test code here
-		assertNotNull(result);
-	}
-
-	// Main Exception
-	@Test
-	public void testExceptionResult_constructor5() throws Exception {
-		Exception exception = new Exception();
-
-		ExceptionResult result = new ExceptionResult(exception);
-
-		// add additional test code here
 		assertNotNull(result);
 	}
 
@@ -77,19 +62,10 @@ public class ExceptionResultTest extends AbstractMswsTest {
 		fixture.setMetaData(new ResponseMetadata());
 		List<ExceptionResult.MwwsError> result = fixture.getErrors();
 
-		// add additional test code here
 		assertNotNull(result);
 		assertEquals(1, result.size());
 	}
 
-	/**
-	 * Perform pre-test initialization.
-	 * 
-	 * @throws Exception
-	 *             if the initialization fails for some reason
-	 * 
-	 * @generatedBy CodePro at 1/15/13 5:51 PM
-	 */
 	@Before
 	public void setUp() throws Exception {
 		MwwsController controller = new MwwsController();
