@@ -2,13 +2,11 @@ package com.markitserv.mwws.exception.small;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
-import org.springframework.beans.factory.support.ManagedList;
 
 import com.markitserv.mwws.ExceptionResult;
 import com.markitserv.mwws.ResponseMetadata;
