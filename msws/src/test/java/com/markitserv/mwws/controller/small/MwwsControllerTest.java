@@ -25,6 +25,7 @@ import com.markitserv.mwws.GenericResult;
 import com.markitserv.mwws.action.ActionResult;
 import com.markitserv.mwws.command.CommandDispatcher;
 import com.markitserv.mwws.command.ReqRespCommand;
+import com.markitserv.mwws.exceptions.MwwsException;
 import com.markitserv.mwws.exceptions.UnknownActionException;
 import com.markitserv.mwws.exceptions.ValidationException;
 import com.markitserv.mwws.testutil.AbstractMswsTest;
@@ -61,7 +62,7 @@ public class MwwsControllerTest extends AbstractMswsTest {
 	}
 
 	/**
-	 * Test if it returns ValidationException(VE) in Exception result
+	 * Test if it returns ActionResult when there is no error
 	 */
 	@Test
 	public void returnsActionResultIfNoErrorIsThrown() throws Exception {
@@ -109,7 +110,7 @@ public class MwwsControllerTest extends AbstractMswsTest {
 		String[] messages = { "validation exception message1",
 				"validation exception message2" };
 		List<String> errorMessages = Arrays.asList(messages);
-		ValidationException validationException = new ValidationException(
+		MwwsException validationException = new ValidationException(
 				"ValidationException", errorMessages);
 
 		when(dispatcher.dispatchReqRespCommand(any(ReqRespCommand.class)))
