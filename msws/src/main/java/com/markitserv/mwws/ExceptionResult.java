@@ -55,7 +55,7 @@ public class ExceptionResult extends GenericResult {
 			}
 		} else if (exception instanceof ProgrammaticException) {
 			errors.push(new MwwsError(ERRORCODE_GENERIC, ERRORMESSAGE_GENERIC));
-		} else { // if exception type of Mws exception
+		} else {
 			errors.push(new MwwsError(exception.getErrorCode(), exception
 					.getMessage()));
 		}

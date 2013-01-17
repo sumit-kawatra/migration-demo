@@ -1,75 +1,94 @@
 package com.markitserv.mwws.exception.small;
 
 import static org.junit.Assert.assertEquals;
-
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.support.ManagedList;
 
 import com.markitserv.mwws.ExceptionResult;
 import com.markitserv.mwws.ResponseMetadata;
+import com.markitserv.mwws.exceptions.MalformedFiltersException;
 import com.markitserv.mwws.exceptions.MultipleErrorsException;
 import com.markitserv.mwws.exceptions.MwwsException;
+import com.markitserv.mwws.exceptions.ProgrammaticException;
+import com.markitserv.mwws.exceptions.ValidationException;
 import com.markitserv.mwws.testutil.AbstractMswsTest;
-import com.markitserv.mwws.web.MwwsController;
 
-//TODO Incomplete
 /**
+ * Tests ExceptionResult. More exception testing is done in
+ * MwwsControllerTest.java
  * 
  * @author prasanth.sudarsanan
- *
+ * 
  */
 public class ExceptionResultTest extends AbstractMswsTest {
 
-	// ValidationException
+	/**
+	 * Test if it returns ProgrammaticException
+	 */
 	@Test
-	public void testExceptionResult_1() throws Exception {
-		MwwsException exception = new MwwsException();
-		//mock container and call with a request and get validation exception
-		//ValidationException exception = new ValidationException(msg, allMsgs);
-		
+	public void returnProgrammaticException() throws Exception {
+		MwwsException exception = new ProgrammaticException();
 		ExceptionResult result = new ExceptionResult(exception);
 		assertNotNull(result);
+		assertEquals(ExceptionResult.ERRORCODE_GENERIC,
+				result.getErrors().get(0).getErrorCode());
+		assertEquals(ExceptionResult.ERRORMESSAGE_GENERIC, result.getErrors()
+				.get(0).getErrorMessage());
 	}
 
-	// ProgrammaticException
+	/**
+	 * Test if it returns MultipleErrorsException
+	 */
 	@Test
-	public void testExceptionResult_ProgrammaticException() throws Exception {
-		MwwsException exception = new MwwsException();
-
-		ExceptionResult result = new ExceptionResult(exception);
-
+	public void returnMultipleErrorsException() throws Exception {
+		String[] messages = { "validation exception message1",
+				"validation exception message2" };
+		List<String> errorMessages = Arrays.asList(messages);
+		MultipleErrorsException validationException = new ValidationException(
+				"ValidationException", errorMessages);
+		ExceptionResult result = new ExceptionResult(validationException);
 		assertNotNull(result);
+		assertEquals(2, result.getErrors().size());
+		assertEquals("ValidationException", result.getErrors().get(0)
+				.getErrorCode());
+		assertEquals("ValidationException", result.getErrors().get(1)
+				.getErrorCode());
+		assertEquals("validation exception message1", result.getErrors().get(0)
+				.getErrorMessage());
+		assertEquals("validation exception message2", result.getErrors().get(1)
+				.getErrorMessage());
 	}
 
-	// other types of MwwsException
-	@Test
-	public void testExceptionResult_constructor3() throws Exception {
-		MwwsException exception = new MultipleErrorsException("",
-				new ManagedList());
-
-		ExceptionResult result = new ExceptionResult(exception);
-		assertNotNull(result);
-	}
-
+	/**
+	 * Test if it returns errors
+	 */
 	@Test
 	public void testErrors() throws Exception {
-		ExceptionResult fixture = new ExceptionResult(new MwwsException());
-		fixture.setMetaData(new ResponseMetadata());
-		List<ExceptionResult.MwwsError> result = fixture.getErrors();
+		ExceptionResult result = new ExceptionResult(new MwwsException());
+		result.setMetaData(new ResponseMetadata());
+		List<ExceptionResult.MwwsError> errors = result.getErrors();
 
+		assertNotNull(errors);
+		assertEquals(1, errors.size());
+	}
+
+	/**
+	 * Test if it returns other types of MwwsException except
+	 * ProgrammaticException,MultipleErrorsException
+	 */
+	@Test
+	public void returnOtherMwwsException() throws Exception {
+		MwwsException exception = new MalformedFiltersException("malformed filters exception thrown");
+		ExceptionResult result = new ExceptionResult(exception);
 		assertNotNull(result);
-		assertEquals(1, result.size());
+		assertEquals(1, result.getErrors().size());
+		assertEquals("MalformedFiltersException",  result.getErrors().get(0).getErrorCode());
+		assertEquals("malformed filters exception thrown",  result.getErrors().get(0).getErrorMessage());
 	}
-
-	@Before
-	public void setUp() throws Exception {
-		MwwsController controller = new MwwsController();
-		
-	}
-
 }
