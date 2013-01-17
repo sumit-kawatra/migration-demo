@@ -14,6 +14,9 @@ public class MultipleErrorsException extends MwwsException {
 		this.messages = messages;
 	}
 	
+	public MultipleErrorsException() {
+		super();
+	}
 	public MultipleErrorsException(String msg) {
 		super(msg);
 	}
