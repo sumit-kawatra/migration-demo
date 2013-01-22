@@ -27,7 +27,7 @@
     		<constructor-arg value="${mail.smtp.host}" />
 	</bean>
 	<bean id="smtpPort"   class="java.lang.String">
-    		<constructor-arg value="${mail.smtp.host}" />
+    		<constructor-arg value="${mail.smtp.port}" />
 	</bean>
 
 	
