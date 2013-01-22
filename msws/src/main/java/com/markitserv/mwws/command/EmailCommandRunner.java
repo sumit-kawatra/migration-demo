@@ -49,7 +49,7 @@ public class EmailCommandRunner extends AbstractCommandRunner {
 	}
 
 	@Override
-	protected Object run(Command cmd) throws MwwsException {
+	public Object run(Command cmd) throws MwwsException {
 		 mwwsAssert(cmd!=null, "EmailCommand must be set");
 		 EmailCommand emailCommand = (EmailCommand) cmd;
 		 sendMailMessage(emailCommand);
