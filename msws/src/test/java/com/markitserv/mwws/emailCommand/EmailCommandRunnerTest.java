@@ -23,7 +23,7 @@ public class EmailCommandRunnerTest {
 		emailCommandRunner = new EmailCommandRunner();
 		emailCommand = new EmailCommand();
 		emailCommand.setTo("kkirangogula.java@gmail.com");
-		emailCommand.setFrom("jstrachan@apache.org");
+		emailCommand.setFrom("kkirangogula.java@gmail.com");
 		emailCommand.setSubject("Test Mail");
 		emailCommand.setBody("Test Body");
 	}
