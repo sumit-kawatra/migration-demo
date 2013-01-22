@@ -93,9 +93,9 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	
 	private void populateTradingRequests(int count) {
 		tradingRequests = new ArrayList<TradingRequest>();
-		for (int i = 0, j=0; i <= count; i++,j++) {
+		for (int i = 1, j=0; i <= count; i++,j++) {
 			j = j == 4 ? 0 : j;
-			tradingRequests.add(createTradingRequest(j));
+			tradingRequests.add(createTradingRequest(i));
 		}
 	}
 
@@ -123,7 +123,7 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		TradingRequest tr = new TradingRequest();
 		tr.setId(id);
 		try {
-			tr.setRequestStatus(tradingRequestStatuses.get((int) id));
+			tr.setRequestStatus(tradingRequestStatuses.get((int) id-1));
 		} catch (Exception exception) {
 			tr.setRequestStatus(tradingRequestStatuses.get(0));
 		}

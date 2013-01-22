@@ -53,7 +53,7 @@ public class MwwsController {
 			// TODO send exception in an ErrorCommand to the dispatcher. Logging for now
 			log.error("Unknown Exception", exception);
 			ProgrammaticException programmaticException = new ProgrammaticException(
-					"Unknwon error occured.", exception);
+					"Unknown error occured.", exception);
 			result = new ExceptionResult(programmaticException);
 		}
 
