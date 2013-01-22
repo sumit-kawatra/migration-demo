@@ -7,6 +7,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.markitserv.mwws.command.AsyncCommand;
+import com.markitserv.mwws.command.CommandDispatcher;
 import com.markitserv.mwws.command.EmailCommand;
 import com.markitserv.mwws.command.EmailCommandRunner;
 
@@ -22,7 +24,7 @@ public class EmailCommandRunnerTest {
 	@Before
 	public void setUp(){
 		emailCommandRunner = new EmailCommandRunner();
-		emailCommand = new EmailCommand();
+		emailCommand = new EmailCommand() ;
 		emailCommand.setTo("kkirangogula.java@gmail.com");
 		emailCommand.setFrom("kkirangogula.java@gmail.com");
 		emailCommand.setSubject("Test Mail");
@@ -37,6 +39,6 @@ public class EmailCommandRunnerTest {
 	
 	@Test
 	public void testSendMail(){
-		emailCommandRunner.sendMail(emailCommand);
+		emailCommandRunner.run(emailCommand);
 	}
 }
