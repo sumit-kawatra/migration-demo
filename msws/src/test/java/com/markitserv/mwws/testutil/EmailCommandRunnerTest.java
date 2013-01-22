@@ -1,13 +1,14 @@
 /**
  * 
  */
-package com.markitserv.mwws.emailCommand;
-
-import junit.framework.Assert;
+package com.markitserv.mwws.testutil;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.markitserv.mwws.command.EmailCommand;
+import com.markitserv.mwws.command.EmailCommandRunner;
 
 /**
  * @author kiran.gogula
@@ -36,7 +37,6 @@ public class EmailCommandRunnerTest {
 	
 	@Test
 	public void testSendMail(){
-		Object resultString = emailCommandRunner.sendMail(emailCommand);
-		Assert.assertEquals("Mail was sent successfully", resultString);
+		emailCommandRunner.sendMail(emailCommand);
 	}
 }

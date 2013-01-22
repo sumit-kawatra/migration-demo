@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.markitserv.mwws.action.ActionCommand;
 import com.markitserv.mwws.action.ActionCommandRunner;
-import com.markitserv.mwws.emailCommand.EmailCommand;
-import com.markitserv.mwws.emailCommand.EmailCommandRunner;
 import com.markitserv.mwws.exceptions.MwwsException;
 import com.markitserv.mwws.exceptions.ProgrammaticException;
 
@@ -25,16 +23,22 @@ public class CommandDispatcher {
 		// upfront
 		if (cmd instanceof ActionCommand) {
 			return actionCommandRunner.run(cmd);
-		}if(cmd instanceof EmailCommand){		
-			EmailCommand emailCommand = (EmailCommand)cmd;
-			return emailCommandRunner.sendMail(emailCommand);
 		}else {		
 			throw new ProgrammaticException("Don't yet know how to handle a "
 					+ cmd.getClass().getSimpleName() + " command");
 		}
 	}
 
+	/**
+	 * <p></p>
+	 * @param cmd
+	 */
 	public void dispatchAsyncCommand(AsyncCommand cmd) {
-		throw new ProgrammaticException("Not implemented yet");
+		if(cmd instanceof EmailCommand){
+			emailCommandRunner.sendMail(cmd);
+		}else{
+			throw new ProgrammaticException("Don't yet know how to handle a "
+					+ cmd.getClass().getSimpleName() + " command");
+		}
 	}
 }

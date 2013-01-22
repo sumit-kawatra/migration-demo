@@ -1,12 +1,9 @@
 /**
  * 
  */
-package com.markitserv.mwws.emailCommand;
-
+package com.markitserv.mwws.command;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import com.markitserv.mwws.command.AsyncCommand;
 
 /**
  * @author kiran.gogula
@@ -24,9 +21,6 @@ public class EmailCommand implements AsyncCommand{
 		private String subject;
 		
 		private String body;
-		
-		private String action;
-		
 		
 
 		public EmailCommand() {
@@ -75,13 +69,6 @@ public class EmailCommand implements AsyncCommand{
 		}
 		
 		
-		public String getAction() {
-			return action;
-		}
-
-		public void setAction(String action) {
-			this.action = action;
-		}
 
 		@Override
 		public String toString() {

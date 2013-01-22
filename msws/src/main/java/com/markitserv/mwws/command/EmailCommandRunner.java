@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.markitserv.mwws.emailCommand;
+package com.markitserv.mwws.command;
 
 import java.util.Properties;
 
@@ -22,19 +22,19 @@ import com.markitserv.mwws.exceptions.MwwsException;
  *
  */
 @Service
-public class EmailCommandRunner extends AbstractEmailCommandRunner {
+public class EmailCommandRunner extends AbstractCommandRunner {
 
 	Logger log = LoggerFactory.getLogger(EmailCommandRunner.class);
 	
-	@Override
-	public Object sendMail(EmailCommand cmd) throws MwwsException {
+	
+	public void sendMail(AsyncCommand cmd) throws MwwsException {
 		if(cmd  != null){
-			return sendMailMessage(cmd);
+			EmailCommand emailCommand = (EmailCommand) cmd;
+			 sendMailMessage(emailCommand);
 		}
-		return null;
 	}
 	
-	private String sendMailMessage(EmailCommand emailCommand){
+	private void sendMailMessage(EmailCommand emailCommand){
 		Properties props = new Properties();
 		props.put("mail.smtp.host", "");
 		props.put("mail.smtp.port", "");
@@ -46,10 +46,13 @@ public class EmailCommandRunner extends AbstractEmailCommandRunner {
 		    message.setSubject(emailCommand.getSubject());
 		    message.setText(emailCommand.getBody());
 		    Transport.send(message);
-		    return "Mail was sent successfully";
 	    }catch (Exception e) {
 	    	log.error("Exception from email command runner class: ", e);
 		}	  
+	}
+
+	@Override
+	protected Object run(Command cmd) throws MwwsException {
 		return null;
 	}
 
