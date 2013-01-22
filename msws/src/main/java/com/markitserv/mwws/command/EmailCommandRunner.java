@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.markitserv.mwws.exceptions.MwwsException;
+import com.markitserv.mwws.exceptions.ProgrammaticException;
+
+import static com.markitserv.mwws.internal.MwwsAssert.mwwsAssert;
 
 /**
  * @author kiran.gogula
@@ -27,12 +30,6 @@ public class EmailCommandRunner extends AbstractCommandRunner {
 	Logger log = LoggerFactory.getLogger(EmailCommandRunner.class);
 	
 	
-	public void sendMail(AsyncCommand cmd) throws MwwsException {
-		if(cmd  != null){
-			EmailCommand emailCommand = (EmailCommand) cmd;
-			 sendMailMessage(emailCommand);
-		}
-	}
 	
 	private void sendMailMessage(EmailCommand emailCommand){
 		Properties props = new Properties();
@@ -47,13 +44,16 @@ public class EmailCommandRunner extends AbstractCommandRunner {
 		    message.setText(emailCommand.getBody());
 		    Transport.send(message);
 	    }catch (Exception e) {
-	    	log.error("Exception from email command runner class: ", e);
+	    	throw new ProgrammaticException("Exception from EmailCommandRunner", e);
 		}	  
 	}
 
 	@Override
 	protected Object run(Command cmd) throws MwwsException {
-		return null;
+		 mwwsAssert(cmd!=null, "EmailCommand must be set");
+		 EmailCommand emailCommand = (EmailCommand) cmd;
+		 sendMailMessage(emailCommand);
+		 return null;
 	}
 
 }

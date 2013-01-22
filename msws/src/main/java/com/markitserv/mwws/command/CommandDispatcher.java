@@ -35,7 +35,7 @@ public class CommandDispatcher {
 	 */
 	public void dispatchAsyncCommand(AsyncCommand cmd) {
 		if(cmd instanceof EmailCommand){
-			emailCommandRunner.sendMail(cmd);
+			emailCommandRunner.run(cmd);
 		}else{
 			throw new ProgrammaticException("Don't yet know how to handle a "
 					+ cmd.getClass().getSimpleName() + " command");
