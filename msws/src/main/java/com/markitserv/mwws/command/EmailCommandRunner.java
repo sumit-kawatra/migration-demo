@@ -13,6 +13,7 @@ import javax.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.markitserv.mwws.exceptions.MwwsException;
@@ -29,12 +30,17 @@ public class EmailCommandRunner extends AbstractCommandRunner {
 
 	Logger log = LoggerFactory.getLogger(EmailCommandRunner.class);
 	
+	@Autowired
+	private String smtpHost;
+	@Autowired
+	private String smtpPort;
+	
 	
 	
 	private void sendMailMessage(EmailCommand emailCommand){
 		Properties props = new Properties();
-		props.put("mail.smtp.host", "");
-		props.put("mail.smtp.port", "");
+		props.put("mail.smtp.host", smtpHost);
+		props.put("mail.smtp.port", smtpPort);
 		Session session = Session.getInstance(props,null);
 	    try{
 		    Message message = new MimeMessage(session);
@@ -55,5 +61,15 @@ public class EmailCommandRunner extends AbstractCommandRunner {
 		 sendMailMessage(emailCommand);
 		 return null;
 	}
+
+	public void setSmtpHost(String smtpHost) {
+		this.smtpHost = smtpHost;
+	}
+
+	public void setSmtpPort(String smtpPort) {
+		this.smtpPort = smtpPort;
+	}
+	
+	
 
 }
