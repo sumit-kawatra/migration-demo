@@ -101,21 +101,39 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 
 	private LegalEntity createLegalEntity(int id) {
 
+
 		LegalEntity le = new LegalEntity();
+		// for easy & consistent search by name - "john boby test LLC"
+		String firstName;
+		String secondName;
+		String thirdName;
+		String name;
+		String bic;
 
-		String firstName = nameGen.compose(3);
-		String secondName = nameGen.compose(2);
-		String thirdName = nameGen.compose(4);
-		String name = firstName + " " + secondName + " " + thirdName + " LLC";
+		if (id == 1) {
+			firstName = "john";
+			secondName = "boby";
+			thirdName = "test";
+			name = firstName + " " + secondName + " " + thirdName + " LLC";
+			bic = "JBT";
 
-		// first 4 letters of first and second name
-		String bic = StringUtils.upperCase(StringUtils.left(firstName, 4))
-				+ StringUtils.upperCase(StringUtils.left(secondName, 4));
+			le.setId(id);
+			le.setName(name);
+			le.setBic(bic);
+		} else {
+			firstName = nameGen.compose(3);
+			secondName = nameGen.compose(2);
+			thirdName = nameGen.compose(4);
+			name = firstName + " " + secondName + " " + thirdName + " LLC";
 
-		le.setId(id);
-		le.setName(name);
-		le.setBic(bic);
+			// first 4 letters of first and second name
+			bic = StringUtils.upperCase(StringUtils.left(firstName, 4))
+					+ StringUtils.upperCase(StringUtils.left(secondName, 4));
 
+			le.setId(id);
+			le.setName(name);
+			le.setBic(bic);
+		}
 		return le;
 	}
 	
