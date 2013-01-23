@@ -22,5 +22,13 @@
 			<value>classpath:META-INF/props/hawthorne.dev.properties</value>
 		</property>
 	</bean>
+	
+	<bean id="smtpHost"   class="java.lang.String">
+    		<constructor-arg value="${mail.smtp.host}" />
+	</bean>
+	<bean id="smtpPort"   class="java.lang.String">
+    		<constructor-arg value="${mail.smtp.port}" />
+	</bean>
 
+	
 </beans>
