@@ -73,9 +73,9 @@ public class MwwsControllerTest extends AbstractMswsTest {
 				new MockMultipartHttpServletRequest()));
 
 		GenericResult result = controller.performActionReq(req);
-		assertTrue(result instanceof ActionResult);
+		assertTrue(result instanceof ActionResult);	
 	}
-
+	
 	/**
 	 * Test if it returns UnknownActionException(UAE) in Exception result
 	 */

@@ -49,7 +49,7 @@ public class ActionResult extends GenericResult {
 
 	@JsonInclude(Include.NON_NULL)
 	@JsonProperty(value="responseMetadata")
-	public ActionResponseMetadata getMetadata() {
+	public ActionResponseMetadata getMetaData() {
 		return metaData;
 	}
 }

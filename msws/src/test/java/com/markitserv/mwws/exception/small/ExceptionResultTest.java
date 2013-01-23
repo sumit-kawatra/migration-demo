@@ -28,6 +28,7 @@ public class ExceptionResultTest extends AbstractMswsTest {
 
 	/**
 	 * Test if it returns ProgrammaticException
+	 * [complete flow from controller to exception in ExceptionResult is covered in MwwsControllerTest.java ]
 	 */
 	@Test
 	public void returnProgrammaticException() throws Exception {
