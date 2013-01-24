@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import com.markitserv.msws.Util.Constants;
+import com.markitserv.msws.internal.Constants;
 import com.markitserv.msws.testutil.AbstractMswsTest;
 import com.markitserv.msws.web.CommandInterceptor;
 

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.markitserv.msws.Type;
-import com.markitserv.msws.Util.Constants;
+import com.markitserv.msws.internal.Constants;
 
 public class PaginatedActionResult extends ActionResult {
 	

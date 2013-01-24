@@ -1,4 +1,4 @@
-package com.markitserv.msws.Util;
+package com.markitserv.msws.internal;
 
 public class Constants {
 

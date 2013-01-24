@@ -15,7 +15,7 @@ import com.markitserv.msws.exceptions.MswsException;
 import com.markitserv.msws.exceptions.ProgrammaticException;
 
 @JsonPropertyOrder(alphabetic = true)
-public class ExceptionResult extends GenericResult {
+public class ExceptionResult extends AbstractWebserviceResult {
 
 	Logger log = LoggerFactory.getLogger(ExceptionResult.class);
 	private Stack<MswsError> errors = new Stack<MswsError>();

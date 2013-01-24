@@ -5,10 +5,10 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.markitserv.msws.GenericResult;
+import com.markitserv.msws.AbstractWebserviceResult;
 import com.markitserv.msws.Type;
 
-public class ActionResult extends GenericResult {
+public class ActionResult extends AbstractWebserviceResult {
 	
 	private ActionResponseMetadata metaData = new ActionResponseMetadata();
 	private List<? extends Type> list;

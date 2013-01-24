@@ -2,7 +2,7 @@ package com.markitserv.msws.validation;
 
 import java.util.Map;
 
-import com.markitserv.msws.Util.Constants;
+import com.markitserv.msws.internal.Constants;
 
 public class PaginationPageSizeValidation extends IntegerMaxMinValidation {
 

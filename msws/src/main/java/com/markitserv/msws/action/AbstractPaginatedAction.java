@@ -1,7 +1,7 @@
 package com.markitserv.msws.action;
 
-import com.markitserv.msws.Util.Constants;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
+import com.markitserv.msws.internal.Constants;
 import com.markitserv.msws.validation.IntegerMaxMinValidation;
 import com.markitserv.msws.validation.PaginationPageSizeValidation;
 import com.markitserv.msws.validation.RequiredValidation;

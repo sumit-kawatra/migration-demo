@@ -8,8 +8,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.markitserv.msws.Util.Constants;
 import com.markitserv.msws.exceptions.ProgrammaticException;
+import com.markitserv.msws.internal.Constants;
 
 public class ActionParameters {
 

@@ -11,13 +11,13 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 
 import com.markitserv.msws.ExceptionResult;
-import com.markitserv.msws.GenericResult;
-import com.markitserv.msws.Util.Constants;
+import com.markitserv.msws.AbstractWebserviceResult;
 import com.markitserv.msws.action.ActionCommand;
 import com.markitserv.msws.action.ActionResult;
 import com.markitserv.msws.command.CommandDispatcher;
 import com.markitserv.msws.exceptions.MswsException;
 import com.markitserv.msws.exceptions.ProgrammaticException;
+import com.markitserv.msws.internal.Constants;
 
 @Controller
 @RequestMapping(value = "/")
@@ -32,9 +32,9 @@ public class MswsController {
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public @ResponseBody
-	GenericResult performActionReq(WebRequest req) {
+	AbstractWebserviceResult performActionReq(WebRequest req) {
 
-		GenericResult result = null;
+		AbstractWebserviceResult result = null;
 		String uuid = null;
 		uuid = (String) req.getAttribute(Constants.UUID,
 				RequestAttributes.SCOPE_REQUEST);

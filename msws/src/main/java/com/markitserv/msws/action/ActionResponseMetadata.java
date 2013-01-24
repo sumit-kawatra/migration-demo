@@ -3,7 +3,7 @@ package com.markitserv.msws.action;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.markitserv.msws.ResponseMetadata;
-import com.markitserv.msws.Util.Constants;
+import com.markitserv.msws.internal.Constants;
 
 public class ActionResponseMetadata extends ResponseMetadata {
 	

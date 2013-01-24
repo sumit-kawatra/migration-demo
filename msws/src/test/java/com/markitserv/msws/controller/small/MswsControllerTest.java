@@ -21,7 +21,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
 import com.markitserv.msws.ExceptionResult;
-import com.markitserv.msws.GenericResult;
+import com.markitserv.msws.AbstractWebserviceResult;
 import com.markitserv.msws.action.ActionResult;
 import com.markitserv.msws.command.CommandDispatcher;
 import com.markitserv.msws.command.ReqRespCommand;
@@ -72,7 +72,7 @@ public class MswsControllerTest extends AbstractMswsTest {
 		WebRequest req = new ServletWebRequest(new HttpServletRequestWrapper(
 				new MockMultipartHttpServletRequest()));
 
-		GenericResult result = controller.performActionReq(req);
+		AbstractWebserviceResult result = controller.performActionReq(req);
 		assertTrue(result instanceof ActionResult);	
 	}
 	
@@ -89,7 +89,7 @@ public class MswsControllerTest extends AbstractMswsTest {
 		WebRequest req = new ServletWebRequest(new HttpServletRequestWrapper(
 				new MockMultipartHttpServletRequest()));
 
-		GenericResult result = controller.performActionReq(req);
+		AbstractWebserviceResult result = controller.performActionReq(req);
 		assertTrue(result instanceof ExceptionResult);
 		ExceptionResult er = (ExceptionResult) result;
 		assertEquals(1, er.getErrors().size());
@@ -114,7 +114,7 @@ public class MswsControllerTest extends AbstractMswsTest {
 		WebRequest req = new ServletWebRequest(new HttpServletRequestWrapper(
 				new MockMultipartHttpServletRequest()));
 
-		GenericResult result = controller.performActionReq(req);
+		AbstractWebserviceResult result = controller.performActionReq(req);
 		assertTrue(result instanceof ExceptionResult);
 		ExceptionResult er = (ExceptionResult) result;
 		assertEquals(1, er.getErrors().size());
@@ -145,7 +145,7 @@ public class MswsControllerTest extends AbstractMswsTest {
 		WebRequest req = new ServletWebRequest(new HttpServletRequestWrapper(
 				new MockMultipartHttpServletRequest()));
 
-		GenericResult result = controller.performActionReq(req);
+		AbstractWebserviceResult result = controller.performActionReq(req);
 		assertTrue(result instanceof ExceptionResult);
 		ExceptionResult er = (ExceptionResult) result;
 		assertEquals(2, er.getErrors().size());
