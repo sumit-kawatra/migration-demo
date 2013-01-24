@@ -12,7 +12,7 @@
 	    http://www.springframework.org/schema/util
 	    http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 
-	<import resource="classpath:META-INF/spring/mwws-context.xml" />
+	<import resource="classpath:META-INF/spring/msws-context.xml" />
 
 	<context:component-scan base-package="com.markitserv.hawthorne" />
 
@@ -29,6 +29,5 @@
 	<bean id="smtpPort"   class="java.lang.String">
     		<constructor-arg value="${mail.smtp.port}" />
 	</bean>
-
 	
 </beans>

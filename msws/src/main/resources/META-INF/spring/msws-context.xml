@@ -10,10 +10,10 @@
 		http://www.springframework.org/schema/security
 	    http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-	<context:component-scan base-package="com.markitserv.mwws" />
+	<context:component-scan base-package="com.markitserv.msws" />
 	<mvc:annotation-driven />
 	
 	<mvc:interceptors>
-	 <bean class="com.markitserv.mwws.web.CommandInterceptor" />
+	 <bean class="com.markitserv.msws.web.CommandInterceptor" />
 	</mvc:interceptors>
 </beans>
