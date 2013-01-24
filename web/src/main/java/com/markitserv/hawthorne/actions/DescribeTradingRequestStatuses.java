@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.HawthorneBackend;
-import com.markitserv.mwws.action.AbstractAction;
-import com.markitserv.mwws.action.ActionFilters;
-import com.markitserv.mwws.action.ActionParameters;
-import com.markitserv.mwws.action.ActionResult;
+import com.markitserv.msws.action.AbstractAction;
+import com.markitserv.msws.action.ActionFilters;
+import com.markitserv.msws.action.ActionParameters;
+import com.markitserv.msws.action.ActionResult;
 
 @Service
 public class DescribeTradingRequestStatuses extends AbstractAction {

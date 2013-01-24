@@ -9,23 +9,23 @@ import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.HawthorneBackend;
 import com.markitserv.hawthorne.types.LegalEntity;
-import com.markitserv.mwws.action.AbstractPaginatedAction;
-import com.markitserv.mwws.action.ActionFilters;
-import com.markitserv.mwws.action.ActionParameters;
-import com.markitserv.mwws.action.ActionResult;
-import com.markitserv.mwws.action.CommonParamKeys;
-import com.markitserv.mwws.action.PaginatedActionResult;
-import com.markitserv.mwws.action.SortOrder;
-import com.markitserv.mwws.definition.ParamsAndFiltersDefinition;
-import com.markitserv.mwws.definition.SortingPresetDefinitionBuilder;
-import com.markitserv.mwws.filters.PaginationFilter;
-import com.markitserv.mwws.filters.PropertyEqualsReflectionFilter;
-import com.markitserv.mwws.filters.SubstringReflectionFilter;
-import com.markitserv.mwws.validation.CollectionSizeValidation;
-import com.markitserv.mwws.validation.ForEachValidator;
-import com.markitserv.mwws.validation.IntegerMaxMinValidation;
-import com.markitserv.mwws.validation.IntegerValidation;
-import com.markitserv.mwws.validation.RequiredValidation;
+import com.markitserv.msws.action.AbstractPaginatedAction;
+import com.markitserv.msws.action.ActionFilters;
+import com.markitserv.msws.action.ActionParameters;
+import com.markitserv.msws.action.ActionResult;
+import com.markitserv.msws.action.CommonParamKeys;
+import com.markitserv.msws.action.PaginatedActionResult;
+import com.markitserv.msws.action.SortOrder;
+import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
+import com.markitserv.msws.definition.SortingPresetDefinitionBuilder;
+import com.markitserv.msws.filters.PaginationFilter;
+import com.markitserv.msws.filters.PropertyEqualsReflectionFilter;
+import com.markitserv.msws.filters.SubstringReflectionFilter;
+import com.markitserv.msws.validation.CollectionSizeValidation;
+import com.markitserv.msws.validation.ForEachValidator;
+import com.markitserv.msws.validation.IntegerMaxMinValidation;
+import com.markitserv.msws.validation.IntegerValidation;
+import com.markitserv.msws.validation.RequiredValidation;
 
 @Service
 /**

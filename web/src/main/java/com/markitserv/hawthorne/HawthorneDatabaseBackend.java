@@ -10,7 +10,7 @@ import com.markitserv.hawthorne.types.LegalEntity;
 import com.markitserv.hawthorne.types.TradingRequest;
 import com.markitserv.hawthorne.types.TradingRequestStatus;
 import com.markitserv.hawthorne.types.User;
-import com.markitserv.mwws.exceptions.NotYetImplementedException;
+import com.markitserv.msws.exceptions.NotYetImplementedException;
 
 /**
  * Back end that hits the database
