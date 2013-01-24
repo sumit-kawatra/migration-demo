@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.markitserv.mwws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.mwws.exceptions.ProgrammaticException;
@@ -15,7 +17,7 @@ import com.markitserv.mwws.validation.AbstractValidation;
 import com.markitserv.mwws.validation.ValidationExceptionBuilder;
 import com.markitserv.mwws.validation.ValidationExceptionBuilder.InvalidType;
 import com.markitserv.mwws.validation.ValidationResponse;
-
+@Service
 public abstract class AbstractAction implements InitializingBean {
 
 	@Autowired

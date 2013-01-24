@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.markitserv.mwws.CommonConstants;
+import com.markitserv.mwws.Util.Constants;
 import com.markitserv.mwws.internal.UuidGenerator;
 
 /**
@@ -25,13 +25,17 @@ public class CommandInterceptor  extends HandlerInterceptorAdapter {
 	@Autowired
 	private UuidGenerator uuidGenerator;
 	
+	public void setUuidGenerator(UuidGenerator uuidGenerator) {
+		this.uuidGenerator = uuidGenerator;
+	}
+
 	Logger log = LoggerFactory.getLogger(CommandInterceptor.class);
 	
 	public boolean preHandle(HttpServletRequest request, 
 			HttpServletResponse response, Object handler)
 	    throws Exception {		
 		String uuid = uuidGenerator.generateUuid();
-		request.setAttribute(CommonConstants.UUID, uuid);
+		request.setAttribute(Constants.UUID, uuid);
 		log.info("Uuid is " + uuid);
 		return true;
 	}

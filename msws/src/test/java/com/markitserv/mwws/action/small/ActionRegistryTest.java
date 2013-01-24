@@ -33,5 +33,5 @@ public class ActionRegistryTest {
 	@Test(expected=UnknownActionException.class)
 	public void missingActionFails() {
 		AbstractAction actual = target.getActionWithName("someAction");
-	}
+	} 
 } 

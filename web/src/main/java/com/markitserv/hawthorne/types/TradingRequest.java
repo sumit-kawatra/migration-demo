@@ -30,9 +30,9 @@ public class TradingRequest extends Type {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(id).toHashCode();
-	}
-
+		   return HashCodeBuilder.reflectionHashCode(id);
+	 }
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) {
@@ -44,10 +44,11 @@ public class TradingRequest extends Type {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		TradingRequest tr = (TradingRequest) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-				.append(id, tr.id).isEquals();
+		TradingRequest tradeRequest = (TradingRequest)obj;
+		return  new EqualsBuilder().appendSuper(super.equals(obj))
+				.append(id, tradeRequest.id).isEquals();
 	}
+
 
 	@Override
 	public String toString() {

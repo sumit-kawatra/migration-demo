@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.HawthorneBackend;
 import com.markitserv.hawthorne.types.TradingRequest;
@@ -24,6 +25,7 @@ import com.markitserv.mwws.validation.IntegerMaxMinValidation;
 import com.markitserv.mwws.validation.IntegerValidation;
 import com.markitserv.mwws.validation.RequiredValidation;
 
+@Service
 public class DescribeTradingRequests extends AbstractPaginatedAction {
 
 	private static final String FILTER_NAME_SUBSTR_NAME = "substrName";

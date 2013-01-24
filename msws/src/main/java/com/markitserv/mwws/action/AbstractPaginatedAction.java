@@ -83,7 +83,7 @@ public abstract class AbstractPaginatedAction extends AbstractAction {
 	@Override
 	protected ActionResult addResponseMetadata(ActionResult result) {
 		PaginatedActionResult pResult = (PaginatedActionResult) result;
-		ActionResponseMetadata metaD = pResult.getMetadata();
+		ActionResponseMetadata metaD = pResult.getMetaData();
 		metaD.setApproxTotalRecords(pResult.getApproxTotalRecords());
 		metaD.setTotalRecords(pResult.getTotalRecords());
 

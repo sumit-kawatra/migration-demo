@@ -13,6 +13,7 @@ import com.markitserv.hawthorne.HawthorneBackend;
 import com.markitserv.hawthorne.types.LegalEntity;
 import com.markitserv.hawthorne.types.TradingRequest;
 import com.markitserv.hawthorne.types.TradingRequestStatus;
+import com.markitserv.hawthorne.types.User;
 
 /**
  * Hardcodes data that will eventually come from the server. This class will not
@@ -30,11 +31,44 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	private List<LegalEntity> legalEntities; 
 	private Stack<TradingRequestStatus> tradingRequestStatuses;
 	private List<TradingRequest> tradingRequests;
+	private List<User> legalEntityUsers;
+	
 
 	private void initData() {
 		populateLegalEntities(100000);
 		populateTradingRequestStatuses();
 		populateTradingRequests(10);
+		populateLegalEntityUsers(10000);
+	}
+
+	private void populateLegalEntityUsers(int count) {
+		int i =1;
+		int j = 1000;
+		legalEntityUsers = new ArrayList<User>();
+		
+		for (int k = 0; k < count; k++) {
+			legalEntityUsers.add(createUser(k));
+		}
+		
+		
+		for (User user : legalEntityUsers) {			
+			user.setLegalEntityId(j);
+			if(i ==10){
+				i=1;
+				j=j+1;
+			}
+			i++;			
+		}	
+	}
+
+	private User createUser(int j) {
+		User user = new User();
+		user.setUserId(j);
+		user.setFirstName("First Name"+j);
+		user.setLastName("LastName"+j);
+		user.setUserName(user.getFirstName()+" "+user.getLastName());
+		user.setLegalEntityId(j);
+		return user;
 	}
 
 	private void populateLegalEntities(int count) {
@@ -59,29 +93,47 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	
 	private void populateTradingRequests(int count) {
 		tradingRequests = new ArrayList<TradingRequest>();
-		for (int i = 0, j=0; i <= count; i++,j++) {
+		for (int i = 1, j=0; i <= count; i++,j++) {
 			j = j == 4 ? 0 : j;
-			tradingRequests.add(createTradingRequest(j));
+			tradingRequests.add(createTradingRequest(i));
 		}
 	}
 
 	private LegalEntity createLegalEntity(int id) {
 
+
 		LegalEntity le = new LegalEntity();
+		// for easy & consistent search by name - "john boby test LLC"
+		String firstName;
+		String secondName;
+		String thirdName;
+		String name;
+		String bic;
 
-		String firstName = nameGen.compose(3);
-		String secondName = nameGen.compose(2);
-		String thirdName = nameGen.compose(4);
-		String name = firstName + " " + secondName + " " + thirdName + " LLC";
+		if (id == 1) {
+			firstName = "john";
+			secondName = "boby";
+			thirdName = "test";
+			name = firstName + " " + secondName + " " + thirdName + " LLC";
+			bic = "JBT";
 
-		// first 4 letters of first and second name
-		String bic = StringUtils.upperCase(StringUtils.left(firstName, 4))
-				+ StringUtils.upperCase(StringUtils.left(secondName, 4));
+			le.setId(id);
+			le.setName(name);
+			le.setBic(bic);
+		} else {
+			firstName = nameGen.compose(3);
+			secondName = nameGen.compose(2);
+			thirdName = nameGen.compose(4);
+			name = firstName + " " + secondName + " " + thirdName + " LLC";
 
-		le.setId(id);
-		le.setName(name);
-		le.setBic(bic);
+			// first 4 letters of first and second name
+			bic = StringUtils.upperCase(StringUtils.left(firstName, 4))
+					+ StringUtils.upperCase(StringUtils.left(secondName, 4));
 
+			le.setId(id);
+			le.setName(name);
+			le.setBic(bic);
+		}
 		return le;
 	}
 	
@@ -89,7 +141,7 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		TradingRequest tr = new TradingRequest();
 		tr.setId(id);
 		try {
-			tr.setRequestStatus(tradingRequestStatuses.get((int) id));
+			tr.setRequestStatus(tradingRequestStatuses.get((int) id-1));
 		} catch (Exception exception) {
 			tr.setRequestStatus(tradingRequestStatuses.get(0));
 		}
@@ -112,5 +164,10 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	@Override
 	public List<TradingRequest> getTradingRequests() {
 		return this.tradingRequests;
+	}
+
+	@Override
+	public List<User> getUsersForLegalEntity() {		
+		return this.legalEntityUsers;
 	}
 }

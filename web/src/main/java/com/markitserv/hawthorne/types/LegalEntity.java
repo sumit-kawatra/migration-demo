@@ -39,25 +39,23 @@ public class LegalEntity extends Type {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(31, 45).append(id).toHashCode();
-	}
-
+		   return HashCodeBuilder.reflectionHashCode(id);
+	 }
+	
 	@Override
 	public boolean equals(Object obj) {
-		
 		if (obj == null) {
 			return false;
 		}
-		if (obj == this) {
+		if (this == obj) {
 			return true;
 		}
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-
-		LegalEntity rhs = (LegalEntity) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-				.append(id, rhs.id).isEquals();
+		LegalEntity legalEntity = (LegalEntity)obj;
+		return  new EqualsBuilder().appendSuper(super.equals(obj))
+				.append(id, legalEntity.id).isEquals();
 	}
 
 	@Override

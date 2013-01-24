@@ -13,6 +13,9 @@ public class CommandDispatcher {
 
 	@Autowired
 	public ActionCommandRunner actionCommandRunner;
+	
+	@Autowired
+	public EmailCommandRunner emailCommandRunner;
 
 	public Object dispatchReqRespCommand(ReqRespCommand cmd) throws MwwsException {
 		// At some point this will be refactored to handle different types
@@ -20,13 +23,22 @@ public class CommandDispatcher {
 		// upfront
 		if (cmd instanceof ActionCommand) {
 			return actionCommandRunner.run(cmd);
-		} else {
+		}else {		
 			throw new ProgrammaticException("Don't yet know how to handle a "
 					+ cmd.getClass().getSimpleName() + " command");
 		}
 	}
 
+	/**
+	 * <p></p>
+	 * @param cmd
+	 */
 	public void dispatchAsyncCommand(AsyncCommand cmd) {
-		throw new ProgrammaticException("Not implemented yet");
+		if(cmd instanceof EmailCommand){
+			emailCommandRunner.run(cmd);
+		}else{
+			throw new ProgrammaticException("Don't yet know how to handle a "
+					+ cmd.getClass().getSimpleName() + " command");
+		}
 	}
 }

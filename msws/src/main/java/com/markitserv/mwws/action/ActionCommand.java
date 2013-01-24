@@ -1,6 +1,10 @@
 package com.markitserv.mwws.action;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.markitserv.mwws.command.ReqRespCommand;
 import com.markitserv.mwws.internal.MwwsAssert;
@@ -63,13 +67,9 @@ public class ActionCommand implements ReqRespCommand {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((action == null) ? 0 : action.hashCode());
-		result = prime * result + ((filters == null) ? 0 : filters.hashCode());
-		result = prime * result + ((params == null) ? 0 : params.hashCode());
-		return result;
+		   return HashCodeBuilder.reflectionHashCode(this);
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -80,30 +80,13 @@ public class ActionCommand implements ReqRespCommand {
 		if (getClass() != obj.getClass())
 			return false;
 		ActionCommand other = (ActionCommand) obj;
-		if (action == null) {
-			if (other.action != null)
-				return false;
-		} else if (!action.equals(other.action))
-			return false;
-		if (filters == null) {
-			if (other.filters != null)
-				return false;
-		} else if (!filters.equals(other.filters))
-			return false;
-		if (params == null) {
-			if (other.params != null)
-				return false;
-		} else if (!params.equals(other.params))
-			return false;
-		return true;
+		return EqualsBuilder.reflectionEquals(other, obj);		
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("ActionCommand [action=").append(action)
-				.append(", params=").append(params).append(", filters=")
-				.append(filters).append("]");
-		return builder.toString();
+		return ReflectionToStringBuilder.toString(this,
+		ToStringStyle.MULTI_LINE_STYLE);
 	}
+	
 } 

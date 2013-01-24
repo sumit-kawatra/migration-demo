@@ -1,6 +1,7 @@
 package com.markitserv.mwws.testutil;
 
 import org.junit.Before;
+import static org.mockito.Mockito.RETURNS_SMART_NULLS;
 import org.mockito.Mockito;
 
 import com.markitserv.mwws.internal.UuidGenerator;
@@ -22,13 +23,13 @@ public abstract class AbstractMswsTest {
 	protected TestAction testAction;
 
 	// dependencies
-	private UuidGenerator uuidGenerator;
+	protected UuidGenerator uuidGenerator;
 
 	@Before
 	public void setupEach() {
 
 		// Stubs
-		uuidGenerator = Mockito.mock(UuidGenerator.class);
+		uuidGenerator = Mockito.mock(UuidGenerator.class, RETURNS_SMART_NULLS);
 		Mockito.when(uuidGenerator.generateUuid()).thenReturn("Stubbed UUID");
 
 		helper = new ActionAndActionCommandHelpers();
