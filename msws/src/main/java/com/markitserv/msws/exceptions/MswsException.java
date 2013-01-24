@@ -1,7 +1,7 @@
 package com.markitserv.msws.exceptions;
 
 /**
- * Parent classes for all
+ * Parent classes for all MarkitServ Web Services exceptions
  * 
  * @author roy.truelove
  * 

@@ -1,5 +1,7 @@
 package com.markitserv.msws.validation.small;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 import com.markitserv.msws.action.ActionCommand;
@@ -12,93 +14,82 @@ public class IntegerMaxMinValidationTest extends AbstractMswsTest {
 	@Test
 	public void isValidatedWhenMinAndMaxValueIsUnlimited() {
 
-		ActionCommand cmd = actionCommandBuilder.addParam("Value", 10).build();
-
-		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
+		IntegerMaxMinValidation v = new IntegerMaxMinValidation(
 				IntegerMaxMinValidation.UNLIMITED,
-				IntegerMaxMinValidation.UNLIMITED));
-		fakeTestAction.performAction(cmd);
+				IntegerMaxMinValidation.UNLIMITED);
+
+		assertTrue(v.isValidInternal(10, null).isValid());
 	}
 
 	@Test
 	public void isValidatedWhenValueIsGreaterThanMinValue() {
 
-		ActionCommand cmd = actionCommandBuilder.addParam("Value", 10).build();
+		IntegerMaxMinValidation v = new IntegerMaxMinValidation(1,
+				IntegerMaxMinValidation.UNLIMITED);
 
-		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(1,
-				IntegerMaxMinValidation.UNLIMITED));
-		fakeTestAction.performAction(cmd);
+		assertTrue(v.isValidInternal(10, null).isValid());
 	}
 
 	@Test
 	public void isValidatedWhenValueIsEqualsToMinValue() {
 
-		ActionCommand cmd = actionCommandBuilder.addParam("Value", 10).build();
+		IntegerMaxMinValidation v = new IntegerMaxMinValidation(10,
+				IntegerMaxMinValidation.UNLIMITED);
 
-		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(10,
-				IntegerMaxMinValidation.UNLIMITED));
-		fakeTestAction.performAction(cmd);
-
+		assertTrue(v.isValidInternal(10, null).isValid());
 	}
 
 	@Test
 	public void isValidatedWhenValueIsLessThanMaxValue() {
 
-		ActionCommand cmd = actionCommandBuilder.addParam("Value", 10).build();
+		IntegerMaxMinValidation v = new IntegerMaxMinValidation(
+				IntegerMaxMinValidation.UNLIMITED, 11);
 
-		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
-				IntegerMaxMinValidation.UNLIMITED, 11));
-		fakeTestAction.performAction(cmd);
-
+		assertTrue(v.isValidInternal(10, null).isValid());
 	}
 
 	@Test
 	public void isValidatedWhenValueIsEqualsToMaxValue() {
 		
-		ActionCommand cmd = actionCommandBuilder.addParam("Value", 10).build();
+		IntegerMaxMinValidation v = new IntegerMaxMinValidation(
+				IntegerMaxMinValidation.UNLIMITED, 10);
 
-		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
-				IntegerMaxMinValidation.UNLIMITED, 10));
-		fakeTestAction.performAction(cmd);
+		assertTrue(v.isValidInternal(10, null).isValid());
 	}
-	
+
 	@Test
 	public void isValidatedWhenValueIsBetweenMaxAndMinValues() {
 		
-		ActionCommand cmd = actionCommandBuilder.addParam("Value", 10).build();
+		IntegerMaxMinValidation v = new IntegerMaxMinValidation(
+				1, 100);
 
-		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
-				1, 100));
-		fakeTestAction.performAction(cmd);
+		assertTrue(v.isValidInternal(10, null).isValid());
 	}
 
-	@Test(expected = ValidationException.class)
+	@Test
 	public void isNotValidatedIfValueIsLessThanMinValue() {
+		
+		IntegerMaxMinValidation v = new IntegerMaxMinValidation(
+				10, IntegerMaxMinValidation.UNLIMITED);
 
-		ActionCommand cmd = actionCommandBuilder.addParam("Value", 9).build();
-
-		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(10,
-				IntegerMaxMinValidation.UNLIMITED));
-		fakeTestAction.performAction(cmd);
+		assertFalse(v.isValidInternal(9, null).isValid());
 	}
 
-	@Test(expected = ValidationException.class)
+	@Test
 	public void isNotValidatedIfValueIsGreaterThanMaxValue() {
 		
-		ActionCommand cmd = actionCommandBuilder.addParam("Value", 11).build();
+		IntegerMaxMinValidation v = new IntegerMaxMinValidation(
+				IntegerMaxMinValidation.UNLIMITED, 10);
 
-		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
-				IntegerMaxMinValidation.UNLIMITED, 10));
-		fakeTestAction.performAction(cmd);
+		assertFalse(v.isValidInternal(11, null).isValid());
 	}
 
-	@Test(expected = ValidationException.class)
+	@Test
 	public void isNotValidatedIfValueIsNotAnInteger() {
+		
+		IntegerMaxMinValidation v = new IntegerMaxMinValidation(
+				IntegerMaxMinValidation.UNLIMITED, 10);
 
-		ActionCommand cmd = actionCommandBuilder.addParam("Value", "foo").build();
-
-		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
-				IntegerMaxMinValidation.UNLIMITED, 10));
-		fakeTestAction.performAction(cmd);
+		assertFalse(v.isValidInternal("foo", null).isValid());
 	}
 }

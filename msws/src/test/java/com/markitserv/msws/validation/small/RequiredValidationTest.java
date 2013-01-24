@@ -1,5 +1,7 @@
 package com.markitserv.msws.validation.small;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 import com.markitserv.msws.action.ActionCommand;
@@ -11,18 +13,14 @@ public class RequiredValidationTest extends AbstractMswsTest {
 
 	@Test
 	public void succeedsIfRequiredParamProvided() {
-
-		ActionCommand cmd = actionCommandBuilder.addParam("Required", "foo").build();
-		fakeTestAction.addParameterValdiation("Required", new RequiredValidation());
-		fakeTestAction.performAction(cmd);
+		RequiredValidation v = new RequiredValidation();
+		assertTrue(v.isValidInternal("notNull", null).isValid());
 	}
 
-	@Test(expected = ValidationException.class)
+	@Test
 	public void failsIfRequiredParamNotProvided() {
 		
-		fakeTestAction.addParameterValdiation("Required", new RequiredValidation());
-
-		ActionCommand cmd = actionCommandBuilder.build();
-		fakeTestAction.performAction(cmd);
+		RequiredValidation v = new RequiredValidation();
+		assertFalse(v.isValidInternal(null, null).isValid());
 	}
 }

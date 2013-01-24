@@ -1,34 +1,26 @@
 package com.markitserv.msws.validation.small;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Test;
 
 import com.markitserv.msws.action.ActionCommand;
-import com.markitserv.msws.exceptions.ValidationException;
 import com.markitserv.msws.testutil.AbstractMswsTest;
 import com.markitserv.msws.validation.OneOfValidation;
-import com.markitserv.msws.validation.RequiredValidation;
 
 public class OneOfValidationTest extends AbstractMswsTest {
 
 	@Test
 	public void isValidatedIfOneOfValuesIsProvided() {
-
-		ActionCommand cmd = actionCommandBuilder.addParam("Value", "foo").build();
 		
-		String[] x = {"bar", "foo", "baz"};
-		
-		fakeTestAction.addParameterValdiation("Value", new OneOfValidation(x));
-		fakeTestAction.performAction(cmd);
+		OneOfValidation v = new OneOfValidation(new String[] {"bar", "foo", "baz"});
+		assertTrue(v.isValidInternal("foo", null).isValid());
 	}
 
-	@Test(expected = ValidationException.class)
 	public void isNotValidatedIfValueIsNotInListOfOneOfValues() {
+		OneOfValidation v = new OneOfValidation(new String[] {"bar", "goo", "baz"});
+		assertFalse(v.isValidInternal("foo", null).isValid());
 		
-		ActionCommand cmd = actionCommandBuilder.addParam("Value", "boo").build();
-		
-		String[] x = {"bar", "foo", "baz"};
-		
-		fakeTestAction.addParameterValdiation("Value", new OneOfValidation(x));
-		fakeTestAction.performAction(cmd);
 	}
 }

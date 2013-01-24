@@ -1,5 +1,7 @@
 package com.markitserv.msws.validation.small;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -16,18 +18,15 @@ public class CollectionValidationTest extends AbstractMswsTest {
 	@Test
 	public void succeedsIfCollectionIsProvided() {
 		
+		CollectionValidation v = new CollectionValidation();
 		ArrayList<String> col = new ArrayList<String>();
 		
-		ActionCommand cmd = this.actionCommandBuilder.addParam("Collection", col).build();
-		fakeTestAction.addParameterValdiation("Collection", new CollectionValidation());
-		fakeTestAction.performAction(cmd);
+		assertTrue(v.isValidInternal(col, null).isValid());
 	}
 	
-	@Test(expected = ValidationException.class)
+	@Test
 	public void failsIfParamNotCollection() {
-		
-		ActionCommand cmd = this.actionCommandBuilder.addParam("Collection", "col").build();
-		fakeTestAction.addParameterValdiation("Collection", new CollectionValidation());
-		fakeTestAction.performAction(cmd);
+		CollectionValidation v = new CollectionValidation();
+		assertFalse(v.isValidInternal("NotACollection", null).isValid());
 	}
 }
