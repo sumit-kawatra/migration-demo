@@ -14,10 +14,10 @@ public class IntegerMaxMinValidationTest extends AbstractMswsTest {
 
 		ActionCommand cmd = actionCommandBuilder.addParam("Value", 10).build();
 
-		testAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
+		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
 				IntegerMaxMinValidation.UNLIMITED,
 				IntegerMaxMinValidation.UNLIMITED));
-		testAction.performAction(cmd);
+		fakeTestAction.performAction(cmd);
 	}
 
 	@Test
@@ -25,9 +25,9 @@ public class IntegerMaxMinValidationTest extends AbstractMswsTest {
 
 		ActionCommand cmd = actionCommandBuilder.addParam("Value", 10).build();
 
-		testAction.addParameterValdiation("Value", new IntegerMaxMinValidation(1,
+		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(1,
 				IntegerMaxMinValidation.UNLIMITED));
-		testAction.performAction(cmd);
+		fakeTestAction.performAction(cmd);
 	}
 
 	@Test
@@ -35,9 +35,9 @@ public class IntegerMaxMinValidationTest extends AbstractMswsTest {
 
 		ActionCommand cmd = actionCommandBuilder.addParam("Value", 10).build();
 
-		testAction.addParameterValdiation("Value", new IntegerMaxMinValidation(10,
+		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(10,
 				IntegerMaxMinValidation.UNLIMITED));
-		testAction.performAction(cmd);
+		fakeTestAction.performAction(cmd);
 
 	}
 
@@ -46,9 +46,9 @@ public class IntegerMaxMinValidationTest extends AbstractMswsTest {
 
 		ActionCommand cmd = actionCommandBuilder.addParam("Value", 10).build();
 
-		testAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
+		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
 				IntegerMaxMinValidation.UNLIMITED, 11));
-		testAction.performAction(cmd);
+		fakeTestAction.performAction(cmd);
 
 	}
 
@@ -57,9 +57,9 @@ public class IntegerMaxMinValidationTest extends AbstractMswsTest {
 		
 		ActionCommand cmd = actionCommandBuilder.addParam("Value", 10).build();
 
-		testAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
+		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
 				IntegerMaxMinValidation.UNLIMITED, 10));
-		testAction.performAction(cmd);
+		fakeTestAction.performAction(cmd);
 	}
 	
 	@Test
@@ -67,9 +67,9 @@ public class IntegerMaxMinValidationTest extends AbstractMswsTest {
 		
 		ActionCommand cmd = actionCommandBuilder.addParam("Value", 10).build();
 
-		testAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
+		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
 				1, 100));
-		testAction.performAction(cmd);
+		fakeTestAction.performAction(cmd);
 	}
 
 	@Test(expected = ValidationException.class)
@@ -77,9 +77,9 @@ public class IntegerMaxMinValidationTest extends AbstractMswsTest {
 
 		ActionCommand cmd = actionCommandBuilder.addParam("Value", 9).build();
 
-		testAction.addParameterValdiation("Value", new IntegerMaxMinValidation(10,
+		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(10,
 				IntegerMaxMinValidation.UNLIMITED));
-		testAction.performAction(cmd);
+		fakeTestAction.performAction(cmd);
 	}
 
 	@Test(expected = ValidationException.class)
@@ -87,9 +87,9 @@ public class IntegerMaxMinValidationTest extends AbstractMswsTest {
 		
 		ActionCommand cmd = actionCommandBuilder.addParam("Value", 11).build();
 
-		testAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
+		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
 				IntegerMaxMinValidation.UNLIMITED, 10));
-		testAction.performAction(cmd);
+		fakeTestAction.performAction(cmd);
 	}
 
 	@Test(expected = ValidationException.class)
@@ -97,8 +97,8 @@ public class IntegerMaxMinValidationTest extends AbstractMswsTest {
 
 		ActionCommand cmd = actionCommandBuilder.addParam("Value", "foo").build();
 
-		testAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
+		fakeTestAction.addParameterValdiation("Value", new IntegerMaxMinValidation(
 				IntegerMaxMinValidation.UNLIMITED, 10));
-		testAction.performAction(cmd);
+		fakeTestAction.performAction(cmd);
 	}
 }

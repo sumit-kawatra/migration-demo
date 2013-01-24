@@ -13,16 +13,16 @@ public class RequiredValidationTest extends AbstractMswsTest {
 	public void succeedsIfRequiredParamProvided() {
 
 		ActionCommand cmd = actionCommandBuilder.addParam("Required", "foo").build();
-		testAction.addParameterValdiation("Required", new RequiredValidation());
-		testAction.performAction(cmd);
+		fakeTestAction.addParameterValdiation("Required", new RequiredValidation());
+		fakeTestAction.performAction(cmd);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void failsIfRequiredParamNotProvided() {
 		
-		testAction.addParameterValdiation("Required", new RequiredValidation());
+		fakeTestAction.addParameterValdiation("Required", new RequiredValidation());
 
 		ActionCommand cmd = actionCommandBuilder.build();
-		testAction.performAction(cmd);
+		fakeTestAction.performAction(cmd);
 	}
 }

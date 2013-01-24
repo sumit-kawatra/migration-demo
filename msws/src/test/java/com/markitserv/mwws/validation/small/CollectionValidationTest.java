@@ -19,15 +19,15 @@ public class CollectionValidationTest extends AbstractMswsTest {
 		ArrayList<String> col = new ArrayList<String>();
 		
 		ActionCommand cmd = this.actionCommandBuilder.addParam("Collection", col).build();
-		testAction.addParameterValdiation("Collection", new CollectionValidation());
-		testAction.performAction(cmd);
+		fakeTestAction.addParameterValdiation("Collection", new CollectionValidation());
+		fakeTestAction.performAction(cmd);
 	}
 	
 	@Test(expected = ValidationException.class)
 	public void failsIfParamNotCollection() {
 		
 		ActionCommand cmd = this.actionCommandBuilder.addParam("Collection", "col").build();
-		testAction.addParameterValdiation("Collection", new CollectionValidation());
-		testAction.performAction(cmd);
+		fakeTestAction.addParameterValdiation("Collection", new CollectionValidation());
+		fakeTestAction.performAction(cmd);
 	}
 }

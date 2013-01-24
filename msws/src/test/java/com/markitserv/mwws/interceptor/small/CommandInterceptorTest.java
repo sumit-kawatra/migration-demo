@@ -43,7 +43,7 @@ public class CommandInterceptorTest extends AbstractMswsTest {
 	public void setUp()
 		throws Exception {
 		interceptor = new CommandInterceptor();
-		interceptor.setUuidGenerator(this.uuidGenerator);
+		interceptor.setUuidGenerator(this.uuidGeneratorMock);
 	}
 
 }

@@ -17,8 +17,8 @@ public class OneOfValidationTest extends AbstractMswsTest {
 		
 		String[] x = {"bar", "foo", "baz"};
 		
-		testAction.addParameterValdiation("Value", new OneOfValidation(x));
-		testAction.performAction(cmd);
+		fakeTestAction.addParameterValdiation("Value", new OneOfValidation(x));
+		fakeTestAction.performAction(cmd);
 	}
 
 	@Test(expected = ValidationException.class)
@@ -28,7 +28,7 @@ public class OneOfValidationTest extends AbstractMswsTest {
 		
 		String[] x = {"bar", "foo", "baz"};
 		
-		testAction.addParameterValdiation("Value", new OneOfValidation(x));
-		testAction.performAction(cmd);
+		fakeTestAction.addParameterValdiation("Value", new OneOfValidation(x));
+		fakeTestAction.performAction(cmd);
 	}
 }

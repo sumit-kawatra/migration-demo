@@ -28,15 +28,15 @@ public class ParamsAndFiltersDefinitionTest extends AbstractMswsTest {
 		mine.mergeWith(other);
 		
 		// set our merged params on the action
-		testAction.setParameterDefinition(mine);
+		fakeTestAction.setParameterDefinition(mine);
 		
 		// ensures that 'defaulted' is set by the mreged defaults
 		String[] required = {"1"};
-		testAction.addParameterValdiation("Defaulted", new OneOfValidation(required));
+		fakeTestAction.addParameterValdiation("Defaulted", new OneOfValidation(required));
 		
 		// build command with no params
 		ActionCommand cmd = this.actionCommandBuilder.build();
-		testAction.performAction(cmd);
+		fakeTestAction.performAction(cmd);
 
 	}
 	
@@ -54,14 +54,14 @@ public class ParamsAndFiltersDefinitionTest extends AbstractMswsTest {
 		mine.mergeWith(other);
 		
 		// set our merged params on the action
-		testAction.setParameterDefinition(mine);
+		fakeTestAction.setParameterDefinition(mine);
 		
 		// ensures that 'defaulted' is set by the mreged defaults
 		String[] required = {"1"};
-		testAction.addParameterValdiation("Defaulted", new OneOfValidation(required));
+		fakeTestAction.addParameterValdiation("Defaulted", new OneOfValidation(required));
 		
 		// build command with no params
 		ActionCommand cmd = this.actionCommandBuilder.build();
-		testAction.performAction(cmd);
+		fakeTestAction.performAction(cmd);
 	}
 }
