@@ -14,18 +14,24 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
 			/WEB-INF/spring/root-context.xml
-			<!--/WEB-INF/spring/spring-security.xml -->
+			/WEB-INF/spring/spring-security.xml
 		</param-value>
 	</context-param>
-
+   <!--  <session-config>
+		<session-timeout>10</session-timeout>
+	</session-config> -->
+	
+	
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	<listener>
+	 <listener>
 		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
-	</listener>
-
+	</listener> 
+    <listener>
+		<listener-class>com.markitserv.hawthorne.authentication.MySessionListener</listener-class>
+	</listener> 
 
 	<!-- Processes application requests -->
 	<servlet>
@@ -46,9 +52,9 @@
 	</servlet-mapping>
 	<!-- Spring Security -->
 
-	<!-- <filter> <filter-name>springSecurityFilterChain</filter-name> <filter-class> 
+	<filter> <filter-name>springSecurityFilterChain</filter-name> <filter-class> 
 		org.springframework.web.filter.DelegatingFilterProxy </filter-class> </filter> 
 		<filter-mapping> <filter-name>springSecurityFilterChain</filter-name> <url-pattern>/*</url-pattern> 
-		</filter-mapping> -->
+		</filter-mapping>
 
 </web-app>

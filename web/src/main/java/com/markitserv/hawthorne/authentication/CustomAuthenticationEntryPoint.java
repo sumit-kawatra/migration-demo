@@ -13,13 +13,13 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import com.markitserv.hawthorne.actions.DescribeLegalEntities;
+
 
 /**
   * @author swati.choudhari
   */
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
-	Logger log = LoggerFactory.getLogger(DescribeLegalEntities.class);
+	Logger log = LoggerFactory.getLogger(CustomAuthenticationEntryPoint.class);
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {

@@ -14,45 +14,36 @@
 		/> <user name="user2" password="xyz" authorities="ROLE_USER" /> </user-service> 
 		</authentication-provider> </authentication-manager> -->
 
-
 	<sec:http realm="Protected API" use-expressions="true"
 		auto-config="false" entry-point-ref="CustomAuthenticationEntryPoint">
 		<sec:custom-filter ref="authenticationTokenProcessingFilter"
 			position="PRE_AUTH_FILTER" />
-
-		<!-- <sec:custom-filter ref="authenticationFilter" position="FORM_LOGIN_FILTER"/> 
-			<sec:custom-filter ref="concurrencyFilter" position="CONCURRENT_SESSION_FILTER"/> -->
-		<!-- <sec:session-management session-authentication-strategy-ref="sas"/> -->
-		<sec:session-management>
-			<sec:concurrency-control max-sessions="10"
-				session-registry-ref="sessionRegistry" />
-		</sec:session-management>
 		<sec:intercept-url pattern="/*" access="isAuthenticated()" />
-
+    <sec:session-management>
+			<sec:concurrency-control max-sessions="1"
+				session-registry-ref="sessionRegistry" />
+	</sec:session-management>
 	</sec:http>
-
-	<!-- <beans:bean id="authenticationFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter" 
-		p:sessionAuthenticationStrategy-ref="sas" p:authenticationManager-ref="myAuthenticationManager"> 
-		</beans:bean> -->
-	<!-- <beans:bean id="concurrencyFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter"> 
-		<beans:property name="sessionRegistry" ref="sessionRegistry" /> </beans:bean> -->
 
 	<sec:authentication-manager alias="authenticationManager" />
 
+	<!-- <beans:bean id="loginProcessingFilter"
+		class="com.markitserv.hawthorne.authentication.LoginProcessingFilter">
+	</beans:bean> -->
+	
 	<beans:bean id="myAuthenticationManager"
 		class="com.markitserv.hawthorne.authentication.CustomAuthunticationManager" />
 
 	<beans:bean id="CustomAuthenticationEntryPoint"
 		class="com.markitserv.hawthorne.authentication.CustomAuthenticationEntryPoint" />
 
-	<beans:bean id="authenticationTokenProcessingFilter"
+	<!-- <beans:bean id="LoginCustomAuthenticationEntryPoint"
+		class="com.markitserv.hawthorne.authentication.LoginCustomAuthenticationEntryPoint" /> -->
+    
+    <beans:bean id="authenticationTokenProcessingFilter"
 		class="com.markitserv.hawthorne.authentication.AuthenticationTokenProcessingFilter">
 	</beans:bean>
-
-	<!-- <beans:bean id="sas" class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy" 
-		> <beans:constructor-arg name="sessionRegistry" ref="sessionRegistry" /> 
-		<beans:property name="maximumSessions" value="10" /> </beans:bean> -->
-
+	
 	<beans:bean id="sessionRegistry"
 		class="org.springframework.security.core.session.SessionRegistryImpl" />
 
