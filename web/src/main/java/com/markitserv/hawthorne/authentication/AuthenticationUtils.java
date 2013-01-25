@@ -3,7 +3,7 @@ package com.markitserv.hawthorne.authentication;
 import java.util.ArrayList;
 
 /**
- * 
+ * TODO - see if we need any of these once the dust settles.
  * @author swati.choudhari
  *
  */

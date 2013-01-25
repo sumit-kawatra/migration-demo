@@ -27,20 +27,13 @@
 
 	<sec:authentication-manager alias="authenticationManager" />
 
-	<!-- <beans:bean id="loginProcessingFilter"
-		class="com.markitserv.hawthorne.authentication.LoginProcessingFilter">
-	</beans:bean> -->
-	
 	<beans:bean id="myAuthenticationManager"
 		class="com.markitserv.hawthorne.authentication.CustomAuthunticationManager" />
 
 	<beans:bean id="CustomAuthenticationEntryPoint"
 		class="com.markitserv.hawthorne.authentication.CustomAuthenticationEntryPoint" />
 
-	<!-- <beans:bean id="LoginCustomAuthenticationEntryPoint"
-		class="com.markitserv.hawthorne.authentication.LoginCustomAuthenticationEntryPoint" /> -->
-    
-    <beans:bean id="authenticationTokenProcessingFilter"
+	<beans:bean id="authenticationTokenProcessingFilter"
 		class="com.markitserv.hawthorne.authentication.AuthenticationTokenProcessingFilter">
 	</beans:bean>
 	
