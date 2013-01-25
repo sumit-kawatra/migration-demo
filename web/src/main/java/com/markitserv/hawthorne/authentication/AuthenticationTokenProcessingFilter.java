@@ -68,6 +68,7 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 		HttpServletRequest htpRequest = (HttpServletRequest) request;
 		HttpServletResponse htpResponse = (HttpServletResponse) response;
 		
+		/*
         // Security is disabled by default for now.  This will allow users to test security if the want to.
     	String isEnabled = System.getProperty(SYS_PROP_ENABLE_SECURITY);
     	if (isEnabled == null) {
@@ -76,6 +77,7 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     		return;
     		// TODO set principal to be some default user.
     	}
+    	*/
 
 		String requestURI = htpRequest.getRequestURI();
 		final ServletContext context = getServletContext();
