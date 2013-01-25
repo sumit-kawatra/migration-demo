@@ -39,6 +39,8 @@ import com.markitserv.msws.internal.MswsAssert;
 
 public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 
+	private static final String SYS_PROP_ENABLE_SECURITY = "com.markitserv.hawthorne.enableSecurity";
+	
 	@Autowired
 	@Resource(name = "sessionRegistry")
 	private SessionRegistryImpl sessionRegistry;
@@ -65,6 +67,14 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 		boolean isSessionExpired = false;
 		HttpServletRequest htpRequest = (HttpServletRequest) request;
 		HttpServletResponse htpResponse = (HttpServletResponse) response;
+		
+        // Security is disabled by default for now.  This will allow users to test security if the want to.
+    	String isEnabled = System.getProperty(SYS_PROP_ENABLE_SECURITY);
+    	if (isEnabled == null) {
+    		log.info ("Skipped security.  Set " + SYS_PROP_ENABLE_SECURITY + " to 'true' to enable.  This is during dev only.");
+    		chain.doFilter(htpRequest, htpResponse);
+    		// TODO set principal to be some default user.
+    	}
 
 		String requestURI = htpRequest.getRequestURI();
 		final ServletContext context = getServletContext();
@@ -157,5 +167,4 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 	public void setAuthManager(AuthenticationManager authManager) {
 		this.authManager = authManager;
 	}
-
 }
