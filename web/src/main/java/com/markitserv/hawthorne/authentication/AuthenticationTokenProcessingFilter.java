@@ -73,6 +73,7 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     	if (isEnabled == null) {
     		log.info ("Skipped security.  Set " + SYS_PROP_ENABLE_SECURITY + " to 'true' to enable.  This is during dev only.");
     		chain.doFilter(htpRequest, htpResponse);
+    		return;
     		// TODO set principal to be some default user.
     	}
 
