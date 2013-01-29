@@ -26,6 +26,10 @@ public class ActionParameters {
 	public int getParameterAsInt(String key) {
 
 		Object param = this.getParameter(key);
+		
+		if (param instanceof Integer) {
+			return ((Integer)param).intValue();
+		}
 
 		mswsAssert(
 				param instanceof String,
@@ -45,6 +49,33 @@ public class ActionParameters {
 
 		return intVal;
 
+	}
+
+	public boolean getParameterAsBoolean(String key) {
+
+		Object param = this.getParameter(key);
+		
+		if (param instanceof Boolean) {
+			return ((Boolean)param).booleanValue();
+		}
+
+		mswsAssert(
+				param instanceof String,
+				"Cannot convert type '%s' to a boolean.  Did you add boolean validation?",
+				param.getClass().getSimpleName());
+
+		String paramStr = (String) param;
+		boolean boolVal = false;
+
+		try {
+			boolVal = Boolean.parseBoolean(paramStr);
+		} catch (Exception e) {
+			throw new ProgrammaticException(
+					"Could not get parameter as a boolean.  Did you add boolean validation?",
+					e);
+		}
+		
+		return boolVal;
 	}
 
 	public void addParameter(String key, Object value) {
