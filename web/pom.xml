@@ -107,16 +107,9 @@
 		</dependency>
 
 		<!-- Validation -->
-		<!--
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-		</dependency>
-		 -->
+		<!-- <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-validator</artifactId> 
+			</dependency> <dependency> <groupId>javax.validation</groupId> <artifactId>validation-api</artifactId> 
+			</dependency> -->
 
 		<!-- TODO move this to the appropriate places if we end up using it -->
 		<dependency>
@@ -152,6 +145,14 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
+
+	<scm>
+		<connection>scm:git:ssh://git@devsrca01.mserv.local/crossplatform/HawthorneServer.git
+		</connection>
+		<developerConnection>scm:git:ssh://git@devsrca01.mserv.local/crossplatform/HawthorneServer.git
+		</developerConnection>
+	</scm>
+
 	<build>
 		<finalName>hawthorne-server</finalName>
 		<resources>
@@ -172,22 +173,18 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>7.6.8.v20121106</version>
 			</plugin>
-			<!--
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-			</plugin>
-		-->
+			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>cobertura-maven-plugin</artifactId> 
+				</plugin> -->
 		</plugins>
 
 	</build>
 
-		<profiles>
+	<profiles>
 		<!-- Creates a distribution. In practice only Jenkins will run this. -->
 		<profile>
 			<id>dist</id>
 			<build>
-		<finalName>hawthorne-server</finalName>
+				<finalName>hawthorne-server</finalName>
 				<resources>
 					<resource>
 						<directory>src/main/resources</directory>
@@ -244,7 +241,7 @@
 								<goals>
 									<goal>run</goal>
 								</goals>
-								</execution>
+							</execution>
 							<execution>
 								<id>create_zip</id>
 								<!-- This needs to run *after* the war file is created, but there's 
@@ -301,7 +298,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>buildnumber-maven-plugin</artifactId>
-						<version>1.0</version>
+						<version>1.2</version>
 						<executions>
 							<execution>
 								<phase>validate</phase>

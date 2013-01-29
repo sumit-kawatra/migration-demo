@@ -30,4 +30,10 @@
     		<constructor-arg value="${mail.smtp.port}" />
 	</bean>
 	
-</beans>
+	<bean class="com.markitserv.hawthorne.BuildInformation">
+		<property name="build">
+			<value>TOOD!!</value>
+		</property>
+	</bean>
+	
+</beans> 
