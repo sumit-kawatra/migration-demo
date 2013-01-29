@@ -3,7 +3,6 @@ package com.markitserv.hawthorne;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.hibernate.validator.internal.util.logging.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;

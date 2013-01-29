@@ -106,18 +106,6 @@
 			<artifactId>joda-time</artifactId>
 		</dependency>
 
-		<!-- Validation -->
-		<!-- <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-validator</artifactId> 
-			</dependency> <dependency> <groupId>javax.validation</groupId> <artifactId>validation-api</artifactId> 
-			</dependency> -->
-
-		<!-- TODO move this to the appropriate places if we end up using it -->
-		<dependency>
-			<groupId>commons-validator</groupId>
-			<artifactId>commons-validator</artifactId>
-			<version>1.4.0</version>
-		</dependency>
-
 		<!-- Jetty, and it's dependencies. These are expanded into the root dir 
 			when creating a dist with the 'dist' profile -->
 		<dependency>
