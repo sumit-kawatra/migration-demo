@@ -34,6 +34,7 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 		</dependency>
+		<!--  TODO do we need this?  Shouldn't it be moved to the web app? -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -50,7 +51,6 @@
 		  <artifactId>greenmail</artifactId>
 		  <version>1.3.1b</version>
 		</dependency>
-		
 	</dependencies>
 
 	<build>
