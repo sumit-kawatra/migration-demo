@@ -23,12 +23,17 @@
 		</property>
 	</bean>
 	
-	<bean id="smtpHost"   class="java.lang.String">
-    		<constructor-arg value="${mail.smtp.host}" />
+	<bean id="emailCommandRunner" class="com.markitserv.msws.command.EmailCommandRunner" >
+		<property name="smtpPort" value="${mail.smtp.port}"/>
+		<property name="smtpHost" value="${mail.smtp.host}"/>
 	</bean>
-	<bean id="smtpPort"   class="java.lang.String">
-    		<constructor-arg value="${mail.smtp.port}" />
+	
+	<bean id="errorCommandRunner" class="com.markitserv.msws.command.ErrorCommandRunner" >
+		<property name="errorDistributionGroup" value="${error.distribution.group}"/>
+		<property name="env" value="${error.distribution.env}"/>
 	</bean>
+	
+	
 	
 	<bean class="com.markitserv.hawthorne.BuildInformation">
 		<property name="build">

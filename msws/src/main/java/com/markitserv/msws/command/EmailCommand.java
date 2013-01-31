@@ -23,6 +23,7 @@ public class EmailCommand implements AsyncCommand{
 		private String body;
 		
 
+
 		public EmailCommand() {
 			super();
 		}
@@ -68,8 +69,6 @@ public class EmailCommand implements AsyncCommand{
 			this.body = body;
 		}
 		
-		
-
 		@Override
 		public String toString() {
 			return ReflectionToStringBuilder.toString(this,

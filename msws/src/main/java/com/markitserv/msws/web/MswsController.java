@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 
-import com.markitserv.msws.ExceptionResult;
 import com.markitserv.msws.AbstractWebserviceResult;
+import com.markitserv.msws.ExceptionResult;
 import com.markitserv.msws.action.ActionCommand;
 import com.markitserv.msws.action.ActionResult;
 import com.markitserv.msws.command.CommandDispatcher;
+import com.markitserv.msws.command.ErrorCommand;
 import com.markitserv.msws.exceptions.MswsException;
 import com.markitserv.msws.exceptions.ProgrammaticException;
 import com.markitserv.msws.internal.Constants;
@@ -46,19 +47,29 @@ public class MswsController {
 			result = (ActionResult) dispatcher
 					.dispatchReqRespCommand(actionCmd);
 		} catch (MswsException mwwsException) {
-			// TODO send exception in an ErrorCommand to the dispatcher. Logging for now
 			log.error("Unknown Exception", mwwsException);
+			// If the exception belongs to the programmatic exception  the mail goes to error distribution group 
+			if(mwwsException instanceof ProgrammaticException){
+				dispatcher.dispatchAsyncCommand(createErrorCommand(mwwsException.getErrorMessage()));
+			}			
 			result = new ExceptionResult(mwwsException);
 		} catch (Exception exception) {
-			// TODO send exception in an ErrorCommand to the dispatcher. Logging for now
 			log.error("Unknown Exception", exception);
 			ProgrammaticException programmaticException = new ProgrammaticException(
-					"Unknown error occured.", exception);
+					"Unknown error occured.", exception);			
+			// If the exception belongs to the programmatic exception  the mail goes to error distribution group 
+			dispatcher.dispatchAsyncCommand(createErrorCommand(programmaticException.getErrorMessage()));
 			result = new ExceptionResult(programmaticException);
 		}
 
 		result.getMetaData().setRequestId(uuid);
 		return result;
+	}
+	
+	private ErrorCommand createErrorCommand(String  errorMessage){
+		ErrorCommand errorCommand = new ErrorCommand();
+		errorCommand.setErrorMessage(errorMessage);
+		return errorCommand;
 	}
 
 	public void setDispatcher(CommandDispatcher dispatcher) {

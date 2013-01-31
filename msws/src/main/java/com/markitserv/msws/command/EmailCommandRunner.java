@@ -3,6 +3,8 @@
  */
 package com.markitserv.msws.command;
 
+import static com.markitserv.msws.internal.MswsAssert.mswsAssert;
+
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -13,34 +15,34 @@ import javax.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.markitserv.msws.exceptions.MswsException;
 import com.markitserv.msws.exceptions.ProgrammaticException;
-
-import static com.markitserv.msws.internal.MswsAssert.mswsAssert;
 
 /**
  * @author kiran.gogula
  *
  */
-@Service
 public class EmailCommandRunner extends AbstractCommandRunner {
 
 	Logger log = LoggerFactory.getLogger(EmailCommandRunner.class);
 	
-	@Autowired
-	private String smtpHost;
-	@Autowired
 	private String smtpPort;
+	private String smtpHost;
 	
-	
-	
-	private void sendMailMessage(EmailCommand emailCommand){
+
+	@Override
+	public Object run(Command cmd) throws MswsException {
+		 mswsAssert(cmd!=null, "EmailCommand must be set");
+		 EmailCommand emailCommand = (EmailCommand) cmd;
+		 sendMailMessage(emailCommand);
+		 return null;
+	}
+
+	public void sendMailMessage(EmailCommand emailCommand){
 		Properties props = new Properties();
-		props.put("mail.smtp.host", smtpHost);
-		props.put("mail.smtp.port", smtpPort);
+		props.put("mail.smtp.host", getSmtpHost());
+		props.put("mail.smtp.port", getSmtpPort());
 		Session session = Session.getInstance(props,null);
 	    try{
 		    Message message = new MimeMessage(session);
@@ -54,22 +56,22 @@ public class EmailCommandRunner extends AbstractCommandRunner {
 		}	  
 	}
 
-	@Override
-	public Object run(Command cmd) throws MswsException {
-		 mswsAssert(cmd!=null, "EmailCommand must be set");
-		 EmailCommand emailCommand = (EmailCommand) cmd;
-		 sendMailMessage(emailCommand);
-		 return null;
-	}
-
-	public void setSmtpHost(String smtpHost) {
-		this.smtpHost = smtpHost;
+	public String getSmtpPort() {
+		return smtpPort;
 	}
 
 	public void setSmtpPort(String smtpPort) {
 		this.smtpPort = smtpPort;
 	}
-	
-	
 
+	public String getSmtpHost() {
+		return smtpHost;
+	}
+
+	public void setSmtpHost(String smtpHost) {
+		this.smtpHost = smtpHost;
+	}
+	
+	
+	
 }

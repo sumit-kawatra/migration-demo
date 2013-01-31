@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.mock.web.MockMultipartHttpServletRequest;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
@@ -24,8 +25,11 @@ import com.markitserv.msws.ExceptionResult;
 import com.markitserv.msws.AbstractWebserviceResult;
 import com.markitserv.msws.action.ActionResult;
 import com.markitserv.msws.command.CommandDispatcher;
+import com.markitserv.msws.command.EmailCommandRunner;
+import com.markitserv.msws.command.ErrorCommandRunner;
 import com.markitserv.msws.command.ReqRespCommand;
 import com.markitserv.msws.exceptions.MswsException;
+import com.markitserv.msws.exceptions.ProgrammaticException;
 import com.markitserv.msws.exceptions.UnknownActionException;
 import com.markitserv.msws.exceptions.ValidationException;
 import com.markitserv.msws.testutil.AbstractMswsTest;
@@ -158,5 +162,7 @@ public class MswsControllerTest extends AbstractMswsTest {
 		assertEquals("validation exception message2", er.getErrors().get(1)
 				.getErrorMessage());
 	}
+	
+	
 
 }

@@ -14,8 +14,9 @@ public class CommandDispatcher {
 	@Autowired
 	public ActionCommandRunner actionCommandRunner;
 	
-	@Autowired
 	public EmailCommandRunner emailCommandRunner;
+	
+	public ErrorCommandRunner errorCommandRunner;
 
 	public Object dispatchReqRespCommand(ReqRespCommand cmd) throws MswsException {
 		// At some point this will be refactored to handle different types
@@ -36,9 +37,30 @@ public class CommandDispatcher {
 	public void dispatchAsyncCommand(AsyncCommand cmd) {
 		if(cmd instanceof EmailCommand){
 			emailCommandRunner.run(cmd);
+		}if(cmd instanceof ErrorCommand){
+			errorCommandRunner.run(cmd);
 		}else{
 			throw new ProgrammaticException("Don't yet know how to handle a "
 					+ cmd.getClass().getSimpleName() + " command");
 		}
 	}
+
+	public EmailCommandRunner getEmailCommandRunner() {
+		return emailCommandRunner;
+	}
+
+	public void setEmailCommandRunner(EmailCommandRunner emailCommandRunner) {
+		this.emailCommandRunner = emailCommandRunner;
+	}
+
+	public ErrorCommandRunner getErrorCommandRunner() {
+		return errorCommandRunner;
+	}
+
+	public void setErrorCommandRunner(ErrorCommandRunner errorCommandRunner) {
+		this.errorCommandRunner = errorCommandRunner;
+	}
+	
+	
+	
 }
