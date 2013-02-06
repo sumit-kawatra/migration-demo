@@ -14,14 +14,12 @@ public class BooleanValidation extends AbstractOptionalValidation {
 			return bad();
 		} else {
 			String targetStr = (String) target;
-			try {
-				Boolean.parseBoolean(targetStr);
-			} catch (Exception e) {
+			if("true".equalsIgnoreCase(targetStr) || "false".equalsIgnoreCase(targetStr)){
+				return ValidationResponse.createValidResponse();
+			}else{
 				return bad();
 			}
 		}
-		
-		return ValidationResponse.createValidResponse();
 	}
 
 	private ValidationResponse bad() {

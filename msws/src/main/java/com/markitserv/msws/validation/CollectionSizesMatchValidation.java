@@ -34,7 +34,7 @@ public class CollectionSizesMatchValidation extends AbstractValidation {
 				|| !isOtherTargetACollection.isValid()) {
 			return ValidationResponse
 					.createInvalidResponse(String
-							.format("Expecting both this parameter and '%s' to be Collections"));
+							.format("Expecting both this parameter and '%s' to be Collections", otherValueName));
 		}
 
 		Collection<?> targetCol = (Collection<?>) target;

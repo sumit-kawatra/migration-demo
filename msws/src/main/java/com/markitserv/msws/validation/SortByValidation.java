@@ -18,7 +18,7 @@ public class SortByValidation extends OneOfValidation {
 		}
 	}
 
-	private SortByValidation(String[] validValues) {
+	public SortByValidation(String[] validValues) {
 		super(validValues);
 	}
 
