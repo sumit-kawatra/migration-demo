@@ -23,6 +23,18 @@ public class User extends Type {
 	private String lastName;
 	
 	private int legalEntityId;
+	
+	private int participantId;
+
+	
+
+	public int getParticipantId() {
+		return participantId;
+	}
+
+	public void setParticipantId(int participantId) {
+		this.participantId = participantId;
+	}
 
 	public int getUserId() {
 		return userId;

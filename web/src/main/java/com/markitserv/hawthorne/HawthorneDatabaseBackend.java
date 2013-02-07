@@ -41,5 +41,8 @@ public class HawthorneDatabaseBackend implements HawthorneBackend {
 		throw NotYetImplementedException.standardException();
 	}
 	
+	public List<User> getUsers(){
+		throw NotYetImplementedException.standardException();
+	}
 	
 }

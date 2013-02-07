@@ -13,4 +13,5 @@ public interface HawthorneBackend {
 	List<TradingRequestStatus> getTradingRequestStatuses();
 	List<TradingRequest> getTradingRequests();
 	List<User> getUsersForLegalEntity();
+	List<User> getUsers();
 }

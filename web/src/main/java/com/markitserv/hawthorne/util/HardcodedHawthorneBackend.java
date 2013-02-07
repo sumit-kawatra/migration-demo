@@ -61,6 +61,15 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		}	
 	}
 
+	@Override
+	public List<User> getUsers() {
+		List<User> userList = new ArrayList<User>();
+		for(int i=0;i<100;i++){
+			userList.add(createUser(i));
+		}
+		return userList;
+	}
+	
 	private User createUser(int j) {
 		User user = new User();
 		user.setUserId(j);
@@ -68,6 +77,7 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		user.setLastName("LastName"+j);
 		user.setUserName(user.getFirstName()+" "+user.getLastName());
 		user.setLegalEntityId(j);
+		user.setParticipantId(j);
 		return user;
 	}
 
@@ -170,4 +180,8 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	public List<User> getUsersForLegalEntity() {		
 		return this.legalEntityUsers;
 	}
+
+	
+
+	
 }
