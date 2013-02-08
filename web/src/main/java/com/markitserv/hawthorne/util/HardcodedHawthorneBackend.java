@@ -2,9 +2,13 @@ package com.markitserv.hawthorne.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Stack;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jetty.util.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +29,9 @@ import com.markitserv.hawthorne.types.User;
 @Service
 public class HardcodedHawthorneBackend implements InitializingBean,
 		HawthorneBackend {
-
+	
+	Logger log = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private RandomNameGenerator nameGen;
 	private List<LegalEntity> legalEntities; 
@@ -143,6 +149,8 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 			le.setId(id);
 			le.setName(name);
 			le.setBic(bic);
+			le.setActive(new Random().nextBoolean());
+			
 		}
 		return le;
 	}
@@ -168,7 +176,9 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		log.debug("Starting to populate hardcoded data");
 		initData();
+		log.debug("Finished populating hardcoded data");
 	}
 
 	@Override
@@ -180,8 +190,4 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	public List<User> getUsersForLegalEntity() {		
 		return this.legalEntityUsers;
 	}
-
-	
-
-	
 }

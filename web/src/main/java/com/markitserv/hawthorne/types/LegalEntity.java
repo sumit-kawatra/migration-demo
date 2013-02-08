@@ -12,6 +12,7 @@ public class LegalEntity extends Type {
 	private int id;
 	private String name;
 	private String bic;
+	private boolean isActive;
 
 	public int getId() {
 		return id;
@@ -35,6 +36,14 @@ public class LegalEntity extends Type {
 
 	public void setBic(String bic) {
 		this.bic = bic;
+	}
+	
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 
 	@Override
@@ -63,4 +72,5 @@ public class LegalEntity extends Type {
 		return ReflectionToStringBuilder.toString(this,
 		ToStringStyle.MULTI_LINE_STYLE);
 	}
+
 }
