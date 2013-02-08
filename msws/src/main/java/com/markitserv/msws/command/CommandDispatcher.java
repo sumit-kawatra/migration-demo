@@ -14,8 +14,10 @@ public class CommandDispatcher {
 	@Autowired
 	public ActionCommandRunner actionCommandRunner;
 	
+	@Autowired
 	public EmailCommandRunner emailCommandRunner;
 	
+	@Autowired
 	public ErrorCommandRunner errorCommandRunner;
 
 	public Object dispatchReqRespCommand(ReqRespCommand cmd) throws MswsException {

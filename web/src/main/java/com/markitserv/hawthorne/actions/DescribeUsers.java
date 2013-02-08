@@ -9,6 +9,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.HawthorneBackend;
 import com.markitserv.hawthorne.types.User;
@@ -34,6 +35,7 @@ import com.markitserv.msws.validation.RequiredValidation;
  * @author kiran.gogula
  * 
  */
+@Service
 public class DescribeUsers extends AbstractPaginatedAction {
 
 	private static final String FILTER_NAME_SUBSTR_LAST_NAME = "substrLastName";
@@ -52,12 +54,12 @@ public class DescribeUsers extends AbstractPaginatedAction {
 		// UserName
 		def.addValidation("UserName", new ForEachValidator(new RequiredValidation()));
 		// Only supporting a signle userName at a time (for now)
-		def.addValidation("UserName", new CollectionSizeValidation(1, 1));
+		def.addValidation("UserName", new CollectionSizeValidation(1, CollectionSizeValidation.UNLIMITED));
 		
 		// Participant ID
 		def.addValidation("ParticipantId", new IntegerValidation());
 		def.addValidation("ParticipantId", new IntegerMaxMinValidation(1, IntegerMaxMinValidation.UNLIMITED));
-		def.addValidation("ParticipantId", new CollectionSizeValidation(1, 1));
+		def.addValidation("ParticipantId", new CollectionSizeValidation(1, CollectionSizeValidation.UNLIMITED));
 
 		// Sorting
 		SortingPresetDefinitionBuilder sortBuilder = new SortingPresetDefinitionBuilder();
