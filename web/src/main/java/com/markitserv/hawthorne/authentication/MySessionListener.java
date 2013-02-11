@@ -1,6 +1,5 @@
 package com.markitserv.hawthorne.authentication;
 
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -22,7 +21,7 @@ public class MySessionListener implements HttpSessionListener {
 	public void sessionDestroyed(HttpSessionEvent se) {
 		final HttpSession session = se.getSession();
     	final ServletContext context = session.getServletContext();
-    	System.out.println("New Session destroyed = " +session.getId());
+    	System.out.println("Session destroyed for JSESSIONID " +session.getId());
     	context.removeAttribute(session.getId());
 
 	}

@@ -1,6 +1,11 @@
 package com.markitserv.hawthorne.web;
 
 
+import java.security.Principal;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +23,11 @@ public class LoginController{
 	Logger log = LoggerFactory.getLogger(LoginController.class);
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public @ResponseBody String validateUser() {
-		System.out.println("in Login Controller");
-		return "User Authenticated Successfully. Please use user token for next Request.";
+	public @ResponseBody String validateUser(HttpServletRequest request, HttpServletResponse response) {
+		Principal principal = request.getUserPrincipal();
+		String UserName = principal.getName();
+		log.info("User "+UserName+" Authenticated Successfully.");
+		return "User "+UserName+" Authenticated Successfully. Please use user token for next Request.";
 	}
 	
 
