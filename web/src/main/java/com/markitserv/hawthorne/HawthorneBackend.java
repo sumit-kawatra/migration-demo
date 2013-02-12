@@ -3,6 +3,7 @@ package com.markitserv.hawthorne;
 import java.util.List;
 
 import com.markitserv.hawthorne.types.LegalEntity;
+import com.markitserv.hawthorne.types.Participant;
 import com.markitserv.hawthorne.types.TradingRequest;
 import com.markitserv.hawthorne.types.TradingRequestStatus;
 import com.markitserv.hawthorne.types.User;
@@ -14,4 +15,5 @@ public interface HawthorneBackend {
 	List<TradingRequest> getTradingRequests();
 	List<User> getUsersForLegalEntity();
 	List<User> getUsers();
+	List<Participant> getParticipants();
 }

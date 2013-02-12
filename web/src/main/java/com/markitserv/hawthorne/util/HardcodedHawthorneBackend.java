@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.HawthorneBackend;
+import com.markitserv.hawthorne.types.Book;
 import com.markitserv.hawthorne.types.LegalEntity;
+import com.markitserv.hawthorne.types.Participant;
 import com.markitserv.hawthorne.types.TradingRequest;
 import com.markitserv.hawthorne.types.TradingRequestStatus;
 import com.markitserv.hawthorne.types.User;
@@ -38,6 +40,9 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	private Stack<TradingRequestStatus> tradingRequestStatuses;
 	private List<TradingRequest> tradingRequests;
 	private List<User> legalEntityUsers;
+	private List<Book> books;
+	private List<Participant> participants;
+	
 	
 
 	private void initData() {
@@ -45,6 +50,58 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		populateTradingRequestStatuses();
 		populateTradingRequests(10);
 		populateLegalEntityUsers(10000);
+	}
+
+	
+	
+	
+	public List<Participant> getParticipants() {
+		participants = new ArrayList<Participant>();
+		int j = 20;
+		int start = 1;
+		int end = 1;
+		for (int i = 1; i < j; i++) {
+			if(i == 1){
+				 start = 1;
+				 end = 50;	
+			}else{
+				start = end;
+				end = end +50;
+			}
+			Participant p = new Participant();
+			p.setId(i);
+			p.setName("Participant "+i);
+			p.setBookList(populateBooks(start, end));
+			p.setUsers(getUserList(i));
+			participants.add(p);
+		}
+		return participants;
+	}
+
+	private List<User> getUserList(int j) {
+		 List<User> list = new ArrayList<User>();
+		for (int i = j; i <= j; i++) {
+			User user = new User();
+			user.setUserId(i);
+			user.setFirstName("First Name"+j);
+			user.setLastName("LastName"+j);
+			user.setUserName(user.getFirstName()+" "+user.getLastName());
+			user.setLegalEntityId(j);
+			user.setParticipantId(j);
+			list.add(user);
+		}
+		return list;
+	}
+
+	private List<Book> populateBooks(int start, int end) {
+		books = new ArrayList<Book>();
+		for (int j = start; j < end; j++) {
+			Book book = new Book();
+			book.setId(j);
+			book.setName("Book "+j);
+			books.add(book);
+		}
+		return books;
 	}
 
 	private void populateLegalEntityUsers(int count) {
