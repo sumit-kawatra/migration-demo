@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.HawthorneBackend;
 import com.markitserv.hawthorne.types.Book;
+import com.markitserv.hawthorne.types.InterestGroup;
 import com.markitserv.hawthorne.types.LegalEntity;
 import com.markitserv.hawthorne.types.Participant;
 import com.markitserv.hawthorne.types.TradingRequest;
@@ -45,6 +46,7 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	private List<Book> books;
 	private List<Participant> participants;
 	private DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
+	private List<InterestGroup> interestGroupList;
 	
 	
 
@@ -53,11 +55,27 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		populateTradingRequestStatuses();
 		populateTradingRequests(10);
 		populateLegalEntityUsers(10000);
+		populateInterestGroupList(10000);
 	}
 
 	
 	
 	
+	private void populateInterestGroupList(int count) {
+		interestGroupList = new ArrayList<InterestGroup>();
+		for (int i = 1; i <= count; i++) {
+			InterestGroup group = new InterestGroup();
+			group.setName("Interest Group "+i);
+			group.setShortName("G "+i);
+			group.setActive(new Random().nextBoolean());
+			interestGroupList.add(group);
+		}
+		
+	}
+
+
+
+
 	public List<Participant> getParticipants() {
 		participants = new ArrayList<Participant>();
 		int j = 20;
@@ -277,5 +295,9 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	@Override
 	public List<User> getUsersForLegalEntity() {		
 		return this.legalEntityUsers;
+	}
+	
+	public List<InterestGroup> getInterestGroups(){
+		return this.interestGroupList;
 	}
 }
