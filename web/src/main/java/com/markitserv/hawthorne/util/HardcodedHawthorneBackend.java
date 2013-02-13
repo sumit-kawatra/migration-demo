@@ -6,7 +6,9 @@ import java.util.Random;
 import java.util.Stack;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jetty.util.log.Log;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -42,6 +44,7 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	private List<User> legalEntityUsers;
 	private List<Book> books;
 	private List<Participant> participants;
+	private DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
 	
 	
 
@@ -136,14 +139,42 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	private User createUser(int j) {
 		User user = new User();
 		user.setUserId(j);
-		user.setFirstName("First Name"+j);
+		user.setFirstName("FirstName"+j);
 		user.setLastName("LastName"+j);
 		user.setUserName(user.getFirstName()+" "+user.getLastName());
 		user.setLegalEntityId(j);
 		user.setParticipantId(j);
+		user.setEmailAddress(user.getFirstName()+"."+user.getLastName()+"@example.com");
+		user.setPhoneNumber(randomPhoneNumGen());		
+        DateTime date = formatter.parseDateTime(randomDateGen());;
+		user.setLastLogin(date);
 		return user;
 	}
 
+	
+	
+	 private String randomPhoneNumGen(){
+        Random generator = new Random();   
+        int num1 = 0;   
+        int num2 = 0;   
+        int num3 = 0;   
+        num1 = generator.nextInt(600) + 100;  
+        num2 = generator.nextInt(641) + 100;   
+        num3 = generator.nextInt(8999) + 1000;    
+        return num1 + "-" + num2 + "-" + num3; 
+	}
+	
+	 
+	 private String randomDateGen(){
+        Random generator = new Random();   
+        int num1 = 0;   
+        int num2 = 0;   
+        num1 = generator.nextInt(9) + 10;  
+        num2 = generator.nextInt(10)+1;             
+        return num1 + "/" + num2 + "/" + 2012; 
+    }
+	 
+	 
 	private void populateLegalEntities(int count) {
 		
 		legalEntities = new ArrayList<LegalEntity>();

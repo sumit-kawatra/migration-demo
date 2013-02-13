@@ -5,6 +5,7 @@ package com.markitserv.hawthorne.types;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.joda.time.DateTime;
 
 import com.markitserv.msws.Type;
 
@@ -25,8 +26,38 @@ public class User extends Type {
 	private int legalEntityId;
 	
 	private int participantId;
+	
+	private String emailAddress;
+	
+	private String phoneNumber;
+	
+	private DateTime lastLogin;
 
 	
+
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public DateTime getLastLogin() {
+		return lastLogin;
+	}
+
+	public void setLastLogin(DateTime lastLogin) {
+		this.lastLogin = lastLogin;
+	}
 
 	public int getParticipantId() {
 		return participantId;
