@@ -3,6 +3,8 @@
  */
 package com.markitserv.hawthorne.types;
 
+import java.util.List;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
@@ -32,6 +34,8 @@ public class User extends Type {
 	private String phoneNumber;
 	
 	private DateTime lastLogin;
+
+	private List <Product> products;
 
 	
 
@@ -106,8 +110,15 @@ public class User extends Type {
 	public void setLegalEntityId(int legalEntityId) {
 		this.legalEntityId = legalEntityId;
 	}
-
 	
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this,

@@ -22,6 +22,11 @@
 			<sec:concurrency-control max-sessions="1"
 				session-registry-ref="sessionRegistry" />
 	</sec:session-management>
+	
+	<!-- <sec:logout  
+    logout-url="/Logout"  
+    success-handler-ref="myCustomLogoutSuccessHandler" /> -->
+
 	</sec:http>
 
 	<beans:bean id="CustomAuthenticationEntryPoint"
@@ -38,7 +43,7 @@
 			<beans:value>
 			superUser=super,ROLE_SUPERVISOR
 			adminUser=admin,ROLE_ADMIN
-			user=user,ROLE_USER
+			appUser=user,ROLE_USER
 			</beans:value>
 		</beans:property> 
 		</beans:bean> 

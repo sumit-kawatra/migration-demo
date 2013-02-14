@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -20,6 +21,7 @@ import com.markitserv.hawthorne.types.Book;
 import com.markitserv.hawthorne.types.InterestGroup;
 import com.markitserv.hawthorne.types.LegalEntity;
 import com.markitserv.hawthorne.types.Participant;
+import com.markitserv.hawthorne.types.Product;
 import com.markitserv.hawthorne.types.TradingRequest;
 import com.markitserv.hawthorne.types.TradingRequestStatus;
 import com.markitserv.hawthorne.types.User;
@@ -48,6 +50,9 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	private DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
 	private List<InterestGroup> interestGroupList;
 	
+    private List<Product> products;
+	private List<User> users;
+
 	
 
 	private void initData() {
@@ -56,10 +61,10 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		populateTradingRequests(10);
 		populateLegalEntityUsers(10000);
 		populateInterestGroupList(10000);
+		populateUsers(100);
+
 	}
 
-	
-	
 	
 	private void populateInterestGroupList(int count) {
 		interestGroupList = new ArrayList<InterestGroup>();
@@ -123,7 +128,7 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 			books.add(book);
 		}
 		return books;
-	}
+    }
 
 	private void populateLegalEntityUsers(int count) {
 		int i =1;
@@ -145,15 +150,18 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		}	
 	}
 
-	@Override
-	public List<User> getUsers() {
-		List<User> userList = new ArrayList<User>();
+	private void populateUsers(int count) {
+		users = new ArrayList<User>();
 		for(int i=0;i<100;i++){
-			userList.add(createUser(i));
-		}
-		return userList;
+			users.add(createUser(i));
+		}	
 	}
 	
+	@Override
+	public List<User> getUsers() {
+		return users;
+	}
+
 	private User createUser(int j) {
 		User user = new User();
 		user.setUserId(j);
@@ -166,11 +174,10 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		user.setPhoneNumber(randomPhoneNumGen());		
         DateTime date = formatter.parseDateTime(randomDateGen());;
 		user.setLastLogin(date);
+		user.setProducts(populateProducts(getRandomNumberFrom(0,4)));
 		return user;
 	}
 
-	
-	
 	 private String randomPhoneNumGen(){
         Random generator = new Random();   
         int num1 = 0;   
@@ -191,8 +198,14 @@ public class HardcodedHawthorneBackend implements InitializingBean,
         num2 = generator.nextInt(10)+1;             
         return num1 + "/" + num2 + "/" + 2012; 
     }
-	 
-	 
+
+	public static int getRandomNumberFrom(int min, int max) {
+        Random num = new Random();
+        int randomNumber = num.nextInt((max + 1) - min) + min;
+        return randomNumber;
+
+    }
+	
 	private void populateLegalEntities(int count) {
 		
 		legalEntities = new ArrayList<LegalEntity>();
@@ -213,7 +226,43 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		tradingRequestStatuses.add(new TradingRequestStatus(5, "Else"));
 	}
 	
-	private void populateTradingRequests(int count) {
+    private List<Product> populateAllProducts() {
+		
+    	products = new ArrayList<Product>();
+    	
+    	products.add(new Product(1, "Credit"));
+    	products.add(new Product(2, "Rates"));
+    	products.add(new Product(3, "Equity"));
+    	products.add(new Product(4, "FX"));
+    	return products;
+	}
+
+    private List<Product> populateProducts(int count) {
+		
+    	List<Product> products = new ArrayList<Product>();
+		if(count == 1){
+			products.add(new Product(1, "Credit"));
+		}else if(count == 2 ){
+			products.add(new Product(1, "Credit"));
+			products.add(new Product(2, "Rates"));
+		}else if(count == 3){
+			products.add(new Product(1, "Credit"));
+			products.add(new Product(2, "Rates"));
+			products.add(new Product(3, "Equity"));
+		}
+		else if(count == 4){
+			products.add(new Product(1, "Credit"));
+			products.add(new Product(2, "Rates"));
+			products.add(new Product(3, "Equity"));
+			products.add(new Product(4, "FX"));
+		}
+		else if(count == 0){
+			//Do nothing
+		}
+		return products;
+		
+	}
+    private void populateTradingRequests(int count) {
 		tradingRequests = new ArrayList<TradingRequest>();
 		for (int i = 1, j=0; i <= count; i++,j++) {
 			j = j == 4 ? 0 : j;
@@ -300,4 +349,11 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	public List<InterestGroup> getInterestGroups(){
 		return this.interestGroupList;
 	}
+
+	@Override
+	public List<Product> getProducts() {
+		return populateAllProducts();
+	}
+
+
 }

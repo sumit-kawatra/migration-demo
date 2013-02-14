@@ -132,7 +132,7 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 		//Valid credentials/token && session not expired.
 		if ( (isUserCredentialValid || isUserTokenValid) && !isSessionExpired) {
 			chain.doFilter(htpRequest, htpResponse);
-			log.info("User/UserToken Authenticated");
+			log.info("User/token Authenticated successfully");
 		//valid credentials/token but session expired.
 		} else if ((isUserCredentialValid || isUserTokenValid) && isSessionExpired) {
 			log.info("Session Expired: User Authenticated but its session is expired.");

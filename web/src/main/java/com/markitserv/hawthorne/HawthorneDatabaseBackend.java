@@ -1,15 +1,17 @@
 package com.markitserv.hawthorne;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+
 import com.markitserv.hawthorne.types.Book;
 import com.markitserv.hawthorne.types.InterestGroup;
+
 import com.markitserv.hawthorne.types.LegalEntity;
 import com.markitserv.hawthorne.types.Participant;
+import com.markitserv.hawthorne.types.Product;
 import com.markitserv.hawthorne.types.TradingRequest;
 import com.markitserv.hawthorne.types.TradingRequestStatus;
 import com.markitserv.hawthorne.types.User;
@@ -47,13 +49,22 @@ public class HawthorneDatabaseBackend implements HawthorneBackend {
 	public List<User> getUsers(){
 		throw NotYetImplementedException.standardException();
 	}
+
+	@Override
+	public List<Product> getProducts() {
+		throw NotYetImplementedException.standardException();
+	}
 	
 	public List<Participant> getParticipants(){
 		throw NotYetImplementedException.standardException();
 	}
 	
+
 	public List<InterestGroup> getInterestGroups(){
 		throw NotYetImplementedException.standardException();
 	}
 	
 }
+
+
+
