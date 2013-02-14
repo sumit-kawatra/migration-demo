@@ -45,11 +45,6 @@ public abstract class AbstractAction implements InitializingBean {
 		return result;
 	}
 
-	protected ActionResult addResponseMetadata(ActionResult result) {
-		result.getMetaData().setRequestId(uuidGenerator.generateUuid());
-		return result;
-	}
-
 	private void applyDefaults(ActionParameters parameters,
 			ActionFilters filters) {
 

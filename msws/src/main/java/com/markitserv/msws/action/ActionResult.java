@@ -6,11 +6,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.markitserv.msws.AbstractWebserviceResult;
+import com.markitserv.msws.ResponseMetadata;
 import com.markitserv.msws.Type;
 
 public class ActionResult extends AbstractWebserviceResult {
 	
-	private ActionResponseMetadata metaData = new ActionResponseMetadata();
 	private List<? extends Type> list;
 	private Type item;
 	
@@ -45,11 +45,5 @@ public class ActionResult extends AbstractWebserviceResult {
 
 	public void setItem(Type item) {
 		this.item = item;
-	}
-
-	@JsonInclude(Include.NON_NULL)
-	@JsonProperty(value="responseMetadata")
-	public ActionResponseMetadata getMetaData() {
-		return metaData;
 	}
 }

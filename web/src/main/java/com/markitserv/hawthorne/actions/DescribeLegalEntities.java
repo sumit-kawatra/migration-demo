@@ -99,22 +99,23 @@ public class DescribeLegalEntities extends AbstractPaginatedAction {
 		legalEntities = applyFilters(params, filters, legalEntities);
 
 		PaginatedActionResult res = new PaginatedActionResult(legalEntities);
-		res.setTotalRecords(totalRecords);
+		res.getPaginatedMetaData().setTotalRecords(totalRecords);
 
 		return res;
 	}
 
 	private List<LegalEntity> applyFilters(ActionParameters p, ActionFilters f,
 			List<LegalEntity> legalEntities) {
-		
+
 		// Note that of course we don't do this in reality but until we get the
-		// DB it'll do.  Filters LE's down to a single LE by ID.
+		// DB it'll do. Filters LE's down to a single LE by ID.
 		if (p.isParameterSet("LegalEntityId")) {
 			List<String> leId = (List<String>) p.getParameter("LegalEntityId");
-			legalEntities = PropertyEqualsReflectionFilter.filter(
-					legalEntities, "id", Integer.parseInt((String) leId.get(0)));
+			legalEntities = PropertyEqualsReflectionFilter
+					.filter(legalEntities, "id",
+							Integer.parseInt((String) leId.get(0)));
 		}
-		
+
 		if (f.isFilterSet(FILTER_NAME_SUBSTR_NAME)) {
 
 			legalEntities = SubstringReflectionFilter.filter(legalEntities,

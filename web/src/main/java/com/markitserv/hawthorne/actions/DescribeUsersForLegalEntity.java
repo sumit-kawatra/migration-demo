@@ -63,9 +63,6 @@ public class DescribeUsersForLegalEntity extends AbstractPaginatedAction {
 		return def;
 	}
 
-	
-	
-	
 	@Override
 	protected ActionResult performAction(ActionParameters params,
 			ActionFilters filters) {
@@ -77,8 +74,8 @@ public class DescribeUsersForLegalEntity extends AbstractPaginatedAction {
 		legalEntityUsers = applyFilters(params, filters, legalEntityUsers);
 
 		PaginatedActionResult res = new PaginatedActionResult(legalEntityUsers);
-		res.setTotalRecords(totalRecords);
-
+		res.getPaginatedMetaData().setTotalRecords(totalRecords);
+		
 		return res;
 	}
 

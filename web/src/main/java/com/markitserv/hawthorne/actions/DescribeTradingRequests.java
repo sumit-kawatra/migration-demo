@@ -74,7 +74,7 @@ public class DescribeTradingRequests extends AbstractPaginatedAction {
 		tradingRequests = applyFilters(params, filters, tradingRequests);
 		
 		PaginatedActionResult res = new PaginatedActionResult(tradingRequests);
-		res.setTotalRecords(totalRecords);
+		res.getPaginatedMetaData().setTotalRecords(totalRecords);
 		
 		return res;
 	}

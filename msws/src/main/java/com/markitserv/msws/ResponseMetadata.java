@@ -15,5 +15,4 @@ public class ResponseMetadata {
 	public void setRequestId(String requestId) {
 		this.requestId = requestId;
 	}
-	
 }

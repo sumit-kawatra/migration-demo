@@ -103,7 +103,7 @@ public class DescribeBooks extends AbstractPaginatedAction {
 		bookList = applyFilters(params, filters, bookList);
 
 		PaginatedActionResult res = new PaginatedActionResult(bookList);
-		res.setTotalRecords(totalRecords);
+		res.getPaginatedMetaData().setTotalRecords(totalRecords);
 
 		return res;
 	}

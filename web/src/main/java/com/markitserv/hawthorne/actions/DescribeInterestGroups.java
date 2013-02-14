@@ -63,7 +63,7 @@ public class DescribeInterestGroups extends AbstractPaginatedAction{
 		groupList = applyFilters(params, filters, groupList);
 
 		PaginatedActionResult res = new PaginatedActionResult(groupList);
-		res.setTotalRecords(totalRecords);
+		res.getPaginatedMetaData().setTotalRecords(totalRecords);
 
 		return res;
 	}

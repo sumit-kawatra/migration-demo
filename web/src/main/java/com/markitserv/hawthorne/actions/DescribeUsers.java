@@ -80,8 +80,8 @@ public class DescribeUsers extends AbstractPaginatedAction {
 		userList = applyFilters(params, filters, userList);
 
 		PaginatedActionResult res = new PaginatedActionResult(userList);
-		res.setTotalRecords(totalRecords);
-
+		res.getPaginatedMetaData().setTotalRecords(totalRecords);
+		
 		return res;
 	}
 

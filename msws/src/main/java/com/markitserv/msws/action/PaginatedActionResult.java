@@ -5,14 +5,13 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.markitserv.msws.ResponseMetadata;
 import com.markitserv.msws.Type;
 import com.markitserv.msws.internal.Constants;
 
 public class PaginatedActionResult extends ActionResult {
 	
-	// using Integer and not int so that they can be null
-	private int totalRecords = Constants.INTEGER_NOT_SET;
-	private int approxTotalRecords = Constants.INTEGER_NOT_SET;
+	protected PaginatedActionResponseMetaData metaData = new PaginatedActionResponseMetaData();
 	
 	public PaginatedActionResult(List<? extends Type> list) {
 		super(list);
@@ -21,23 +20,14 @@ public class PaginatedActionResult extends ActionResult {
 	public PaginatedActionResult() {
 		super();
 	}
-
-	@JsonIgnore
-	public int getTotalRecords() {
-		return totalRecords;
-	}
-
-	public void setTotalRecords(int totalRecords) {
-		this.totalRecords = totalRecords;
-	}
-
-	@JsonIgnore
-	public int getApproxTotalRecords() {
-		return approxTotalRecords;
-	}
-
-	public void setApproxTotalRecords(int approxTotalRecords) {
-		this.approxTotalRecords = approxTotalRecords;
-	}
 	
+	@JsonIgnore
+	public PaginatedActionResponseMetaData getPaginatedMetaData() {
+		return metaData;
+	}
+
+	@Override
+	public ResponseMetadata getMetaData() {
+		return metaData;
+	}
 } 

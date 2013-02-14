@@ -1,12 +1,13 @@
 package com.markitserv.msws.action;
 
+import static com.markitserv.msws.internal.MswsAssert.mswsAssert;
+
+import com.markitserv.msws.ResponseMetadata;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.internal.Constants;
 import com.markitserv.msws.validation.IntegerMaxMinValidation;
 import com.markitserv.msws.validation.PaginationPageSizeValidation;
 import com.markitserv.msws.validation.RequiredValidation;
-
-import static com.markitserv.msws.internal.MswsAssert.mswsAssert;
 
 public abstract class AbstractPaginatedAction extends AbstractAction {
 
@@ -59,13 +60,15 @@ public abstract class AbstractPaginatedAction extends AbstractAction {
 				"Paginated actions must return an instance of PaginatedActionResult.");
 
 		PaginatedActionResult pRes = (PaginatedActionResult) result;
+		PaginatedActionResponseMetaData metaData = pRes.getPaginatedMetaData();
 
-		mswsAssert(pRes.getApproxTotalRecords() != Constants.INTEGER_NOT_SET
-				|| pRes.getTotalRecords() != Constants.INTEGER_NOT_SET,
+		mswsAssert(
+				metaData.getApproxTotalRecords() != Constants.INTEGER_NOT_SET
+						|| metaData.getTotalRecords() != Constants.INTEGER_NOT_SET,
 				"Either totalRecords or approxTotalRecords must be set.");
 
 		mswsAssert(
-				!(pRes.getApproxTotalRecords() != Constants.INTEGER_NOT_SET && pRes
+				!(metaData.getApproxTotalRecords() != Constants.INTEGER_NOT_SET && metaData
 						.getTotalRecords() != Constants.INTEGER_NOT_SET),
 				"Either totalRecords or approxTotalRecords must be set, but not both.");
 
@@ -76,21 +79,5 @@ public abstract class AbstractPaginatedAction extends AbstractAction {
 				result.getList().size() <= this.getMaxPageSize(),
 				"List size (%d) cannot be greater than the max page size of %d",
 				result.getList().size(), this.getMaxPageSize());
-	}
-
-	/**
-	 * Adds the pagination information
-	 */
-	@Override
-	protected ActionResult addResponseMetadata(ActionResult result) {
-		PaginatedActionResult pResult = (PaginatedActionResult) result;
-		ActionResponseMetadata metaD = pResult.getMetaData();
-		metaD.setApproxTotalRecords(pResult.getApproxTotalRecords());
-		metaD.setTotalRecords(pResult.getTotalRecords());
-
-		//TODO verify this. commenting the below line as resultId is set from Interceptor. 
-		//result = super.addResponseMetadata(pResult);
-
-		return result;
 	}
 }
