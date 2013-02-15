@@ -108,7 +108,7 @@ public class DescribeProducts extends AbstractPaginatedAction {
 		List<Product> productList = applyFilters(params, filters, userList);
         
 		PaginatedActionResult res = new PaginatedActionResult(productList);
-		res.setTotalRecords(totalsize);
+		res.getPaginatedMetaData().setTotalRecords(totalsize);
 		return res;
 	}
 
