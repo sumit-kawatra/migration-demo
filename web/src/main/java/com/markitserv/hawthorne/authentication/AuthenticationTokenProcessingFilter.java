@@ -8,12 +8,15 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,30 +148,20 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 		// Valid credentials/token && session not expired.
 		if ((isUserCredentialValid || isUserTokenValid) && !isSessionExpired) {
 
-			// set JSESSIONID cookie expiry time in response header
+			// No longer in use - not accessible from the client. Using 'expires'
+			// header instead
+			// overrideJSessionHeader(htpResponse, htpRequest);
+
 			session = htpRequest.getSession();
 
-			Cookie cookie;
-			cookie = new Cookie("JSESSIONID", session.getId());
-			cookie.setMaxAge(session.getMaxInactiveInterval());
-
-			log.debug(cookie.toString());
-
-			htpResponse.addCookie(cookie);
-
-			/*
-			 * String expiryDate = sessionExpiryFormat.print(dt) + " GMT";
-			 * 
-			 * String cookieHeader =
-			 * String.format("JSESSIONID=%s; expires=%s; path=" +
-			 * htpRequest.getContextPath(), session.getId(), expiryDate);
-			 * 
-			 * log.debug("CookieHeader: " + cookieHeader);
-			 * 
-			 * htpResponse.setHeader("Set-Cookie", cookieHeader);
-			 */
+			DateTime expires = new DateTime(DateTimeZone.UTC);
+			expires = expires.plusSeconds(session.getMaxInactiveInterval());
+			DateTimeFormatter fmt = DateTimeFormat.forPattern("EEE, dd-MMM-yyyy HH:mm:ss");
+			String expiresStr = fmt.print(expires) + " GMT";
+			htpResponse.addHeader("X-Msws-Session-Expires", expiresStr);
 
 			chain.doFilter(htpRequest, htpResponse);
+
 			log.info("User/token Authenticated successfully");
 		} else if ((isUserCredentialValid || isUserTokenValid) && isSessionExpired) {// valid
 																												// credentials/token
@@ -184,5 +177,21 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 					.sendError(HttpServletResponse.SC_UNAUTHORIZED,
 							"Unauthorized: User Credentials/Authentication token was either missing or invalid.");
 		}
+	}
+
+	private void overrideJSessionHeader(HttpServletResponse htpResponse,
+			HttpServletRequest htpRequest) {
+		HttpSession session;
+		session = htpRequest.getSession();
+
+		DateTime expires = new DateTime(DateTimeZone.UTC);
+		expires = expires.plusSeconds(session.getMaxInactiveInterval());
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("EEE, dd-MMM-yyyy HH:mm:ss");
+
+		String expiresStr = fmt.print(expires) + " GMT";
+		String headerValue = String.format("JSESSIONID=%s;Expires=%s", session.getId(),
+				expiresStr);
+
+		htpResponse.addHeader("Set-Cookie", headerValue);
 	}
 }

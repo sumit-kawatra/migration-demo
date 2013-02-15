@@ -10,14 +10,14 @@ import com.markitserv.msws.util.CustomTimeStampSerializer;
 
 /**
  * @author kiran.gogula
- *
+ * 
  */
-public class PingResponse extends SuccessFailure{
+public class PingResponse extends SuccessFailure {
 
 	public PingResponse(boolean success) {
 		super(success);
 	}
-	
+
 	@JsonSerialize(using = CustomTimeStampSerializer.class)
 	private DateTime currentTimpstamp;
 
@@ -28,9 +28,4 @@ public class PingResponse extends SuccessFailure{
 	public void setCurrentTimpstamp(DateTime currentTimpstamp) {
 		this.currentTimpstamp = currentTimpstamp;
 	}
-	
-	
-	
-	
-
 }
