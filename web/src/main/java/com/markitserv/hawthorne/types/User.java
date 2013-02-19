@@ -9,7 +9,9 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.markitserv.msws.Type;
+import com.markitserv.msws.util.CustomTimeStampSerializer;
 
 /**
  * @author kiran.gogula
@@ -33,6 +35,7 @@ public class User extends Type {
 	
 	private String phoneNumber;
 	
+	@JsonSerialize(using = CustomTimeStampSerializer.class)
 	private DateTime lastLogin;
 
 	private List <Product> products;
