@@ -24,8 +24,8 @@ public class RequiredIfAllNotProvidedValidation extends RequiredValidation{
 			Map<String, ? extends Object> map) {
 		int counter = 0;
 		
-		for (String string : otherValues) {
-			if (isProvided((String) map.get(string))) {
+		for (Object obj : otherValues) {
+			if (isProvided( map.get(obj))) {
 				counter++;
 			}
 		}

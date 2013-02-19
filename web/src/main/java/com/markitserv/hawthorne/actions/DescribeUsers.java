@@ -23,12 +23,13 @@ import com.markitserv.msws.action.SortOrder;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.definition.SortingPresetDefinitionBuilder;
 import com.markitserv.msws.filters.PaginationFilter;
-import com.markitserv.msws.filters.PropertyEqualsReflectionFilter;
 import com.markitserv.msws.filters.SubstringReflectionFilter;
 import com.markitserv.msws.validation.CollectionSizeValidation;
 import com.markitserv.msws.validation.ForEachValidator;
 import com.markitserv.msws.validation.IntegerMaxMinValidation;
 import com.markitserv.msws.validation.IntegerValidation;
+import com.markitserv.msws.validation.MutuallyExclusiveWithValidation;
+import com.markitserv.msws.validation.RequiredIfAllNotProvidedValidation;
 import com.markitserv.msws.validation.RequiredValidation;
 
 /**
@@ -39,6 +40,11 @@ import com.markitserv.msws.validation.RequiredValidation;
 public class DescribeUsers extends AbstractPaginatedAction {
 
 	private static final String FILTER_NAME_SUBSTR_LAST_NAME = "substrLastName";
+	private static final String FILTER_NAME_SUBSTR_FIRST_NAME = "substrFirstName";
+	private static final String FILTER_NAME_SUBSTR_USER_NAME = "substrUserName";
+	private static final String PARAM_NAME_USER_NAME = "UserName";
+	private static final String PARAM_PARTICIPANT_ID = "ParticipantId";
+	private static final String PARAM_NAME_LEGAL_ENTITY_ID = "LegalEntityId";
 
 	Logger log = LoggerFactory.getLogger(DescribeUsers.class);
 
@@ -52,15 +58,36 @@ public class DescribeUsers extends AbstractPaginatedAction {
 		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
 
 		// UserName
-		def.addValidation("UserName", new ForEachValidator(new RequiredValidation()));
+		def.addValidation(PARAM_NAME_USER_NAME, new ForEachValidator(new RequiredValidation()));
 		// Only supporting a signle userName at a time (for now)
-		def.addValidation("UserName", new CollectionSizeValidation(1, CollectionSizeValidation.UNLIMITED));
-		
+		def.addValidation(PARAM_NAME_USER_NAME, new CollectionSizeValidation(1, 1));
+		//If UserName is provided ParticipantId & LegalEntityId are not required
+		def.addValidation(PARAM_NAME_USER_NAME, new MutuallyExclusiveWithValidation(new String[]{PARAM_PARTICIPANT_ID,PARAM_NAME_LEGAL_ENTITY_ID}));
+		//UserName is required when neither ParticipantId nor LegalEntityId is provided
+		def.addValidation(PARAM_NAME_USER_NAME, new RequiredIfAllNotProvidedValidation(new String[]{PARAM_PARTICIPANT_ID,PARAM_NAME_LEGAL_ENTITY_ID}));
+				
 		// Participant ID
-		def.addValidation("ParticipantId", new IntegerValidation());
-		def.addValidation("ParticipantId", new IntegerMaxMinValidation(1, IntegerMaxMinValidation.UNLIMITED));
-		def.addValidation("ParticipantId", new CollectionSizeValidation(1, CollectionSizeValidation.UNLIMITED));
-
+		def.addValidation(PARAM_PARTICIPANT_ID, new ForEachValidator(new IntegerValidation()));
+		def.addValidation(PARAM_PARTICIPANT_ID, new ForEachValidator(new IntegerMaxMinValidation(1,IntegerMaxMinValidation.UNLIMITED)));
+		// Only supporting a single legal entity ID at a time (for now)
+		def.addValidation(PARAM_PARTICIPANT_ID, new CollectionSizeValidation(1, 1));
+		//If ParticipantId is provided UserName & LegalEntityId are not required
+		def.addValidation(PARAM_PARTICIPANT_ID, new MutuallyExclusiveWithValidation(new String[]{PARAM_NAME_USER_NAME,PARAM_NAME_LEGAL_ENTITY_ID}));
+		//ParticipantId is required when neither UserName nor LegalEntityId is provided
+		def.addValidation(PARAM_PARTICIPANT_ID, new RequiredIfAllNotProvidedValidation(new String[]{PARAM_NAME_USER_NAME,PARAM_NAME_LEGAL_ENTITY_ID}));
+		
+		// Legal Entity ID
+		def.addValidation(PARAM_NAME_LEGAL_ENTITY_ID, new ForEachValidator(new IntegerValidation()));
+		def.addValidation(PARAM_NAME_LEGAL_ENTITY_ID, new ForEachValidator(new IntegerMaxMinValidation(1,IntegerMaxMinValidation.UNLIMITED)));
+		// Only supporting a single legal entity ID at a time (for now)
+		def.addValidation(PARAM_NAME_LEGAL_ENTITY_ID, new CollectionSizeValidation(1, 1));
+		
+				
+		//If LegalEntityId is provided UserName & ParticipantId are not required
+		def.addValidation(PARAM_NAME_LEGAL_ENTITY_ID, new MutuallyExclusiveWithValidation(new String[]{PARAM_NAME_USER_NAME,PARAM_PARTICIPANT_ID}));
+		//LegalEntityId is required when neither UserName nor ParticipantId is provided
+		def.addValidation(PARAM_NAME_LEGAL_ENTITY_ID, new RequiredIfAllNotProvidedValidation(new String[]{PARAM_NAME_USER_NAME,PARAM_PARTICIPANT_ID}));
+						
 		// Sorting
 		SortingPresetDefinitionBuilder sortBuilder = new SortingPresetDefinitionBuilder();
 		sortBuilder = sortBuilder.setDefaultSort("userId", SortOrder.Asc);
@@ -73,15 +100,11 @@ public class DescribeUsers extends AbstractPaginatedAction {
 	@Override
 	protected ActionResult performAction(ActionParameters params,
 			ActionFilters filters) {
-		List<User> userList = data.getUsers();
-
+		List<User> userList = data.getAllUsers();
 		int totalRecords = userList.size();
-
 		userList = applyFilters(params, filters, userList);
-
 		PaginatedActionResult res = new PaginatedActionResult(userList);
 		res.getPaginatedMetaData().setTotalRecords(totalRecords);
-		
 		return res;
 	}
 
@@ -89,34 +112,44 @@ public class DescribeUsers extends AbstractPaginatedAction {
 			List<User> users) {
 		List<User> userList = new ArrayList<User>();
 
-		if (p.isParameterSet("ParticipantId")) {
-			List<String> participantIdList = (List<String>) p.getParameter("ParticipantId");
-			for (String string : participantIdList) {
-				userList.addAll(PropertyEqualsReflectionFilter.filter(
-					users, "participantId", Integer.parseInt(string)));
+		if (p.isParameterSet(PARAM_PARTICIPANT_ID)) {
+			List<String> participantIdList = (List<String>) p.getParameter(PARAM_PARTICIPANT_ID);
+			for (String id : participantIdList) {
+				userList = data.getUsersForParticipant(Integer.parseInt(id));
 			}
-		}
-		
-		if (p.isParameterSet("UserName")) {
-			List<String> userNameList = (List<String>) p.getParameter("UserName");
+		}else if (p.isParameterSet(PARAM_NAME_USER_NAME)) {
+			List<String> userNameList = (List<String>) p.getParameter(PARAM_NAME_USER_NAME);
 			for (String string : userNameList) {
-				userList.addAll(PropertyEqualsReflectionFilter.filter(
-					users, "userName", string));
+				data.getUser(string);
+				userList=data.getUser(string);
+			}
+		}else if (p.isParameterSet(PARAM_NAME_LEGAL_ENTITY_ID)) {
+			List<String> legalEntityIdList =  (List<String>)  p.getParameter(PARAM_NAME_LEGAL_ENTITY_ID);
+			for (String id  : legalEntityIdList) {
+				userList = data.getUsersForLegalEntity(Integer.parseInt(id));
 			}
 		}
 		
 		if (f.isFilterSet(FILTER_NAME_SUBSTR_LAST_NAME)) {
-			userList.addAll(SubstringReflectionFilter.filter(
-					users, "lastName",
-					f.getSingleFilter(FILTER_NAME_SUBSTR_LAST_NAME)));
+			userList = SubstringReflectionFilter.filter(userList, "lastName",f.getSingleFilter(FILTER_NAME_SUBSTR_LAST_NAME));
+		}
+		
+		if (f.isFilterSet(FILTER_NAME_SUBSTR_FIRST_NAME)) {
+
+			userList = SubstringReflectionFilter.filter(userList,
+					"firstName", f.getSingleFilter(FILTER_NAME_SUBSTR_FIRST_NAME));
 		}
 
-		int pageNumber = p.getParameterAsInt(CommonParamKeys.PageNumber
-				.toString());
+		if (f.isFilterSet(FILTER_NAME_SUBSTR_USER_NAME)) {
+
+			userList = SubstringReflectionFilter.filter(userList,
+					"userName", f.getSingleFilter(FILTER_NAME_SUBSTR_USER_NAME));
+		}
+
+		int pageNumber = p.getParameterAsInt(CommonParamKeys.PageNumber.toString());
 		int pageSize = p.getParameterAsInt(CommonParamKeys.PageSize.toString());
 
-		userList.addAll(PaginationFilter.filter(users,
-				pageNumber, pageSize));
+		userList = PaginationFilter.filter(userList,pageNumber, pageSize);
 		return userList;
 	}
 

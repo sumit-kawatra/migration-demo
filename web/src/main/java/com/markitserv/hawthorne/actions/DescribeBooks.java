@@ -48,7 +48,7 @@ public class DescribeBooks extends AbstractPaginatedAction {
 		// UserName
 		def.addValidation("UserName", new MutuallyExclusiveWithValidation(new String[]{"ParticipantId"}));
 		def.addValidation("UserName", new RequiredIfAllNotProvidedValidation(new String[]{"ParticipantId"}));
-
+	
 		// Participant ID
 		def.addValidation("ParticipantId", new MutuallyExclusiveWithValidation(new String[]{"UserName"}));
 		def.addValidation("ParticipantId", new RequiredIfAllNotProvidedValidation(new String[]{"UserName"}));
@@ -69,7 +69,7 @@ public class DescribeBooks extends AbstractPaginatedAction {
 		}
 		if (StringUtils.isNotBlank(userName)) {
 			for (Participant participant : pariticipantList) {
-				List<User> userList = participant.getUsers();
+				List<User> userList = participant.getAllUsers();
 				for (User user : userList) {
 					if (userName.contains(user.getUserName()) || 
 						userName.equalsIgnoreCase(user.getUserName())) {

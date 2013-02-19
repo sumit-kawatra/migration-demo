@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 
-import com.markitserv.hawthorne.types.Book;
 import com.markitserv.hawthorne.types.InterestGroup;
 
 import com.markitserv.hawthorne.types.LegalEntity;
@@ -40,13 +39,8 @@ public class HawthorneDatabaseBackend implements HawthorneBackend {
 	public List<TradingRequest> getTradingRequests() {
 		throw NotYetImplementedException.standardException();
 	}
-
-	@Override
-	public List<User> getUsersForLegalEntity() {
-		throw NotYetImplementedException.standardException();
-	}
 	
-	public List<User> getUsers(){
+	public List<User> getAllUsers(){
 		throw NotYetImplementedException.standardException();
 	}
 
@@ -61,6 +55,21 @@ public class HawthorneDatabaseBackend implements HawthorneBackend {
 	
 
 	public List<InterestGroup> getInterestGroups(){
+		throw NotYetImplementedException.standardException();
+	}
+
+	@Override
+	public List<User> getUsersForLegalEntity(int id) {
+		throw NotYetImplementedException.standardException();
+	}
+
+	@Override
+	public List<User> getUsersForParticipant(int id) {
+		throw NotYetImplementedException.standardException();
+	}
+
+	@Override
+	public List<User> getUser(String userName) {
 		throw NotYetImplementedException.standardException();
 	}
 	

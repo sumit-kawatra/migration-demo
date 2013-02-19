@@ -44,13 +44,11 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	private List<LegalEntity> legalEntities; 
 	private Stack<TradingRequestStatus> tradingRequestStatuses;
 	private List<TradingRequest> tradingRequests;
-	private List<User> legalEntityUsers;
 	private List<Book> books;
 	private List<Participant> participants;
 	private DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
 	private List<InterestGroup> interestGroupList;
-	
-    private List<Product> products;
+	private List<Product> products;
 	private List<User> users;
 
 	
@@ -59,7 +57,6 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		populateLegalEntities(100000);
 		populateTradingRequestStatuses();
 		populateTradingRequests(10);
-		populateLegalEntityUsers(10000);
 		populateInterestGroupList(10000);
 		populateUsers(100);
 
@@ -130,26 +127,6 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		return books;
     }
 
-	private void populateLegalEntityUsers(int count) {
-		int i =1;
-		int j = 1000;
-		legalEntityUsers = new ArrayList<User>();
-		
-		for (int k = 0; k < count; k++) {
-			legalEntityUsers.add(createUser(k));
-		}
-		
-		
-		for (User user : legalEntityUsers) {			
-			user.setLegalEntityId(j);
-			if(i ==10){
-				i=1;
-				j=j+1;
-			}
-			i++;			
-		}	
-	}
-
 	private void populateUsers(int count) {
 		users = new ArrayList<User>();
 		for(int i=0;i<100;i++){
@@ -158,7 +135,7 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	}
 	
 	@Override
-	public List<User> getUsers() {
+	public List<User> getAllUsers() {
 		return users;
 	}
 
@@ -341,11 +318,7 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		return this.tradingRequests;
 	}
 
-	@Override
-	public List<User> getUsersForLegalEntity() {		
-		return this.legalEntityUsers;
-	}
-	
+
 	public List<InterestGroup> getInterestGroups(){
 		return this.interestGroupList;
 	}
@@ -354,6 +327,43 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	public List<Product> getProducts() {
 		return populateAllProducts();
 	}
+
+
+	@Override
+	public List<User> getUsersForLegalEntity(int id) {
+		List<User> userList = new ArrayList<User>();
+		for (User user : this.users ){
+			if(user.getLegalEntityId()== id){
+				userList.add(user);
+			}
+		}
+		return userList;
+	}
+
+
+	@Override
+	public List<User> getUsersForParticipant(int id) {
+		List<User> userList = new ArrayList<User>();
+		for (User user : this.users ){
+			if(user.getParticipantId()== id){
+				userList.add(user);
+			}
+		}
+		return userList;
+	}
+
+
+	@Override
+	public List<User> getUser(String userName) {
+		List<User> userList = new ArrayList<User>();
+		for (User user : this.users ){
+			if(user.getUserName().equals(userName)){
+				userList.add(user);
+			}
+		}
+		return userList;
+	}
+
 
 
 }

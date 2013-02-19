@@ -26,7 +26,7 @@ public class Participant extends Type {
 	
 	
 
-	public List<User> getUsers() {
+	public List<User> getAllUsers() {
 		return users;
 	}
 

@@ -101,7 +101,7 @@ public class DescribeProducts extends AbstractPaginatedAction {
 	@Override
 	protected ActionResult performAction(ActionParameters params,
 			ActionFilters filters) {
-		List<User> userList = data.getUsers();
+		List<User> userList = data.getAllUsers();
 		List<Product> totalProductList = data.getProducts();
 		int totalsize= totalProductList.size();
 		

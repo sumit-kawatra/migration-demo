@@ -15,8 +15,10 @@ public interface HawthorneBackend {
 	List<LegalEntity> getLegalEntities();
 	List<TradingRequestStatus> getTradingRequestStatuses();
 	List<TradingRequest> getTradingRequests();
-	List<User> getUsersForLegalEntity();
-	List<User> getUsers();
+	List<User> getUsersForLegalEntity(int id);
+	List<User> getUsersForParticipant(int id);
+	List<User> getUser(String userName);
+	List<User> getAllUsers();
 	List<Participant> getParticipants();
 	List<InterestGroup> getInterestGroups();
 	List<Product> getProducts();
