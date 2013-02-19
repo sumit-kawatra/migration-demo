@@ -4,15 +4,10 @@ import java.util.List;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-
-
 import com.markitserv.hawthorne.types.InterestGroup;
-
 import com.markitserv.hawthorne.types.LegalEntity;
 import com.markitserv.hawthorne.types.Participant;
 import com.markitserv.hawthorne.types.Product;
-import com.markitserv.hawthorne.types.TradingRequest;
-import com.markitserv.hawthorne.types.TradingRequestStatus;
 import com.markitserv.hawthorne.types.User;
 import com.markitserv.msws.exceptions.NotYetImplementedException;
 
@@ -29,16 +24,6 @@ public class HawthorneDatabaseBackend implements HawthorneBackend {
 	public List<LegalEntity> getLegalEntities() {
 		throw NotYetImplementedException.standardException();
 	}
-
-	@Override
-	public List<TradingRequestStatus> getTradingRequestStatuses() {
-		throw NotYetImplementedException.standardException();
-	}
-
-	@Override
-	public List<TradingRequest> getTradingRequests() {
-		throw NotYetImplementedException.standardException();
-	}
 	
 	public List<User> getAllUsers(){
 		throw NotYetImplementedException.standardException();
@@ -53,8 +38,7 @@ public class HawthorneDatabaseBackend implements HawthorneBackend {
 		throw NotYetImplementedException.standardException();
 	}
 	
-
-	public List<InterestGroup> getInterestGroups(){
+    public List<InterestGroup> getInterestGroups(){
 		throw NotYetImplementedException.standardException();
 	}
 

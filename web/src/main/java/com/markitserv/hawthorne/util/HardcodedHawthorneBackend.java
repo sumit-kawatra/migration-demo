@@ -3,7 +3,6 @@ package com.markitserv.hawthorne.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Stack;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -22,8 +21,6 @@ import com.markitserv.hawthorne.types.InterestGroup;
 import com.markitserv.hawthorne.types.LegalEntity;
 import com.markitserv.hawthorne.types.Participant;
 import com.markitserv.hawthorne.types.Product;
-import com.markitserv.hawthorne.types.TradingRequest;
-import com.markitserv.hawthorne.types.TradingRequestStatus;
 import com.markitserv.hawthorne.types.User;
 
 /**
@@ -42,8 +39,6 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 	@Autowired
 	private RandomNameGenerator nameGen;
 	private List<LegalEntity> legalEntities; 
-	private Stack<TradingRequestStatus> tradingRequestStatuses;
-	private List<TradingRequest> tradingRequests;
 	private List<Book> books;
 	private List<Participant> participants;
 	private DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
@@ -55,8 +50,6 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 
 	private void initData() {
 		populateLegalEntities(100000);
-		populateTradingRequestStatuses();
-		populateTradingRequests(10);
 		populateInterestGroupList(10000);
 		populateUsers(100);
 
@@ -74,9 +67,6 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		}
 		
 	}
-
-
-
 
 	public List<Participant> getParticipants() {
 		participants = new ArrayList<Participant>();
@@ -191,17 +181,6 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 			legalEntities.add(createLegalEntity(i));
 		}
 	}
-
-	private void populateTradingRequestStatuses() {
-		
-		tradingRequestStatuses = new Stack<TradingRequestStatus>();
-		
-		tradingRequestStatuses.add(new TradingRequestStatus(1, "Cancelled"));
-		tradingRequestStatuses.add(new TradingRequestStatus(2, "Live"));
-		tradingRequestStatuses.add(new TradingRequestStatus(3, "No Relationship"));
-		tradingRequestStatuses.add(new TradingRequestStatus(4, "On Hold"));
-		tradingRequestStatuses.add(new TradingRequestStatus(5, "Else"));
-	}
 	
     private List<Product> populateAllProducts() {
 		
@@ -238,13 +217,6 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		}
 		return products;
 		
-	}
-    private void populateTradingRequests(int count) {
-		tradingRequests = new ArrayList<TradingRequest>();
-		for (int i = 1, j=0; i <= count; i++,j++) {
-			j = j == 4 ? 0 : j;
-			tradingRequests.add(createTradingRequest(i));
-		}
 	}
 
 	private LegalEntity createLegalEntity(int id) {
@@ -287,35 +259,15 @@ public class HardcodedHawthorneBackend implements InitializingBean,
 		return le;
 	}
 	
-	private TradingRequest createTradingRequest(long id) {
-		TradingRequest tr = new TradingRequest();
-		tr.setId(id);
-		try {
-			tr.setRequestStatus(tradingRequestStatuses.get((int) id-1));
-		} catch (Exception exception) {
-			tr.setRequestStatus(tradingRequestStatuses.get(0));
-		}
-		return tr;
-	}
-
 	public List<LegalEntity> getLegalEntities() {
 		return legalEntities;
 	}
 	
-	public List<TradingRequestStatus> getTradingRequestStatuses() {
-		return this.tradingRequestStatuses;
-	}
-
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		log.debug("Starting to populate hardcoded data");
 		initData();
 		log.debug("Finished populating hardcoded data");
-	}
-
-	@Override
-	public List<TradingRequest> getTradingRequests() {
-		return this.tradingRequests;
 	}
 
 
