@@ -1,8 +1,6 @@
 package com.markitserv.hawthorne.authentication;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
@@ -10,6 +8,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -148,13 +147,26 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 
 			// set JSESSIONID cookie expiry time in response header
 			session = htpRequest.getSession();
-			long expireTimestamp = System.currentTimeMillis()
-					+ (session.getMaxInactiveInterval() * 1000); // in miliseconds
-			String expiryDate = new SimpleDateFormat("EEE, dd-MMM-yyyy HH:mm:ss z")
-					.format(new Date(expireTimestamp));
-			htpResponse.setHeader("Set-Cookie", String.format(
-					"JSESSIONID=%s;Expires=%s;Path=" + htpRequest.getContextPath(),
-					session.getId(), expiryDate));
+
+			Cookie cookie;
+			cookie = new Cookie("JSESSIONID", session.getId());
+			cookie.setMaxAge(session.getMaxInactiveInterval());
+
+			log.debug(cookie.toString());
+
+			htpResponse.addCookie(cookie);
+
+			/*
+			 * String expiryDate = sessionExpiryFormat.print(dt) + " GMT";
+			 * 
+			 * String cookieHeader =
+			 * String.format("JSESSIONID=%s; expires=%s; path=" +
+			 * htpRequest.getContextPath(), session.getId(), expiryDate);
+			 * 
+			 * log.debug("CookieHeader: " + cookieHeader);
+			 * 
+			 * htpResponse.setHeader("Set-Cookie", cookieHeader);
+			 */
 
 			chain.doFilter(htpRequest, htpResponse);
 			log.info("User/token Authenticated successfully");
@@ -173,5 +185,4 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 							"Unauthorized: User Credentials/Authentication token was either missing or invalid.");
 		}
 	}
-
 }
