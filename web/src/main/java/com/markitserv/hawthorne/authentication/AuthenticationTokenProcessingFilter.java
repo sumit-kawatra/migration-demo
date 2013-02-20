@@ -1,6 +1,8 @@
 package com.markitserv.hawthorne.authentication;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
@@ -35,21 +37,22 @@ import com.markitserv.msws.internal.MswsAssert;
 
 /**
  * Authentication Token Processing Filter
+ * 
  * @author swati.choudhari
  * 
  */
 
 public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
-    
+
 	@Autowired
 	@Resource(name = "sessionRegistry")
 	private SessionRegistryImpl sessionRegistry;
-	
-	// TODO why isn't this loaded from Spring?  Comes back as null
-	//@Autowired
-	//@Qualifier("authenticationManager")
+
+	// TODO why isn't this loaded from Spring? Comes back as null
+	// @Autowired
+	// @Qualifier("authenticationManager")
 	private AuthenticationManager authManager;
-    
+
 	public static final String HAWTHORNE_USER_USERNAME = "username";
 	public static final String HAWTHORNE_USER_PASSWORD = "password";
 	public static final String HAWTHORNE_LOGIN = "/login";
@@ -58,7 +61,7 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 	public AuthenticationTokenProcessingFilter() {
 		super();
 	}
-	
+
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
@@ -69,57 +72,68 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 		boolean isSessionExpired = false;
 		HttpServletRequest htpRequest = (HttpServletRequest) request;
 		HttpServletResponse htpResponse = (HttpServletResponse) response;
-		String LoginReqURI = htpRequest.getContextPath()+HAWTHORNE_LOGIN;
+		String LoginReqURI = htpRequest.getContextPath() + HAWTHORNE_LOGIN;
 		String requestURI = htpRequest.getRequestURI();
 		final ServletContext context = getServletContext();
+		HttpSession session = null;
 
-		ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(context);
-		sessionRegistry = (SessionRegistryImpl) ctx.getBean("sessionRegistry", SessionRegistry.class);
-		
-		if (StringUtils.isNotBlank(htpRequest.getRequestURI()) && requestURI.equals(LoginReqURI)) {
+		ApplicationContext ctx = WebApplicationContextUtils
+				.getWebApplicationContext(context);
+		sessionRegistry = (SessionRegistryImpl) ctx.getBean("sessionRegistry",
+				SessionRegistry.class);
+
+		if (StringUtils.isNotBlank(htpRequest.getRequestURI())
+				&& requestURI.equals(LoginReqURI)) {
 			isLoginRequired = true;
 		}
 		if (isLoginRequired) {// validate User Credentials and provide user token
 			String username = htpRequest.getHeader(HAWTHORNE_USER_USERNAME);
 			String password = htpRequest.getHeader(HAWTHORNE_USER_PASSWORD);
 			SecurityContext securityContext = SecurityContextHolder.getContext();
-			
+
 			if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
-				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, password);
-				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(htpRequest));
-				
-				//NOTE see above - have to get it from the ctx because it's not being autowired
-				AuthenticationManager authManager = (AuthenticationManager) ctx.getBean("authenticationManager");
-				try{
-					Authentication auth= authManager.authenticate(authentication);
-					if(auth.isAuthenticated()){
+				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+						username, password);
+				authentication.setDetails(new WebAuthenticationDetailsSource()
+						.buildDetails(htpRequest));
+
+				// NOTE see above - have to get it from the ctx because it's not
+				// being autowired
+				AuthenticationManager authManager = (AuthenticationManager) ctx
+						.getBean("authenticationManager");
+				try {
+					Authentication auth = authManager.authenticate(authentication);
+					if (auth.isAuthenticated()) {
 						isUserCredentialValid = true;
 						securityContext.setAuthentication(auth);
 						System.out.println(htpRequest.getSession());
-						HttpSession session = htpRequest.getSession();
-						//invalidate the previous sessions if any
-						if(!session.isNew()){
+						session = htpRequest.getSession();
+						// invalidate the previous sessions if any
+						if (!session.isNew()) {
 							session.invalidate();
 						}
 					}
-				}catch(BadCredentialsException e){
+				} catch (BadCredentialsException e) {
 					isUserCredentialValid = false;
 				}
 			}
 
 		} else {// validate token and process the request
 			String reuestedSessionId = htpRequest.getRequestedSessionId();
-			System.out.println("RequestedSessionId() = "+ htpRequest.getRequestedSessionId());
+			System.out.println("RequestedSessionId() = "
+					+ htpRequest.getRequestedSessionId());
 			log.info("User Token = " + htpRequest.getRequestedSessionId());
 			if (StringUtils.isNotBlank(reuestedSessionId)) {
 				// check for validity of token
-				MswsAssert.mswsAssert(context != null,"Expecting to always have a context");
+				MswsAssert.mswsAssert(context != null, "Expecting to always have a context");
 				// sessionRegistry.getAllPrincipals();
 				if (sessionRegistry != null) {
-					SessionInformation sessionInfo = sessionRegistry.getSessionInformation(reuestedSessionId);
+					SessionInformation sessionInfo = sessionRegistry
+							.getSessionInformation(reuestedSessionId);
 					if (sessionInfo != null) {
 						UserDetails userDetails = (UserDetails) sessionInfo.getPrincipal();
-						if (userDetails != null && StringUtils.isNotBlank(userDetails.getUsername())) {
+						if (userDetails != null
+								&& StringUtils.isNotBlank(userDetails.getUsername())) {
 							isUserTokenValid = true;
 							if (sessionInfo.isExpired()) {
 								isSessionExpired = true;
@@ -129,19 +143,35 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 				}
 			}
 		}
-		//Valid credentials/token && session not expired.
-		if ( (isUserCredentialValid || isUserTokenValid) && !isSessionExpired) {
+		// Valid credentials/token && session not expired.
+		if ((isUserCredentialValid || isUserTokenValid) && !isSessionExpired) {
+
+			// set JSESSIONID cookie expiry time in response header
+			session = htpRequest.getSession();
+			long expireTimestamp = System.currentTimeMillis()
+					+ (session.getMaxInactiveInterval() * 1000); // in miliseconds
+			String expiryDate = new SimpleDateFormat("EEE, dd-MMM-yyyy HH:mm:ss z")
+					.format(new Date(expireTimestamp));
+			htpResponse.setHeader("Set-Cookie", String.format(
+					"JSESSIONID=%s;Expires=%s;Path=" + htpRequest.getContextPath(),
+					session.getId(), expiryDate));
+
 			chain.doFilter(htpRequest, htpResponse);
 			log.info("User/token Authenticated successfully");
-		//valid credentials/token but session expired.
-		} else if ((isUserCredentialValid || isUserTokenValid) && isSessionExpired) {
+		} else if ((isUserCredentialValid || isUserTokenValid) && isSessionExpired) {// valid
+																												// credentials/token
+																												// but
+																												// session
+																												// expired.
 			log.info("Session Expired: User Authenticated but its session is expired.");
-			htpResponse.sendError(HttpServletResponse.SC_FORBIDDEN,"Session Expired: User Authenticated but its session is expired.");
+			htpResponse.sendError(HttpServletResponse.SC_FORBIDDEN,
+					"Session Expired: User Authenticated but its session is expired.");
 		} else {
 			log.info("Unauthorized: Authentication token was either missing or invalid.");
-			htpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Unauthorized: User Credentials/Authentication token was either missing or invalid.");
+			htpResponse
+					.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+							"Unauthorized: User Credentials/Authentication token was either missing or invalid.");
 		}
 	}
 
-	
 }
