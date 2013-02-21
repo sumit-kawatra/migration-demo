@@ -35,6 +35,8 @@ import com.markitserv.msws.validation.RequiredIfAllNotProvidedValidation;
 public class DescribeBooks extends AbstractPaginatedAction {
 
 	private static final String FILTER_NAME_SUBSTR_BOOK_NAME = "substrBookName";
+	private static final String PARAM_NAME_USER_NAME = "UserName";
+	private static final String PARAM_PARTICIPANT_ID = "ParticipantId";
 
 	@Autowired
 	private HawthorneBackend data;
@@ -46,20 +48,33 @@ public class DescribeBooks extends AbstractPaginatedAction {
 		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
 
 		// UserName
-		def.addValidation("UserName", new MutuallyExclusiveWithValidation(new String[]{"ParticipantId"}));
-		def.addValidation("UserName", new RequiredIfAllNotProvidedValidation(new String[]{"ParticipantId"}));
-	
+		def.addValidation(PARAM_NAME_USER_NAME, new MutuallyExclusiveWithValidation(
+				new String[] {
+					PARAM_PARTICIPANT_ID
+				}));
+		def.addValidation(PARAM_NAME_USER_NAME, new RequiredIfAllNotProvidedValidation(
+				new String[] {
+					PARAM_PARTICIPANT_ID
+				}));
+
 		// Participant ID
-		def.addValidation("ParticipantId", new MutuallyExclusiveWithValidation(new String[]{"UserName"}));
-		def.addValidation("ParticipantId", new RequiredIfAllNotProvidedValidation(new String[]{"UserName"}));
-		def.addValidation("ParticipantId", new IntegerValidation());
-		def.addValidation("ParticipantId", new IntegerMaxMinValidation(1, IntegerMaxMinValidation.UNLIMITED));
-		
+		def.addValidation(PARAM_PARTICIPANT_ID, new MutuallyExclusiveWithValidation(
+				new String[] {
+					PARAM_NAME_USER_NAME
+				}));
+		def.addValidation(PARAM_PARTICIPANT_ID, new RequiredIfAllNotProvidedValidation(
+				new String[] {
+					PARAM_NAME_USER_NAME
+				}));
+		def.addValidation(PARAM_PARTICIPANT_ID, new IntegerValidation());
+		def.addValidation(PARAM_PARTICIPANT_ID, new IntegerMaxMinValidation(1,
+				IntegerMaxMinValidation.UNLIMITED));
+
 		return def;
 	}
 
-	private List<Book> getBooks(List<Participant> pariticipantList,
-			Integer participantId, String userName) {
+	private List<Book> getBooks(List<Participant> pariticipantList, Integer participantId,
+			String userName) {
 		if (participantId != null) {
 			for (Participant participant : pariticipantList) {
 				if (participant.getId() == participantId) {
@@ -71,8 +86,8 @@ public class DescribeBooks extends AbstractPaginatedAction {
 			for (Participant participant : pariticipantList) {
 				List<User> userList = participant.getAllUsers();
 				for (User user : userList) {
-					if (userName.contains(user.getUserName()) || 
-						userName.equalsIgnoreCase(user.getUserName())) {
+					if (userName.contains(user.getUserName())
+							|| userName.equalsIgnoreCase(user.getUserName())) {
 						return participant.getBookList();
 					}
 				}
@@ -82,18 +97,18 @@ public class DescribeBooks extends AbstractPaginatedAction {
 	}
 
 	@Override
-	protected ActionResult performAction(ActionParameters params,
-			ActionFilters filters) {
+	protected ActionResult performAction(ActionParameters params, ActionFilters filters) {
 		String userName = null;
-		int participantId = 0; 
+		int participantId = 0;
 		List<Participant> paList = data.getParticipants();
-		
-		if (params.isParameterSet("ParticipantId")) {
-			 participantId = Integer.parseInt((String)params.getParameter("ParticipantId"));
+
+		if (params.isParameterSet(PARAM_PARTICIPANT_ID)) {
+			participantId = Integer.parseInt((String) params
+					.getParameter(PARAM_PARTICIPANT_ID));
 		}
 
-		if (params.isParameterSet("UserName")) {
-			userName = (String)params.getParameter("UserName");
+		if (params.isParameterSet(PARAM_NAME_USER_NAME)) {
+			userName = (String) params.getParameter(PARAM_NAME_USER_NAME);
 		}
 
 		List<Book> bookList = getBooks(paList, participantId, userName);
@@ -107,24 +122,18 @@ public class DescribeBooks extends AbstractPaginatedAction {
 
 		return res;
 	}
-	
-	private List<Book> applyFilters(ActionParameters p, ActionFilters f,
-			List<Book> books) {
 
-	
-		
+	private List<Book> applyFilters(ActionParameters p, ActionFilters f, List<Book> books) {
+
 		if (f.isFilterSet(FILTER_NAME_SUBSTR_BOOK_NAME)) {
-			books  = SubstringReflectionFilter.filter(
-					books, "name",
+			books = SubstringReflectionFilter.filter(books, "name",
 					f.getSingleFilter(FILTER_NAME_SUBSTR_BOOK_NAME));
 		}
 
-		int pageNumber = p.getParameterAsInt(CommonParamKeys.PageNumber
-				.toString());
+		int pageNumber = p.getParameterAsInt(CommonParamKeys.PageNumber.toString());
 		int pageSize = p.getParameterAsInt(CommonParamKeys.PageSize.toString());
 
-		books = PaginationFilter.filter(books,
-				pageNumber, pageSize);
+		books = PaginationFilter.filter(books, pageNumber, pageSize);
 		return books;
 	}
 
