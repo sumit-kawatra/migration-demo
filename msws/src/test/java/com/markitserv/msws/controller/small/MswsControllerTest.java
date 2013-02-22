@@ -12,12 +12,15 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpSession;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockMultipartHttpServletRequest;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
@@ -35,6 +38,7 @@ import com.markitserv.msws.exceptions.ValidationException;
 import com.markitserv.msws.testutil.AbstractMswsTest;
 import com.markitserv.msws.web.HttpParamsToActionCommand;
 import com.markitserv.msws.web.MswsController;
+import com.markitserv.msws.web.RequestContextHolderWrapper;
 
 /**
  * This testcase tests Controller methods and Exception handling
@@ -47,16 +51,26 @@ public class MswsControllerTest extends AbstractMswsTest {
 	private MswsController controller;
 	private HttpParamsToActionCommand actionCmdBuilder;
 	private CommandDispatcher dispatcher;
+	private RequestContextHolderWrapper reqContextHolder;
 
 	@Before
 	public void setupEach() {
 
 		controller = new MswsController();
+		
 		dispatcher = mock(CommandDispatcher.class, RETURNS_SMART_NULLS);
 		actionCmdBuilder = mock(HttpParamsToActionCommand.class,
 				RETURNS_SMART_NULLS);
+		reqContextHolder = mock(RequestContextHolderWrapper.class, RETURNS_SMART_NULLS);
+		
+		HttpSession session = mock(HttpSession.class, RETURNS_SMART_NULLS);
+		
+		when(session.getMaxInactiveInterval()).thenReturn(30);
+		when(reqContextHolder.getCurrentSession()).thenReturn(session);
+		
 		controller.setDispatcher(dispatcher);
 		controller.setActionCmdBuilder(actionCmdBuilder);
+		controller.setReqContextHolder(reqContextHolder);
 	}
 
 	@Test
@@ -126,10 +140,8 @@ public class MswsControllerTest extends AbstractMswsTest {
 				.getErrorCode());
 		assertEquals(ExceptionResult.ERRORMESSAGE_GENERIC, er.getErrors().get(0)
 				.getErrorMessage());
-
 	}
 	
-
 	/**
 	 * Test if it returns multiple ValidationException(VE) in Exception result
 	 */

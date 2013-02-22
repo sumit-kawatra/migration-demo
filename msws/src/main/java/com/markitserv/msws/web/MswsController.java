@@ -36,6 +36,8 @@ public class MswsController {
 	private HttpParamsToActionCommand actionCmdBuilder;
 	@Autowired
 	private CommandDispatcher dispatcher;
+	@Autowired
+	private RequestContextHolderWrapper reqContextHolder;
 
 	Logger log = LoggerFactory.getLogger(MswsController.class);
 
@@ -72,9 +74,7 @@ public class MswsController {
 			result = new ExceptionResult(programmaticException);
 		}
 
-		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder
-				.currentRequestAttributes();
-		HttpSession session = attr.getRequest().getSession(false);
+		HttpSession session = reqContextHolder.getCurrentSession();
 
 		DateTime expires = new DateTime(DateTimeZone.UTC);
 		expires = expires.plusSeconds(session.getMaxInactiveInterval());
@@ -97,5 +97,9 @@ public class MswsController {
 
 	public void setActionCmdBuilder(HttpParamsToActionCommand actionCmdBuilder) {
 		this.actionCmdBuilder = actionCmdBuilder;
+	}
+	
+	public void setReqContextHolder(RequestContextHolderWrapper reqContextHolder) {
+		this.reqContextHolder = reqContextHolder;
 	}
 }
