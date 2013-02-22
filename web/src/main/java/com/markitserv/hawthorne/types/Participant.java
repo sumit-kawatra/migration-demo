@@ -12,19 +12,31 @@ import com.markitserv.msws.Type;
 
 /**
  * @author kiran.gogula
- *
+ * 
  */
 public class Participant extends Type {
-	
+
 	private int id;
-	
+
 	private String name;
-	
+
 	private List<Book> bookList;
-	
+
 	private List<User> users;
-	
-	
+
+	private List<SubGroup> subGroupList;
+
+	public List<SubGroup> getSubGroupList() {
+		return subGroupList;
+	}
+
+	public void setSubGroupList(List<SubGroup> subGroupList) {
+		this.subGroupList = subGroupList;
+	}
+
+	public List<User> getUsers() {
+		return users;
+	}
 
 	public List<User> getAllUsers() {
 		return users;
@@ -57,11 +69,10 @@ public class Participant extends Type {
 	public void setBookList(List<Book> bookList) {
 		this.bookList = bookList;
 	}
-	
+
 	@Override
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this,
-				ToStringStyle.MULTI_LINE_STYLE);
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 }

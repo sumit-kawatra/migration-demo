@@ -8,6 +8,7 @@ import com.markitserv.hawthorne.types.InterestGroup;
 import com.markitserv.hawthorne.types.LegalEntity;
 import com.markitserv.hawthorne.types.Participant;
 import com.markitserv.hawthorne.types.Product;
+import com.markitserv.hawthorne.types.SubGroup;
 import com.markitserv.hawthorne.types.User;
 import com.markitserv.msws.exceptions.NotYetImplementedException;
 
@@ -54,6 +55,11 @@ public class HawthorneDatabaseBackend implements HawthorneBackend {
 
 	@Override
 	public List<User> getUser(String userName) {
+		throw NotYetImplementedException.standardException();
+	}
+	
+	@Override
+	public List<SubGroup> getSubGroups(Integer participantId, String userName){
 		throw NotYetImplementedException.standardException();
 	}
 	

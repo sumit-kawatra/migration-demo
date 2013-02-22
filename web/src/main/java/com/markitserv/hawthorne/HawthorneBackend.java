@@ -6,6 +6,7 @@ import com.markitserv.hawthorne.types.InterestGroup;
 import com.markitserv.hawthorne.types.LegalEntity;
 import com.markitserv.hawthorne.types.Participant;
 import com.markitserv.hawthorne.types.Product;
+import com.markitserv.hawthorne.types.SubGroup;
 import com.markitserv.hawthorne.types.User;
 
 public interface HawthorneBackend {
@@ -18,5 +19,6 @@ public interface HawthorneBackend {
 	List<Participant> getParticipants();
 	List<InterestGroup> getInterestGroups();
 	List<Product> getProducts();
+	List<SubGroup> getSubGroups(Integer participantId, String userName);
 
 }

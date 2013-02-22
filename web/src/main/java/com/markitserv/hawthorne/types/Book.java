@@ -12,12 +12,12 @@ import com.markitserv.msws.Type;
 
 /**
  * @author kiran.gogula
- *
+ * 
  */
-public class Book extends Type{
-	
+public class Book extends Type {
+
 	private int id;
-	
+
 	private String name;
 
 	public int getId() {
@@ -35,12 +35,12 @@ public class Book extends Type{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Override
 	public int hashCode() {
-		   return HashCodeBuilder.reflectionHashCode(id);
-	 }
-	
+		return HashCodeBuilder.reflectionHashCode(id);
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) {
@@ -52,15 +52,14 @@ public class Book extends Type{
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		Book book = (Book)obj;
-		return  new EqualsBuilder().appendSuper(super.equals(obj))
-				.append(id, book.id).isEquals();
+		Book book = (Book) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj)).append(id, book.id)
+				.isEquals();
 	}
-	
+
 	@Override
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this,
-				ToStringStyle.MULTI_LINE_STYLE);
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 }

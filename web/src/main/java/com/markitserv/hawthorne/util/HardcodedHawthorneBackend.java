@@ -19,6 +19,7 @@ import com.markitserv.hawthorne.types.InterestGroup;
 import com.markitserv.hawthorne.types.LegalEntity;
 import com.markitserv.hawthorne.types.Participant;
 import com.markitserv.hawthorne.types.Product;
+import com.markitserv.hawthorne.types.SubGroup;
 import com.markitserv.hawthorne.types.User;
 
 /**
@@ -79,21 +80,38 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 			p.setId(i);
 			p.setName("Participant " + i);
 			p.setBookList(populateBooks(start, end));
-			p.setUsers(getUserList(i));
+			p.setUsers(getUserList(start, end, p.getId()));
+			p.setSubGroupList(populateSubGroups(start, end, p.getUsers()));
 			participants.add(p);
 		}
 	}
 
-	private List<User> getUserList(int j) {
+	private List<SubGroup> populateSubGroups(int start, int end, List<User> subGrpUsers) {
+		List<SubGroup> subGroupList = new ArrayList<SubGroup>();
+		for (int j = start; j < end; j++) {
+			SubGroup group = new SubGroup();
+			group.setName("SubGroup" + j);
+			group.setShortName("SG" + j);
+			group.setActive(new Random().nextBoolean());
+			group.setSubGroupUser(subGrpUsers);
+			subGroupList.add(group);
+		}
+		return subGroupList;
+	}
+
+	private List<User> getUserList(int start, int end, int participantId) {
 		List<User> list = new ArrayList<User>();
-		for (int i = j; i <= j; i++) {
+		for (int j = start; j < end; j++) {
 			User user = new User();
-			user.setUserId(i);
-			user.setFirstName("First Name" + j);
+			user.setUserId(j);
+			user.setFirstName("FirstName" + j);
 			user.setLastName("LastName" + j);
 			user.setUserName(user.getFirstName() + " " + user.getLastName());
 			user.setLegalEntityId(j);
-			user.setParticipantId(j);
+			user.setParticipantId(participantId);
+			user.setEmailAddress(user.getFirstName() + "." + user.getLastName()
+					+ "@example.com");
+			user.setPhoneNumber(randomPhoneNumGen());
 			list.add(user);
 		}
 		return list;
@@ -304,6 +322,32 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 			}
 		}
 		return userList;
+	}
+
+	@Override
+	public List<SubGroup> getSubGroups(Integer participantId, String userName) {
+		if (participants == null) {
+			populateParticipants();
+		}
+		if (participantId != null) {
+			for (Participant participant : participants) {
+				if (participant.getId() == participantId) {
+					return participant.getSubGroupList();
+				}
+			}
+		}
+		if (StringUtils.isNotBlank(userName)) {
+			for (Participant participant : participants) {
+				List<User> userList = participant.getAllUsers();
+				for (User user : userList) {
+					if (userName.contains(user.getUserName())
+							|| userName.equalsIgnoreCase(user.getUserName())) {
+						return participant.getSubGroupList();
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 }
