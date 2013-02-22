@@ -67,17 +67,22 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-		@SuppressWarnings("unchecked")
+
+		log.debug("auth filter");
+
 		boolean isLoginRequired = false;
 		boolean isUserCredentialValid = false;
 		boolean isUserTokenValid = false;
 		boolean isSessionExpired = false;
+
 		HttpServletRequest htpRequest = (HttpServletRequest) request;
 		HttpServletResponse htpResponse = (HttpServletResponse) response;
 		String LoginReqURI = htpRequest.getContextPath() + HAWTHORNE_LOGIN;
 		String requestURI = htpRequest.getRequestURI();
 		final ServletContext context = getServletContext();
 		HttpSession session = null;
+
+		htpResponse.setContentType("text/javascript;charset=UTF-8");
 
 		ApplicationContext ctx = WebApplicationContextUtils
 				.getWebApplicationContext(context);
@@ -88,9 +93,11 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 				&& requestURI.equals(LoginReqURI)) {
 			isLoginRequired = true;
 		}
+
 		if (isLoginRequired) {// validate User Credentials and provide user token
-			String username = htpRequest.getHeader(HAWTHORNE_USER_USERNAME);
-			String password = htpRequest.getHeader(HAWTHORNE_USER_PASSWORD);
+			String username = htpRequest.getParameter(HAWTHORNE_USER_USERNAME);
+			String password = htpRequest.getParameter(HAWTHORNE_USER_PASSWORD);
+			log.debug("Logging in user " + username);
 			SecurityContext securityContext = SecurityContextHolder.getContext();
 
 			if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
@@ -114,6 +121,10 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 						if (!session.isNew()) {
 							session.invalidate();
 						}
+
+						// to make JSONP happy. Resp needs to be valid JSON
+						htpResponse.getOutputStream().write("{}".getBytes());
+
 					}
 				} catch (BadCredentialsException e) {
 					isUserCredentialValid = false;
@@ -163,35 +174,36 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 			chain.doFilter(htpRequest, htpResponse);
 
 			log.info("User/token Authenticated successfully");
-		} else if ((isUserCredentialValid || isUserTokenValid) && isSessionExpired) {// valid
-																												// credentials/token
-																												// but
-																												// session
-																												// expired.
-			log.info("Session Expired: User Authenticated but its session is expired.");
-			htpResponse.sendError(HttpServletResponse.SC_FORBIDDEN,
+
+			// if valid credentials but session expired
+		} else if ((isUserCredentialValid || isUserTokenValid) && isSessionExpired) {
+
+			log.debug("Session Expired: User Authenticated but its session is expired.");
+
+			// TODO right now this assumes a JSONP call. Need to also handle if the
+			// user is not using JSONP. Should throw a 401 if not jsonp
+			String msg = buildHttpErrorJsonMsg(HttpServletResponse.SC_FORBIDDEN,
 					"Session Expired: User Authenticated but its session is expired.");
+
+			htpResponse.getOutputStream().write(msg.getBytes());
+
 		} else {
+
 			log.info("Unauthorized: Authentication token was either missing or invalid.");
-			htpResponse
-					.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-							"Unauthorized: User Credentials/Authentication token was either missing or invalid.");
+
+			// TODO right now this assumes a JSONP call. Need to also handle if the
+			// user is not using JSONP. Should throw a 401 if not jsonp
+			String msg = buildHttpErrorJsonMsg(HttpServletResponse.SC_UNAUTHORIZED,
+					"Unauthorized: User Credentials/Authentication token was either missing or invalid.");
+
+			htpResponse.getOutputStream().write(msg.getBytes());
 		}
 	}
 
-	private void overrideJSessionHeader(HttpServletResponse htpResponse,
-			HttpServletRequest htpRequest) {
-		HttpSession session;
-		session = htpRequest.getSession();
+	private String buildHttpErrorJsonMsg(int errorCode, String msg) {
 
-		DateTime expires = new DateTime(DateTimeZone.UTC);
-		expires = expires.plusSeconds(session.getMaxInactiveInterval());
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("EEE, dd-MMM-yyyy HH:mm:ss");
-
-		String expiresStr = fmt.print(expires) + " GMT";
-		String headerValue = String.format("JSESSIONID=%s;Expires=%s", session.getId(),
-				expiresStr);
-
-		htpResponse.addHeader("Set-Cookie", headerValue);
+		// Maybe move this to Jackson at some point?
+		String template = "{\"httpError\":{\"code\":\"%d\",\"msg\":\"%s\"}}";
+		return String.format(template, errorCode, msg);
 	}
 }

@@ -40,7 +40,10 @@ public class HttpParamsToActionCommand {
 
 		Map<String, Object> processedParamsMap = new HashMap<String, Object>();
 		for (String key : params.keySet()) {
-
+			
+			if (isJsonpParam(key))
+				continue;
+			
 			String[] valueArr = params.get(key);
 
 			if (valueArr.length != 1) {
@@ -71,6 +74,16 @@ public class HttpParamsToActionCommand {
 				filters);
 
 		return actionCmd;
+	}
+
+	/**
+	 * jsonp parameters should be removed.  Hate doing this here, would rather do it in the filter, but we need Servlet 3 api
+	 * These are the params set by jquery
+	 * @param key
+	 * @return
+	 */
+	private boolean isJsonpParam(String key) {
+		return (key.equalsIgnoreCase("callback") || key.equalsIgnoreCase("_"));
 	}
 
 	private boolean isMultiValue(String key) {

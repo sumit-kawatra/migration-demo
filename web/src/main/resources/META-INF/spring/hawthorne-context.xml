@@ -15,6 +15,13 @@
 	<import resource="classpath:META-INF/spring/msws-context.xml" />
 
 	<context:component-scan base-package="com.markitserv.hawthorne" />
+	
+<mvc:interceptors>
+  <mvc:interceptor>
+   <mvc:mapping path="/login" />
+   <bean id="loggerInterceptor" class="com.markitserv.msws.web.SpringJsonPIntercepter" />
+  </mvc:interceptor>
+ </mvc:interceptors>
 
 	<bean
 		class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">

@@ -1,5 +1,11 @@
 package com.markitserv.msws.web;
 
+import javax.servlet.http.HttpSession;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 
 import com.markitserv.msws.AbstractWebserviceResult;
@@ -37,36 +45,47 @@ public class MswsController {
 
 		AbstractWebserviceResult result = null;
 		String uuid = null;
-		uuid = (String) req.getAttribute(Constants.UUID,
-				RequestAttributes.SCOPE_REQUEST);
+		uuid = (String) req.getAttribute(Constants.UUID, RequestAttributes.SCOPE_REQUEST);
 		log.info("Uuid is " + uuid);
 
 		try {
-			ActionCommand actionCmd = actionCmdBuilder
-					.buildActionCommandFromHttpParams(req.getParameterMap()); 
-			result = (ActionResult) dispatcher
-					.dispatchReqRespCommand(actionCmd);
+			ActionCommand actionCmd = actionCmdBuilder.buildActionCommandFromHttpParams(req
+					.getParameterMap());
+			result = (ActionResult) dispatcher.dispatchReqRespCommand(actionCmd);
 		} catch (MswsException mwwsException) {
 			log.error("Unknown Exception", mwwsException);
-			// If the exception belongs to the programmatic exception  the mail goes to error distribution group 
-			if(mwwsException instanceof ProgrammaticException){
-				dispatcher.dispatchAsyncCommand(createErrorCommand(mwwsException.getErrorMessage()));
-			}			
+			// If the exception belongs to the programmatic exception the mail goes
+			// to error distribution group
+			if (mwwsException instanceof ProgrammaticException) {
+				dispatcher.dispatchAsyncCommand(createErrorCommand(mwwsException
+						.getErrorMessage()));
+			}
 			result = new ExceptionResult(mwwsException);
 		} catch (Exception exception) {
 			log.error("Unknown Exception", exception);
 			ProgrammaticException programmaticException = new ProgrammaticException(
-					"Unknown error occured.", exception);			
-			// If the exception belongs to the programmatic exception  the mail goes to error distribution group 
-			dispatcher.dispatchAsyncCommand(createErrorCommand(programmaticException.getErrorMessage()));
+					"Unknown error occured.", exception);
+			// If the exception belongs to the programmatic exception the mail goes
+			// to error distribution group
+			dispatcher.dispatchAsyncCommand(createErrorCommand(programmaticException
+					.getErrorMessage()));
 			result = new ExceptionResult(programmaticException);
 		}
 
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder
+				.currentRequestAttributes();
+		HttpSession session = attr.getRequest().getSession(false);
+
+		DateTime expires = new DateTime(DateTimeZone.UTC);
+		expires = expires.plusSeconds(session.getMaxInactiveInterval());
+
+		result.getMetaData().setSessionExpires(expires);
 		result.getMetaData().setRequestId(uuid);
+		
 		return result;
 	}
-	
-	private ErrorCommand createErrorCommand(String  errorMessage){
+
+	private ErrorCommand createErrorCommand(String errorMessage) {
 		ErrorCommand errorCommand = new ErrorCommand();
 		errorCommand.setErrorMessage(errorMessage);
 		return errorCommand;

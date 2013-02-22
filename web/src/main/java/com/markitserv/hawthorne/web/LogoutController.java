@@ -16,26 +16,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/logout")
+@RequestMapping(value = "/logout")
 public class LogoutController {
 
 	Logger log = LoggerFactory.getLogger(LogoutController.class);
-	
-	 @RequestMapping(value = "", method = RequestMethod.GET)
-		public @ResponseBody String LogoutUser(HttpServletRequest request, HttpServletResponse response) {
-			
-		 String UserName = "";
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			//If security is enabled
-			 if (auth != null){
-				 Principal principal = request.getUserPrincipal();
-				 UserName = principal.getName();
-				 //Performs a logout by invalidating associated session and does cleaning/remove Authentication from SecurityContext 
-		         new SecurityContextLogoutHandler().logout(request, response, auth);
-			 }else{//if security is disabled just invalidate session
-				 request.getSession().invalidate();
-			 }
-			log.info("User "+UserName+ "Logged out Successfully.");
-			return "User "+UserName+ " Logged out Successfully.";
+
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public @ResponseBody
+	String LogoutUser(HttpServletRequest request, HttpServletResponse response) {
+
+		String UserName = "";
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		// If security is enabled
+		if (auth != null) {
+			Principal principal = request.getUserPrincipal();
+			UserName = principal.getName();
+			// Performs a logout by invalidating associated session and does
+			// cleaning/remove Authentication from SecurityContext
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		} else {// if security is disabled just invalidate session
+			request.getSession().invalidate();
 		}
+		log.info("User " + UserName + "Logged out Successfully.");
+		return "";
+	}
 }
