@@ -96,7 +96,24 @@ public class DescribeUsers extends AbstractPaginatedAction {
 
 		return def;
 	}
+	
+	@Override
+	protected ParamsAndFiltersDefinition createFilterDefinition() {
+		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
 
+		def.addValidation(FILTER_NAME_SUBSTR_LAST_NAME,
+				new CollectionSizeValidation(
+						CollectionSizeValidation.UNLIMITED, 1));
+
+		def.addValidation(FILTER_NAME_SUBSTR_FIRST_NAME, new CollectionSizeValidation(
+				CollectionSizeValidation.UNLIMITED, 1));
+		
+		def.addValidation(FILTER_NAME_SUBSTR_USER_NAME, new CollectionSizeValidation(
+				CollectionSizeValidation.UNLIMITED, 1));
+
+		return def;
+	}
+	
 	@Override
 	protected ActionResult performAction(ActionParameters params,
 			ActionFilters filters) {
