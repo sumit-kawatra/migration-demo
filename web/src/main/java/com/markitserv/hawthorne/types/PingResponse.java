@@ -6,7 +6,7 @@ package com.markitserv.hawthorne.types;
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.markitserv.msws.util.CustomTimeStampSerializer;
+import com.markitserv.msws.util.JsonTimeStampSerializer;
 
 /**
  * @author kiran.gogula
@@ -18,7 +18,7 @@ public class PingResponse extends SuccessFailure {
 		super(success);
 	}
 
-	@JsonSerialize(using = CustomTimeStampSerializer.class)
+	@JsonSerialize(using = JsonTimeStampSerializer.class)
 	private DateTime currentTimpstamp;
 
 	public DateTime getCurrentTimpstamp() {

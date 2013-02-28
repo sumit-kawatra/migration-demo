@@ -11,7 +11,7 @@ import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.markitserv.msws.Type;
-import com.markitserv.msws.util.CustomTimeStampSerializer;
+import com.markitserv.msws.util.JsonTimeStampSerializer;
 
 /**
  * @author kiran.gogula
@@ -35,7 +35,7 @@ public class User extends Type {
 	
 	private String phoneNumber;
 	
-	@JsonSerialize(using = CustomTimeStampSerializer.class)
+	@JsonSerialize(using = JsonTimeStampSerializer.class)
 	private DateTime lastLogin;
 
 	private List <Product> products;

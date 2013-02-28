@@ -16,30 +16,28 @@ import com.markitserv.msws.exceptions.ProgrammaticException;
 
 /**
  * @author kiran.gogula
- *
+ * 
  */
-public class CustomDateSerializer extends JsonSerializer<DateTime>{
+public class JsonDateSerializer extends JsonSerializer<DateTime> {
 
-	 private static DateTimeFormatter formatter = DateTimeFormat.forPattern("YYYY-MM-dd");
-	 Logger log = LoggerFactory.getLogger(CustomDateSerializer.class);
+	private static DateTimeFormatter formatter = DateTimeFormat.forPattern("YYYY-MM-dd");
+	Logger log = LoggerFactory.getLogger(JsonDateSerializer.class);
 
-	 /**
-	  * This overridden method serialize the Joda DatTime object to string.
-	  */
+	/**
+	 * This overridden method serialize the Joda DatTime object to string.
+	 */
 	@Override
-	public void serialize(DateTime value, JsonGenerator jgen,
-			SerializerProvider provider)  {		
-		try{
-			
+	public void serialize(DateTime value, JsonGenerator jgen, SerializerProvider provider) {
+		try {
+
 			jgen.writeString(formatter.print(value));
-			
-		}catch(Exception exception){
+
+		} catch (Exception exception) {
 			log.error("Exception from CustomDateSerializer class", exception);
-			throw new ProgrammaticException("Exception from CustomDateSerializer class", exception);
+			throw new ProgrammaticException("Exception from CustomDateSerializer class",
+					exception);
 		}
-		
+
 	}
-	
-	
 
 }
