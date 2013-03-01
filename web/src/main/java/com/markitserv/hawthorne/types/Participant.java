@@ -21,10 +21,20 @@ public class Participant extends Type {
 	private String name;
 
 	private List<Book> bookList;
+	
+	private List<BookList> listOfBookList;
 
 	private List<User> users;
 
 	private List<SubGroup> subGroupList;
+
+	public List<BookList> getListOfBookList() {
+		return listOfBookList;
+	}
+
+	public void setListOfBookList(List<BookList> listOfBookList) {
+		this.listOfBookList = listOfBookList;
+	}
 
 	public List<SubGroup> getSubGroupList() {
 		return subGroupList;

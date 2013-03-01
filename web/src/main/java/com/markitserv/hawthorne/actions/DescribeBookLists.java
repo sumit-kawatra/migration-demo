@@ -3,6 +3,7 @@
  */
 package com.markitserv.hawthorne.actions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.HawthorneBackend;
-import com.markitserv.hawthorne.types.Book;
+import com.markitserv.hawthorne.types.BookList;
 import com.markitserv.hawthorne.types.Participant;
 import com.markitserv.hawthorne.types.User;
 import com.markitserv.msws.action.AbstractPaginatedAction;
@@ -22,8 +23,8 @@ import com.markitserv.msws.action.PaginatedActionResult;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.filters.PaginationFilter;
 import com.markitserv.msws.filters.SubstringReflectionFilter;
-import com.markitserv.msws.validation.IntegerMaxMinValidationAndConversion;
 import com.markitserv.msws.validation.CollectionSizeValidation;
+import com.markitserv.msws.validation.IntegerMaxMinValidationAndConversion;
 import com.markitserv.msws.validation.IntegerValidationAndConversion;
 import com.markitserv.msws.validation.MutuallyExclusiveWithValidation;
 import com.markitserv.msws.validation.RequiredIfAllNotProvidedValidation;
@@ -33,9 +34,9 @@ import com.markitserv.msws.validation.RequiredIfAllNotProvidedValidation;
  * 
  */
 @Service
-public class DescribeBooks extends AbstractPaginatedAction {
+public class DescribeBookLists extends AbstractPaginatedAction {
 
-	private static final String FILTER_NAME_SUBSTR_BOOK_NAME = "substrBookName";
+	private static final String FILTER_NAME_SUBSTR_BOOK_LIST_NAME = "substrBookListName";
 	private static final String PARAM_NAME_USER_NAME = "UserName";
 	private static final String PARAM_PARTICIPANT_ID = "ParticipantId";
 
@@ -67,12 +68,9 @@ public class DescribeBooks extends AbstractPaginatedAction {
 				new String[] {
 					PARAM_NAME_USER_NAME
 				}));
-
-		def.addValidationAndConversion(PARAM_PARTICIPANT_ID,
-				new IntegerValidationAndConversion());
-		def.addValidationAndConversion(PARAM_PARTICIPANT_ID,
-				new IntegerMaxMinValidationAndConversion(1,
-						IntegerMaxMinValidationAndConversion.UNLIMITED));
+		def.addValidationAndConversion(PARAM_PARTICIPANT_ID, new IntegerValidationAndConversion());
+		def.addValidationAndConversion(PARAM_PARTICIPANT_ID, new IntegerMaxMinValidationAndConversion(1,
+				IntegerMaxMinValidationAndConversion.UNLIMITED));
 
 		return def;
 	}
@@ -81,34 +79,34 @@ public class DescribeBooks extends AbstractPaginatedAction {
 	protected ParamsAndFiltersDefinition createFilterDefinition() {
 		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
 
-		def.addValidation(FILTER_NAME_SUBSTR_BOOK_NAME,
+		def.addValidation(FILTER_NAME_SUBSTR_BOOK_LIST_NAME,
 				new CollectionSizeValidation(
 						CollectionSizeValidation.UNLIMITED, 1));
 
 		return def;
 	}
 
-	private List<Book> getBooks(List<Participant> pariticipantList, Integer participantId,
+	private List<BookList> getBookLists(List<Participant> pariticipantList, Integer participantId,
 			String userName) {
+		List<BookList> booklist = new ArrayList<BookList>();
 		if (participantId != null) {
 			for (Participant participant : pariticipantList) {
 				if (participant.getId() == participantId) {
-					return participant.getBookList();
+					booklist = participant.getListOfBookList();
 				}
 			}
-		}
-		if (StringUtils.isNotBlank(userName)) {
+		}if (StringUtils.isNotBlank(userName)) {
 			for (Participant participant : pariticipantList) {
 				List<User> userList = participant.getAllUsers();
 				for (User user : userList) {
 					if (userName.contains(user.getUserName())
 							|| userName.equalsIgnoreCase(user.getUserName())) {
-						return participant.getBookList();
+						booklist = participant.getListOfBookList();
 					}
 				}
 			}
 		}
-		return null;
+		return booklist;
 	}
 
 	@Override
@@ -122,33 +120,34 @@ public class DescribeBooks extends AbstractPaginatedAction {
 		}
 
 		if (params.isParameterSet(PARAM_NAME_USER_NAME)) {
-			userName = (String) params.getParameter(PARAM_NAME_USER_NAME, String.class);
+			userName = (String) params.getParameter(PARAM_NAME_USER_NAME);
 		}
 
-		List<Book> bookList = getBooks(paList, participantId, userName);
+		List<BookList> listOfBookList = getBookLists(paList, participantId, userName);
+		
+		
+		int totalRecords = listOfBookList.size();
 
-		int totalRecords = bookList.size();
+		listOfBookList = applyFilters(params, filters, listOfBookList);
 
-		bookList = applyFilters(params, filters, bookList);
-
-		PaginatedActionResult res = new PaginatedActionResult(bookList);
+		PaginatedActionResult res = new PaginatedActionResult(listOfBookList);
 		res.getPaginatedMetaData().setTotalRecords(totalRecords);
 
 		return res;
 	}
 
-	private List<Book> applyFilters(ActionParameters p, ActionFilters f, List<Book> books) {
+	private List<BookList> applyFilters(ActionParameters p, ActionFilters f, List<BookList> booklists) {
 
-		if (f.isFilterSet(FILTER_NAME_SUBSTR_BOOK_NAME)) {
-			books = SubstringReflectionFilter.filter(books, "name",
-					f.getSingleFilter(FILTER_NAME_SUBSTR_BOOK_NAME));
+		if (f.isFilterSet(FILTER_NAME_SUBSTR_BOOK_LIST_NAME)) {
+			booklists = SubstringReflectionFilter.filter(booklists, "name",
+					f.getSingleFilter(FILTER_NAME_SUBSTR_BOOK_LIST_NAME));
 		}
 
-		int pageNumber = p.getParameter(CommonParamKeys.PageNumber.toString(),
-				Integer.class);
-		int pageSize = p.getParameter(CommonParamKeys.PageSize.toString(), Integer.class);
+		int pageNumber = p.getParameterAsInt(CommonParamKeys.PageNumber.toString());
+		int pageSize = p.getParameterAsInt(CommonParamKeys.PageSize.toString());
 
-		books = PaginationFilter.filter(books, pageNumber, pageSize);
-		return books;
+		booklists = PaginationFilter.filter(booklists, pageNumber, pageSize);
+		return booklists;
 	}
+
 }

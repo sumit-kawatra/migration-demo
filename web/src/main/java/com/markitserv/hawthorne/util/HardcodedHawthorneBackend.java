@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.HawthorneBackend;
 import com.markitserv.hawthorne.types.Book;
+import com.markitserv.hawthorne.types.BookList;
 import com.markitserv.hawthorne.types.InterestGroup;
 import com.markitserv.hawthorne.types.LegalEntity;
 import com.markitserv.hawthorne.types.Participant;
@@ -38,6 +39,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 	private RandomNameGenerator nameGen;
 	private List<LegalEntity> legalEntities;
 	private List<Book> books;
+	private List<BookList> bookLists;
 	private List<Participant> participants;
 	private DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
 	private List<InterestGroup> interestGroupList;
@@ -80,6 +82,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 			p.setId(i);
 			p.setName("Participant " + i);
 			p.setBookList(populateBooks(start, end));
+			p.setListOfBookList(populateBookLists(start, end));
 			p.setUsers(getUserList(start, end, p.getId()));
 			p.setSubGroupList(populateSubGroups(start, end, p.getUsers()));
 			participants.add(p);
@@ -130,6 +133,18 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 		return books;
 	}
 
+	private List<BookList> populateBookLists(int start, int end) {
+		if (bookLists == null) {
+			bookLists = new ArrayList<BookList>();
+			for (int j = start; j < end; j++) {
+				BookList bookList = new BookList();
+				bookList.setId(j);
+				bookList.setName("BookList " + j);
+				bookLists.add(bookList);
+			}
+		}
+		return bookLists;
+	}
 	private void populateUsers(int count) {
 		users = new ArrayList<User>();
 		for (int i = 0; i < 100; i++) {
