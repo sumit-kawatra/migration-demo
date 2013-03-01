@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import com.markitserv.msws.exceptions.AssertionException;
 import com.markitserv.msws.validation.SortByValidation;
-import com.markitserv.msws.validation.ValidationResponse;
+import com.markitserv.msws.validation.ValidationAndConversionResponse;
 
 /**
  * @author kiran.gogula
@@ -22,7 +22,7 @@ import com.markitserv.msws.validation.ValidationResponse;
 public class SortByValidationTest {
 	
 	SortByValidation sortByValidation;
-	ValidationResponse validationResponse;
+	ValidationAndConversionResponse validationResponse;
 	List<String> itemList;
 	
 	@Before
@@ -44,7 +44,7 @@ public class SortByValidationTest {
 	
 	@Test
 	public void testIsValidWithStringInputWhichIsTobeSearched(){
-		validationResponse = sortByValidation.isValid("foo", null);
+		validationResponse = sortByValidation.validate("foo", null);
 		Assert.assertEquals(true, validationResponse.isValid());
 	}
 
@@ -52,25 +52,25 @@ public class SortByValidationTest {
 	
 	@Test(expected=AssertionException.class)
 	public void testIsValidWithException(){
-		validationResponse = sortByValidation.isValid(1, null);
+		validationResponse = sortByValidation.validate(1, null);
 	}
 	
 	@Test(expected=AssertionException.class)
 	public void testIsValidCheckConstructorArgumentWithException(){
 		sortByValidation = new SortByValidation(new String[]{"","",""});
-		validationResponse  = sortByValidation.isValid(1, null);
+		validationResponse  = sortByValidation.validate(1, null);
 	}
 	
 	@Test
 	public void testIsValidMethodWithStringInputWhichIsNotPresent(){
-		validationResponse = sortByValidation.isValid("koo", null);
+		validationResponse = sortByValidation.validate("koo", null);
 		Assert.assertEquals(false, validationResponse.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodWithConstructorArgAsList(){
 		sortByValidation = new SortByValidation(itemList);
-		validationResponse = sortByValidation.isValid("foo", null);
+		validationResponse = sortByValidation.validate("foo", null);
 		Assert.assertEquals(true, validationResponse.isValid());
 	}
 }

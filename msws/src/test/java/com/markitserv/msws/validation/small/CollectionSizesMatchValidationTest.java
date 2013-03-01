@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.markitserv.msws.validation.CollectionSizesMatchValidation;
-import com.markitserv.msws.validation.ValidationResponse;
+import com.markitserv.msws.validation.ValidationAndConversionResponse;
 
 /**
  * @author kiran.gogula
@@ -24,7 +24,7 @@ public class CollectionSizesMatchValidationTest {
 
 	
 	private CollectionSizesMatchValidation sizesMatchValidation;
-	private ValidationResponse response;
+	private ValidationAndConversionResponse response;
 	private Map<String, Object> map;
 	private List<String> list;
 	
@@ -47,14 +47,14 @@ public class CollectionSizesMatchValidationTest {
 	
 	@Test
 	public void testIsValidMethodWithProperInputValueList(){
-		response = sizesMatchValidation.isValid(list, map);
+		response = sizesMatchValidation.validate(list, map);
 		Assert.assertEquals(true, response.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodWithEmptyMapExpectedException(){
 		map = new HashMap<String, Object>();
-		response = sizesMatchValidation.isValid(list, map);
+		response = sizesMatchValidation.validate(list, map);
 		Assert.assertEquals(false, response.isValid());
 	}
 	
@@ -65,7 +65,7 @@ public class CollectionSizesMatchValidationTest {
 		lst.add("foo");
 		lst.add("doo");
 		map.put("list", lst);
-		response = sizesMatchValidation.isValid(list, map);
+		response = sizesMatchValidation.validate(list, map);
 		Assert.assertEquals(false, response.isValid());
 	}
 	

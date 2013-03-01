@@ -14,7 +14,7 @@ import org.junit.Test;
 import com.markitserv.msws.validation.AbstractValidation;
 import com.markitserv.msws.validation.ForEachValidator;
 import com.markitserv.msws.validation.RequiredValidation;
-import com.markitserv.msws.validation.ValidationResponse;
+import com.markitserv.msws.validation.ValidationAndConversionResponse;
 
 /**
  * @author kiran.gogula
@@ -24,7 +24,7 @@ public class ForEachValidatorTest {
 	
 	private ForEachValidator forEachValidator;
 	private AbstractValidation forEachElement ;
-	private ValidationResponse validationResponse;
+	private ValidationAndConversionResponse validationResponse;
 	private List<String> listItems;
 	
 	@Before
@@ -44,13 +44,13 @@ public class ForEachValidatorTest {
 	
 	@Test
 	public void testIsValidMethodwithInputList(){
-		validationResponse = forEachValidator.isValid(listItems, null);
+		validationResponse = forEachValidator.validate(listItems, null);
 		Assert.assertEquals(true, validationResponse.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodwithInputStringExpectedInvalid(){
-		validationResponse = forEachValidator.isValid("a", null);
+		validationResponse = forEachValidator.validate("a", null);
 		Assert.assertEquals(false, validationResponse.isValid());
 	}
 	
@@ -58,7 +58,7 @@ public class ForEachValidatorTest {
 	public void testIsValidMethodwithEmptyListExpctedInvalid(){
 		List<String> Items = new ArrayList<String>();
 		Items.add(" ");
-		validationResponse = forEachValidator.isValid(Items, null);
+		validationResponse = forEachValidator.validate(Items, null);
 		Assert.assertEquals(false, validationResponse.isValid());
 	}
 

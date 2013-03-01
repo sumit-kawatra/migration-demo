@@ -20,7 +20,7 @@ public class MutuallyExclusiveWithValidation extends RequiredValidation {
 	}
 
 	@Override
-	public ValidationResponse isValid(Object target,
+	public ValidationAndConversionResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 		int counter = 0;
 
@@ -30,12 +30,12 @@ public class MutuallyExclusiveWithValidation extends RequiredValidation {
 			}
 		}
 		if (isProvided(target) && counter == otherValues.length) {
-			return ValidationResponse
+			return ValidationAndConversionResponse
 					.createInvalidResponse(String
 							.format("If this field is provided, the following fields are not applicable: "
 									+ getStringFromArray(otherValues)));
 		}else {
-			return ValidationResponse.createValidResponse();
+			return ValidationAndConversionResponse.createValidResponse();
 		}
 	}
 

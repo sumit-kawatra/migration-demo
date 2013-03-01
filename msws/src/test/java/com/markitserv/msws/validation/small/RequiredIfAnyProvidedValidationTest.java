@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.markitserv.msws.validation.RequiredIfAnyProvidedValidation;
-import com.markitserv.msws.validation.ValidationResponse;
+import com.markitserv.msws.validation.ValidationAndConversionResponse;
 
 /**
  * @author kiran.gogula
@@ -21,7 +21,7 @@ import com.markitserv.msws.validation.ValidationResponse;
  */
 public class RequiredIfAnyProvidedValidationTest {
 	
-	private ValidationResponse validationResponse;
+	private ValidationAndConversionResponse validationResponse;
 	private RequiredIfAnyProvidedValidation anyProvidedValidation;
 	private Map<String, Object> map;
 	
@@ -42,13 +42,13 @@ public class RequiredIfAnyProvidedValidationTest {
 	
 	@Test
 	public void testIsValidMethodwithInputParmsMapAndTarget(){
-		validationResponse = anyProvidedValidation.isValid("string", map);
+		validationResponse = anyProvidedValidation.validate("string", map);
 		Assert.assertEquals(null, validationResponse);
 	}
 	
 	@Test
 	public void testIsValidMethodwithInputParmsMapAndTargetShouldBeNull(){
-		validationResponse = anyProvidedValidation.isValid(null, map);
+		validationResponse = anyProvidedValidation.validate(null, map);
 		Assert.assertEquals(false, validationResponse.isValid());
 		
 	}

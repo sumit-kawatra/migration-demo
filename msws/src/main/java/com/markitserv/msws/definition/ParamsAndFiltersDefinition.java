@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.Stack;
 
 import com.markitserv.msws.action.CommonParamKeys;
+import com.markitserv.msws.internal.MswsAssert;
+import com.markitserv.msws.validation.AbstractConversionValidation;
 import com.markitserv.msws.validation.AbstractValidation;
 
 public class ParamsAndFiltersDefinition {
@@ -16,21 +18,36 @@ public class ParamsAndFiltersDefinition {
 	private Map<String, Object> defaults = new HashMap<String, Object>();
 
 	public void addValidation(String key, AbstractValidation value) {
+		
+		MswsAssert.mswsAssert(!(value instanceof AbstractConversionValidation),
+				"Should use 'addValidationAndConvertion' instead of 'AddValidation'");
+		
 		if (!validations.containsKey(key)) {
 			List<AbstractValidation> v = new Stack<AbstractValidation>();
 			validations.put(key, v);
 		}
 
-		Stack<AbstractValidation> v = (Stack<AbstractValidation>) validations
-				.get(key);
+		Stack<AbstractValidation> v = (Stack<AbstractValidation>) validations.get(key);
 		v.push(value);
 		validations.put(key, v);
 	}
-	
-	public void addValidation(CommonParamKeys key, AbstractValidation value) {
+
+	public void addValidationAndConversion(CommonParamKeys key,
+			AbstractConversionValidation value) {
 		this.addValidation(key.toString(), value);
 	}
 	
+	public void addValidationAndConversion(String key,
+			AbstractConversionValidation value) {
+		
+		this.addValidation(key, value);
+	}
+
+	public void addValidation(CommonParamKeys key, AbstractValidation value) {
+		
+		this.addValidation(key.toString(), value);
+	}
+
 	public Map<String, List<AbstractValidation>> getValidations() {
 		return validations;
 	}
@@ -42,7 +59,7 @@ public class ParamsAndFiltersDefinition {
 	public void addDefaultParam(String key, Object value) {
 		defaults.put(key, value);
 	}
-	
+
 	public void addDefaultParam(CommonParamKeys key, Object value) {
 		this.addDefaultParam(key.toString(), value);
 	}
@@ -74,8 +91,7 @@ public class ParamsAndFiltersDefinition {
 		Set<String> otherDefaultKeys = otherDefaults.keySet();
 		for (String otherDefaultKey : otherDefaultKeys) {
 			if (!this.isDefaultParamSet(otherDefaultKey)) {
-				this.addDefaultParam(otherDefaultKey,
-						otherDefaults.get(otherDefaultKey));
+				this.addDefaultParam(otherDefaultKey, otherDefaults.get(otherDefaultKey));
 			}
 		}
 	}

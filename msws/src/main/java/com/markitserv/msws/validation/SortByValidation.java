@@ -6,15 +6,15 @@ import java.util.Map;
 public class SortByValidation extends OneOfValidation {
 
 	@Override
-	public ValidationResponse isValid(Object target,
+	public ValidationAndConversionResponse validate(Object target,
 			Map<String, ? extends Object> map) {
-		ValidationResponse resp = super.isValid(target, map);
+		ValidationAndConversionResponse resp = super.validate(target, map);
 		if (!resp.isValid()) {
-			return ValidationResponse
+			return ValidationAndConversionResponse
 					.createInvalidResponse("Could not sort by value '"
 							+ target.toString() + "'.  " + resp.getMessage());
 		} else {
-			return ValidationResponse.createValidResponse();
+			return ValidationAndConversionResponse.createValidResponse();
 		}
 	}
 

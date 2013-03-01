@@ -18,7 +18,7 @@ import com.markitserv.msws.exceptions.ValidationException;
 @Service
 public class ValidationExceptionBuilder {
 
-	public enum InvalidType {
+	public enum FilterOrParam {
 		filter, param
 	}
 
@@ -35,8 +35,8 @@ public class ValidationExceptionBuilder {
 	public ValidationExceptionBuilder() {
 	}
 
-	public ValidationExceptionBuilder addInvalidValidation(InvalidType type,
-			ValidationResponse resp, String name) {
+	public ValidationExceptionBuilder addInvalidValidation(FilterOrParam type,
+			ValidationAndConversionResponse resp, String name) {
 	
 		// report only a single validation for each
 		if (alreadyProcessed.contains(name)) {

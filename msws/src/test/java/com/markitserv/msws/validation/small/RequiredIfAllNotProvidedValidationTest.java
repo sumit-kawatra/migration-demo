@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.markitserv.msws.validation.RequiredIfAllNotProvidedValidation;
-import com.markitserv.msws.validation.ValidationResponse;
+import com.markitserv.msws.validation.ValidationAndConversionResponse;
 
 /**
  * @author kiran.gogula
@@ -21,7 +21,7 @@ import com.markitserv.msws.validation.ValidationResponse;
 public class RequiredIfAllNotProvidedValidationTest {
 	
 	private RequiredIfAllNotProvidedValidation validation;
-	private ValidationResponse response;
+	private ValidationAndConversionResponse response;
 	private Map<String, Object> map;
 	
 	@Before
@@ -41,14 +41,14 @@ public class RequiredIfAllNotProvidedValidationTest {
 	
 	@Test
 	public void testIsValidMethodWithOtherParamValue(){
-		response = validation.isValid("Kiran", map);
+		response = validation.validate("Kiran", map);
 		Assert.assertTrue(response.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodWithTargetAndOtherParamValue(){
 		map = new HashMap<String, Object>();
-		response = validation.isValid(null, map);
+		response = validation.validate(null, map);
 		Assert.assertFalse(response.isValid());
 	}
 

@@ -13,10 +13,10 @@ public class ForEachValidator extends AbstractOptionalValidation {
 	}
 
 	@Override
-	public ValidationResponse isValid(Object target,
+	public ValidationAndConversionResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 
-		ValidationResponse isCollection = new CollectionValidation().isValid(
+		ValidationAndConversionResponse isCollection = new CollectionValidation().validate(
 				target, map);
 		if (!isCollection.isValid()) {
 			return isCollection;
@@ -25,15 +25,15 @@ public class ForEachValidator extends AbstractOptionalValidation {
 		Collection<?> col = (Collection<?>) target;
 
 		for (Object object : col) {
-			ValidationResponse resp = forEachElement.isValid(object, map);
+			ValidationAndConversionResponse resp = forEachElement.validate(object, map);
 			if (!resp.isValid()) {
-				return ValidationResponse.createInvalidResponse("Element '"
+				return ValidationAndConversionResponse.createInvalidResponse("Element '"
 						+ object.toString()
 						+ "' of this collection failed validation: "
 						+ resp.getMessage());
 			}
 		}
 
-		return ValidationResponse.createValidResponse();
+		return ValidationAndConversionResponse.createValidResponse();
 	}
 }

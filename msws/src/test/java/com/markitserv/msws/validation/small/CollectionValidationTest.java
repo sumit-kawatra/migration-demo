@@ -21,12 +21,12 @@ public class CollectionValidationTest extends AbstractMswsTest {
 		CollectionValidation v = new CollectionValidation();
 		ArrayList<String> col = new ArrayList<String>();
 		
-		assertTrue(v.isValidInternal(col, null).isValid());
+		assertTrue(v.validateInternal(col, null).isValid());
 	}
 	
 	@Test
 	public void failsIfParamNotCollection() {
 		CollectionValidation v = new CollectionValidation();
-		assertFalse(v.isValidInternal("NotACollection", null).isValid());
+		assertFalse(v.validateInternal("NotACollection", null).isValid());
 	}
 }

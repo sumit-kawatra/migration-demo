@@ -23,7 +23,7 @@ import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.filters.PaginationFilter;
 import com.markitserv.msws.filters.SubstringReflectionFilter;
 import com.markitserv.msws.validation.IntegerMaxMinValidation;
-import com.markitserv.msws.validation.IntegerValidation;
+import com.markitserv.msws.validation.IntegerValidationAndConversion;
 import com.markitserv.msws.validation.MutuallyExclusiveWithValidation;
 import com.markitserv.msws.validation.RequiredIfAllNotProvidedValidation;
 
@@ -66,8 +66,8 @@ public class DescribeBooks extends AbstractPaginatedAction {
 				new String[] {
 					PARAM_NAME_USER_NAME
 				}));
-		def.addValidation(PARAM_PARTICIPANT_ID, new IntegerValidation());
-		def.addValidation(PARAM_PARTICIPANT_ID, new IntegerMaxMinValidation(1,
+		def.addValidationAndConversion(PARAM_PARTICIPANT_ID, new IntegerValidationAndConversion());
+		def.addValidationAndConversion(PARAM_PARTICIPANT_ID, new IntegerMaxMinValidation(1,
 				IntegerMaxMinValidation.UNLIMITED));
 
 		return def;

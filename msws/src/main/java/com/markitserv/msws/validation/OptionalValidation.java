@@ -5,9 +5,9 @@ import java.util.Map;
 public class OptionalValidation extends AbstractOptionalValidation {
 
 	@Override
-	public ValidationResponse isValid(Object target,
+	public ValidationAndConversionResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 		// always valid.
-		return ValidationResponse.createValidResponse();
+		return ValidationAndConversionResponse.createValidResponse();
 	}
 }

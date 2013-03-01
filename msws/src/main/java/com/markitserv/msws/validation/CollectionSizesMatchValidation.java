@@ -10,7 +10,7 @@ import java.util.Map;
  * @author roy.truelove
  * 
  */
-public class CollectionSizesMatchValidation extends AbstractValidation {
+public class CollectionSizesMatchValidation extends AbstractOptionalValidation {
 
 	private String otherValueName;
 
@@ -20,19 +20,19 @@ public class CollectionSizesMatchValidation extends AbstractValidation {
 	}
 
 	@Override
-	public ValidationResponse isValid(Object target,
+	public ValidationAndConversionResponse validate(Object target,
 			Map<String, ? extends Object> otherValues) {
 
 		Object otherTarget = otherValues.get(otherValueName);
 
-		ValidationResponse isTargetACollection = new CollectionValidation()
-				.isValid(target, otherValues);
-		ValidationResponse isOtherTargetACollection = new CollectionValidation()
-				.isValid(otherTarget, otherValues);
+		ValidationAndConversionResponse isTargetACollection = new CollectionValidation()
+				.validate(target, otherValues);
+		ValidationAndConversionResponse isOtherTargetACollection = new CollectionValidation()
+				.validate(otherTarget, otherValues);
 
 		if (!isTargetACollection.isValid()
 				|| !isOtherTargetACollection.isValid()) {
-			return ValidationResponse
+			return ValidationAndConversionResponse
 					.createInvalidResponse(String
 							.format("Expecting both this parameter and '%s' to be Collections", otherValueName));
 		}
@@ -41,7 +41,7 @@ public class CollectionSizesMatchValidation extends AbstractValidation {
 		Collection<?> otherCol = (Collection<?>) otherTarget;
 
 		if (targetCol.size() != otherCol.size()) {
-			return ValidationResponse
+			return ValidationAndConversionResponse
 					.createInvalidResponse(String
 							.format("Expected this collection to have the same number "
 									+ "of elements as the '%s' collection.  "
@@ -50,6 +50,6 @@ public class CollectionSizesMatchValidation extends AbstractValidation {
 									otherCol.size(), targetCol.size()));
 		}
 
-		return ValidationResponse.createValidResponse();
+		return ValidationAndConversionResponse.createValidResponse();
 	}
 }

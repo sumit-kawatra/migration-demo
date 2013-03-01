@@ -14,15 +14,17 @@ public class PaginationPageSizeValidation extends IntegerMaxMinValidation {
 	}
 
 	@Override
-	public ValidationResponse isValid(Object target,
+	public ValidationAndConversionResponse validateAndConvert(Object target,
 			Map<String, ? extends Object> map) {
 
-		if (!super.isValid(target, map).isValid()) {
-			return ValidationResponse.createInvalidResponse(String.format(
+		ValidationAndConversionResponse resp = super.validateAndConvert(target, map);
+		
+		if (!resp.isValid()) {
+			return ValidationAndConversionResponse.createInvalidResponse(String.format(
 					"Page size cannot exceed '%d' for this action.",
 					this.maxPageSize));
 		}
 
-		return ValidationResponse.createValidResponse();
+		return resp;
 	}
 }

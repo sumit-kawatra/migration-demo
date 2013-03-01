@@ -14,13 +14,13 @@ public class RequiredValidationTest extends AbstractMswsTest {
 	@Test
 	public void succeedsIfRequiredParamProvided() {
 		RequiredValidation v = new RequiredValidation();
-		assertTrue(v.isValidInternal("notNull", null).isValid());
+		assertTrue(v.validateInternal("notNull", null).isValid());
 	}
 
 	@Test
 	public void failsIfRequiredParamNotProvided() {
 		
 		RequiredValidation v = new RequiredValidation();
-		assertFalse(v.isValidInternal(null, null).isValid());
+		assertFalse(v.validateInternal(null, null).isValid());
 	}
 }

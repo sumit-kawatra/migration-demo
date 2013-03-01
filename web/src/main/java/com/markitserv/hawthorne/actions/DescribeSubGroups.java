@@ -26,7 +26,7 @@ import com.markitserv.msws.filters.PaginationFilter;
 import com.markitserv.msws.filters.SubstringReflectionFilter;
 import com.markitserv.msws.validation.CollectionSizeValidation;
 import com.markitserv.msws.validation.IntegerMaxMinValidation;
-import com.markitserv.msws.validation.IntegerValidation;
+import com.markitserv.msws.validation.IntegerValidationAndConversion;
 import com.markitserv.msws.validation.MutuallyExclusiveWithValidation;
 import com.markitserv.msws.validation.RequiredIfAllNotProvidedValidation;
 
@@ -38,14 +38,11 @@ import com.markitserv.msws.validation.RequiredIfAllNotProvidedValidation;
 public class DescribeSubGroups extends AbstractPaginatedAction {
 
 	Logger log = LoggerFactory.getLogger(DescribeSubGroups.class);
-	
+
 	private static final String FILTER_NAME_SUBSTR_SUB_GROUP_NAME = "substrSubGroup";
 	private static final String PARAM_NAME_USER_NAME = "UserName";
 	private static final String PARAM_PARTICIPANT_ID = "ParticipantId";
-	
-	
-	
-	
+
 	@Autowired
 	private HawthorneBackend data;
 
@@ -54,8 +51,8 @@ public class DescribeSubGroups extends AbstractPaginatedAction {
 
 		// Add validation
 		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
-		
-	   // UserName
+
+		// UserName
 		def.addValidation(PARAM_NAME_USER_NAME, new MutuallyExclusiveWithValidation(
 				new String[] {
 					PARAM_PARTICIPANT_ID
@@ -74,11 +71,10 @@ public class DescribeSubGroups extends AbstractPaginatedAction {
 				new String[] {
 					PARAM_NAME_USER_NAME
 				}));
-		def.addValidation(PARAM_PARTICIPANT_ID, new IntegerValidation());
-		def.addValidation(PARAM_PARTICIPANT_ID, new IntegerMaxMinValidation(1,
+		def.addValidation(PARAM_PARTICIPANT_ID, new IntegerValidationAndConversion());
+		def.addValidationAndConversion(PARAM_PARTICIPANT_ID, new IntegerMaxMinValidation(1,
 				IntegerMaxMinValidation.UNLIMITED));
 
-		
 		// Sorting
 		SortingPresetDefinitionBuilder sortBuilder = new SortingPresetDefinitionBuilder();
 		sortBuilder = sortBuilder.setDefaultSort("name", SortOrder.Asc);
@@ -86,27 +82,22 @@ public class DescribeSubGroups extends AbstractPaginatedAction {
 		return def;
 	}
 
-	
-	
 	@Override
 	protected ParamsAndFiltersDefinition createFilterDefinition() {
 		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
 
-		def.addValidation(FILTER_NAME_SUBSTR_SUB_GROUP_NAME,
-				new CollectionSizeValidation(
-						CollectionSizeValidation.UNLIMITED, 1));
+		def.addValidation(FILTER_NAME_SUBSTR_SUB_GROUP_NAME, new CollectionSizeValidation(
+				CollectionSizeValidation.UNLIMITED, 1));
 
 		return def;
 	}
 
-	
-	
 	@Override
 	protected ActionResult performAction(ActionParameters params, ActionFilters filters) {
-		
+
 		int participantId = 0;
 		String userName = null;
-		
+
 		if (params.isParameterSet(PARAM_PARTICIPANT_ID)) {
 			participantId = Integer.parseInt((String) params
 					.getParameter(PARAM_PARTICIPANT_ID));
@@ -115,35 +106,34 @@ public class DescribeSubGroups extends AbstractPaginatedAction {
 		if (params.isParameterSet(PARAM_NAME_USER_NAME)) {
 			userName = (String) params.getParameter(PARAM_NAME_USER_NAME);
 		}
-		
-		//Get the SubGroup(s) for the corresponding participantId or the UserName
+
+		// Get the SubGroup(s) for the corresponding participantId or the UserName
 		List<SubGroup> subGroupList = data.getSubGroups(participantId, userName);
-		
-		//Total record Count
+
+		// Total record Count
 		int totalRecords = subGroupList.size();
-		
+
 		// Apply the filter on specific SubGroup Name or ShortName
 		subGroupList = applyFilters(params, filters, subGroupList);
-		
+
 		PaginatedActionResult res = new PaginatedActionResult(subGroupList);
 		res.getPaginatedMetaData().setTotalRecords(totalRecords);
 
 		return res;
 	}
-	
-	
-	private List<SubGroup> applyFilters(ActionParameters p, ActionFilters f, List<SubGroup> subGroupList) {
-		
+
+	private List<SubGroup> applyFilters(ActionParameters p, ActionFilters f,
+			List<SubGroup> subGroupList) {
+
 		List<SubGroup> subGrpList = new ArrayList<SubGroup>();
 
 		if (f.isFilterSet(FILTER_NAME_SUBSTR_SUB_GROUP_NAME)) {
 			subGrpList.addAll(SubstringReflectionFilter.filter(subGroupList, "name",
 					f.getSingleFilter(FILTER_NAME_SUBSTR_SUB_GROUP_NAME)));
-			
+
 			subGrpList.addAll(SubstringReflectionFilter.filter(subGroupList, "shortName",
 					f.getSingleFilter(FILTER_NAME_SUBSTR_SUB_GROUP_NAME)));
 		}
-		
 
 		int pageNumber = p.getParameterAsInt(CommonParamKeys.PageNumber.toString());
 		int pageSize = p.getParameterAsInt(CommonParamKeys.PageSize.toString());

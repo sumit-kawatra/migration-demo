@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.markitserv.msws.exceptions.ProgrammaticException;
 
-public class IntegerMaxMinValidation extends AbstractOptionalValidation {
+public class IntegerMaxMinValidation extends AbstractConversionValidation {
 
 	public static final int UNLIMITED = -1;
 
@@ -19,32 +19,27 @@ public class IntegerMaxMinValidation extends AbstractOptionalValidation {
 	}
 
 	@Override
-	public ValidationResponse isValid(Object target,
+	public ValidationAndConversionResponse validateAndConvert(Object target,
 			Map<String, ? extends Object> map) {
-
-		ValidationResponse isInteger = new IntegerValidation().isValid(target,
-				map);
+		
+		ValidationAndConversionResponse isInteger = new IntegerValidationAndConversion()
+				.internalValidateAndConvert(target, map);
 		if (!isInteger.isValid()) {
 			return isInteger;
 		}
 
-		Integer i = (target instanceof Integer) ? (Integer) target : Integer
-				.parseInt((String) target);
+		Integer i = (Integer) isInteger.getConvertedObj();
 
 		if (i.compareTo(min) < 0 && min != UNLIMITED) {
-			return ValidationResponse
-					.createInvalidResponse(String
-							.format("Expected a value greater than or equal to'%d' but got '%d'.",
-									min, i));
+			return ValidationAndConversionResponse.createInvalidResponse(String.format(
+					"Expected a value greater than or equal to'%d' but got '%d'.", min, i));
 		}
 
 		if (i.compareTo(max) > 0 && max != UNLIMITED) {
-			return ValidationResponse
-					.createInvalidResponse(String
-							.format("Expected a value less than or equal to '%d' but got '%d'.",
-									max, i));
+			return ValidationAndConversionResponse.createInvalidResponse(String.format(
+					"Expected a value less than or equal to '%d' but got '%d'.", max, i));
 		}
 
-		return ValidationResponse.createValidResponse();
+		return ValidationAndConversionResponse.createValidConvertedResponse(i);
 	}
 }

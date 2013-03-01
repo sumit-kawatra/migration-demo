@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.markitserv.msws.validation.CollectionSizeValidation;
-import com.markitserv.msws.validation.ValidationResponse;
+import com.markitserv.msws.validation.ValidationAndConversionResponse;
 
 /**
  * @author kiran.gogula
@@ -21,7 +21,7 @@ import com.markitserv.msws.validation.ValidationResponse;
 public class CollectionSizeValidationTest {
 
 	private CollectionSizeValidation collectionSizeValidation;
-	private ValidationResponse response;
+	private ValidationAndConversionResponse response;
 	
 	@Before
 	public void setUp(){
@@ -39,13 +39,13 @@ public class CollectionSizeValidationTest {
 		List<String> list = new ArrayList<String>();
 		list.add("foo");
 		list.add("too");
-		response = collectionSizeValidation.isValid(list, null);
+		response = collectionSizeValidation.validate(list, null);
 		Assert.assertEquals(true, response.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodTargerIsStringExpectedInvalid(){
-		response = collectionSizeValidation.isValid("a", null);
+		response = collectionSizeValidation.validate("a", null);
 		Assert.assertEquals(false, response.isValid());
 	}
 	
@@ -55,14 +55,14 @@ public class CollectionSizeValidationTest {
 		list.add("foo");
 		list.add("too");
 		list.add("too");
-		response = collectionSizeValidation.isValid(list, null);
+		response = collectionSizeValidation.validate(list, null);
 		Assert.assertEquals(false, response.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodWithLessThandtMinValues(){
 		List<String> list = new ArrayList<String>();		
-		response = collectionSizeValidation.isValid(list, null);
+		response = collectionSizeValidation.validate(list, null);
 		Assert.assertEquals(false, response.isValid());
 	}
 }

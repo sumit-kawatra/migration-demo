@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.markitserv.msws.validation.OptionalValidation;
-import com.markitserv.msws.validation.ValidationResponse;
+import com.markitserv.msws.validation.ValidationAndConversionResponse;
 
 /**
  * @author kiran.gogula
@@ -18,7 +18,7 @@ import com.markitserv.msws.validation.ValidationResponse;
 public class OptionalValidationTest {
 	
 	private OptionalValidation optionalValidation;
-	private ValidationResponse response;
+	private ValidationAndConversionResponse response;
 	
 	@Before
 	public void setUp(){
@@ -34,7 +34,7 @@ public class OptionalValidationTest {
 	
 	@Test
 	public void testIsValidateMethod(){
-		response = optionalValidation.isValid("", null);
+		response = optionalValidation.validate("", null);
 		Assert.assertEquals(true, response.isValid());
 	}
 

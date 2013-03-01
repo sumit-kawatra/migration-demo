@@ -10,6 +10,7 @@ import java.util.Set;
 
 import com.markitserv.msws.exceptions.ProgrammaticException;
 import com.markitserv.msws.internal.Constants;
+import com.markitserv.msws.internal.MswsAssert;
 
 public class ActionParameters {
 
@@ -22,66 +23,26 @@ public class ActionParameters {
 	public Object getParameter(String key) {
 		return params.get(key);
 	}
-
-	public int getParameterAsInt(String key) {
-
-		Object param = this.getParameter(key);
-		
-		if (param instanceof Integer) {
-			return ((Integer)param).intValue();
-		}
-
-		mswsAssert(
-				param instanceof String,
-				"Cannot convert type '%s' to an integer.  Did you add integer validation?",
-				param.getClass().getSimpleName());
-
-		String paramStr = (String) param;
-		int intVal = Constants.INTEGER_NOT_SET;
-
-		try {
-			intVal = Integer.parseInt(paramStr);
-		} catch (Exception e) {
-			throw new ProgrammaticException(
-					"Could not get parameter as an integer.  Did you add integer validation?",
-					e);
-		}
-
-		return intVal;
-
+	
+	@SuppressWarnings("unchecked")
+	public <T> T getParameter(String k, Class<T> type) {
+		return (T)this.getParameter(k);
 	}
 
+	@Deprecated
+	public int getParameterAsInt(String key) {
+		return this.getParameter(key, Integer.class);
+	}
+
+	@Deprecated
 	public boolean getParameterAsBoolean(String key) {
-
-		Object param = this.getParameter(key);
-		
-		if (param instanceof Boolean) {
-			return ((Boolean)param).booleanValue();
-		}
-
-		mswsAssert(
-				param instanceof String,
-				"Cannot convert type '%s' to a boolean.  Did you add boolean validation?",
-				param.getClass().getSimpleName());
-
-		String paramStr = (String) param;
-		boolean boolVal = false;
-
-		try {
-			boolVal = Boolean.parseBoolean(paramStr);
-		} catch (Exception e) {
-			throw new ProgrammaticException(
-					"Could not get parameter as a boolean.  Did you add boolean validation?",
-					e);
-		}
-		
-		return boolVal;
+		return this.getParameter(key, Boolean.class);
 	}
 
 	public void addParameter(String key, Object value) {
 		params.put(key, value);
 	}
-
+	
 	public Map<String, Object> getAllParameters() {
 		return params;
 	}

@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.markitserv.msws.validation.MutuallyExclusiveWithValidation;
-import com.markitserv.msws.validation.ValidationResponse;
+import com.markitserv.msws.validation.ValidationAndConversionResponse;
 
 /**
  * @author kiran.gogula
@@ -21,7 +21,7 @@ import com.markitserv.msws.validation.ValidationResponse;
 public class MutuallyExclusiveWithValidationTest {
 	
 	private MutuallyExclusiveWithValidation validation;
-	private ValidationResponse response;
+	private ValidationAndConversionResponse response;
 	private Map<String, Object> map;
 	
 	@Before
@@ -40,14 +40,14 @@ public class MutuallyExclusiveWithValidationTest {
 	
 	@Test
 	public void testIsValidMethodWithTargetProvidedThenOtherValuesAreNotNeeded(){
-		response = validation.isValid("UserName", map);
+		response = validation.validate("UserName", map);
 		Assert.assertFalse(response.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodWithOneInputParam(){
 		map = new HashMap<String, Object>();
-		response = validation.isValid("UserName", map);
+		response = validation.validate("UserName", map);
 		Assert.assertTrue(response.isValid());
 	}
 	
@@ -55,7 +55,7 @@ public class MutuallyExclusiveWithValidationTest {
 	public void testIsValidMethodWithTargetProvidedThenMultipleOtherValuesAreNotNeeded(){
 		validation = new MutuallyExclusiveWithValidation(new String[]{"ParticipantId", "BookName"});
 		map.put("BookName", new String("Book"));
-		response = validation.isValid("UserName", map);
+		response = validation.validate("UserName", map);
 		Assert.assertFalse(response.isValid());
 	}
 

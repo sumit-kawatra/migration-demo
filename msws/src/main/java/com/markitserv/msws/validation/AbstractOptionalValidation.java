@@ -12,15 +12,15 @@ import java.util.Map;
 public abstract class AbstractOptionalValidation extends AbstractValidation {
 
 	@Override
-	public ValidationResponse isValidInternal(Object target,
+	public ValidationAndConversionResponse validateInternal(Object target,
 			Map<String, ? extends Object> map) {
 
-		ValidationResponse resp;
+		ValidationAndConversionResponse resp;
 
 		if (!isProvided(target)) {
-			resp = ValidationResponse.createValidResponse();
+			resp = ValidationAndConversionResponse.createValidResponse();
 		} else {
-			resp = super.isValidInternal(target, map);
+			resp = super.validateInternal(target, map);
 		}
 
 		return resp;

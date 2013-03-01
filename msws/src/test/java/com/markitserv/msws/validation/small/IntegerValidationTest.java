@@ -8,8 +8,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.markitserv.msws.validation.IntegerValidation;
-import com.markitserv.msws.validation.ValidationResponse;
+import com.markitserv.msws.validation.IntegerValidationAndConversion;
+import com.markitserv.msws.validation.ValidationAndConversionResponse;
 
 /**
  * @author kiran.gogula
@@ -17,12 +17,12 @@ import com.markitserv.msws.validation.ValidationResponse;
  */
 public class IntegerValidationTest {
 	
-	private IntegerValidation integerValidation;
-	private ValidationResponse validationResponse;
+	private IntegerValidationAndConversion integerValidation;
+	private ValidationAndConversionResponse validationResponse;
 	
 	@Before
 	public void setUp(){
-		integerValidation = new IntegerValidation();
+		integerValidation = new IntegerValidationAndConversion();
 	}
 	
 	@After
@@ -33,28 +33,38 @@ public class IntegerValidationTest {
 	
 	@Test
 	public void testIsValidMethodWithIntergerValue(){
-		validationResponse = integerValidation.isValid(1, null);
+		validationResponse = integerValidation.internalValidateAndConvert(1, null);
 		Assert.assertEquals(true, validationResponse.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodWithIntergerValueInStringFormat(){
-		validationResponse = integerValidation.isValid("1", null);
+		validationResponse = integerValidation.internalValidateAndConvert("1", null);
 		Assert.assertEquals(true, validationResponse.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodWithIntergerValueInStringFormatButWhichIsNotInt(){
-		validationResponse = integerValidation.isValid("true", null);
+		validationResponse = integerValidation.internalValidateAndConvert("true", null);
 		Assert.assertEquals(false, validationResponse.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodWithBooleanValueExpectedExcetpion(){
-		validationResponse = integerValidation.isValid(true, null);
+		validationResponse = integerValidation.internalValidateAndConvert(true, null);
 		Assert.assertEquals(false, validationResponse.isValid());
 	}
 	
+	@Test
+	public void canConvertStringIntToInt(){
+		validationResponse = integerValidation.internalValidateAndConvert("1", null);
+		Assert.assertEquals(1, validationResponse.getConvertedObj());
+	}
 	
-
+	@Test
+	public void cantConvertNonIntStringIntToInt(){
+		validationResponse = integerValidation.internalValidateAndConvert("1x", null);
+		Assert.assertNull(validationResponse.getConvertedObj());
+		Assert.assertFalse(validationResponse.isValid());
+	}
 }

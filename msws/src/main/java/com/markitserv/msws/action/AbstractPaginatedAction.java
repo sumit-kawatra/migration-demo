@@ -37,12 +37,12 @@ public abstract class AbstractPaginatedAction extends AbstractAction {
 			ParamsAndFiltersDefinition def) {
 
 		def.addValidation(CommonParamKeys.PageNumber, new RequiredValidation());
-		def.addValidation(CommonParamKeys.PageNumber,
+		def.addValidationAndConversion(CommonParamKeys.PageNumber,
 				new IntegerMaxMinValidation(1,
 						IntegerMaxMinValidation.UNLIMITED));
 
 		def.addValidation(CommonParamKeys.PageSize, new RequiredValidation());
-		def.addValidation(CommonParamKeys.PageSize,
+		def.addValidationAndConversion(CommonParamKeys.PageSize,
 				new PaginationPageSizeValidation(this.getMaxPageSize()));
 
 		def.addDefaultParam(CommonParamKeys.PageNumber.toString(), "1");

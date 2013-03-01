@@ -15,12 +15,12 @@ public class OneOfValidationTest extends AbstractMswsTest {
 	public void isValidatedIfOneOfValuesIsProvided() {
 		
 		OneOfValidation v = new OneOfValidation(new String[] {"bar", "foo", "baz"});
-		assertTrue(v.isValidInternal("foo", null).isValid());
+		assertTrue(v.validateInternal("foo", null).isValid());
 	}
 
 	public void isNotValidatedIfValueIsNotInListOfOneOfValues() {
 		OneOfValidation v = new OneOfValidation(new String[] {"bar", "goo", "baz"});
-		assertFalse(v.isValidInternal("foo", null).isValid());
+		assertFalse(v.validateInternal("foo", null).isValid());
 		
 	}
 }

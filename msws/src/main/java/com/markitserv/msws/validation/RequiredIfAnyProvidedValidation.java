@@ -12,16 +12,16 @@ public class RequiredIfAnyProvidedValidation extends RequiredValidation {
 	}
 
 	@Override
-	public ValidationResponse isValid(Object target,
+	public ValidationAndConversionResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 
-		boolean isTargetSet = super.isValid(target, map).isValid();
+		boolean isTargetSet = super.validate(target, map).isValid();
 
 		for (String other : otherParams) {
 			Object otherVal = map.get(other);
-			ValidationResponse resp = super.isValid(otherVal, map);
+			ValidationAndConversionResponse resp = super.validate(otherVal, map);
 			if (resp.isValid() && !isTargetSet) {
-				return ValidationResponse
+				return ValidationAndConversionResponse
 						.createInvalidResponse("Required when '" + other
 								+ "'is provided.");
 			}

@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.markitserv.msws.validation.PaginationPageSizeValidation;
-import com.markitserv.msws.validation.ValidationResponse;
+import com.markitserv.msws.validation.ValidationAndConversionResponse;
 
 /**
  * @author kiran.gogula
@@ -18,7 +18,7 @@ import com.markitserv.msws.validation.ValidationResponse;
 public class PaginationPageSizeValidationTest {
 	
 	private PaginationPageSizeValidation sizeValidation;
-	private ValidationResponse validationResponse;
+	private ValidationAndConversionResponse validationResponse;
 	
 	@Before
 	public void setUp(){
@@ -33,31 +33,25 @@ public class PaginationPageSizeValidationTest {
 	
 	@Test
 	public void testIsValidMethodWithInputParamInteger(){
-		validationResponse = sizeValidation.isValid(5, null);
+		validationResponse = sizeValidation.internalValidateAndConvert(5, null);
 		Assert.assertEquals(true, validationResponse.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodWithInputParamString(){
-		validationResponse = sizeValidation.isValid("1", null);
+		validationResponse = sizeValidation.internalValidateAndConvert("1", null);
 		Assert.assertEquals(true, validationResponse.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodWithInputParamBoolanExpectedException(){
-		validationResponse = sizeValidation.isValid(true, null);
+		validationResponse = sizeValidation.internalValidateAndConvert(true, null);
 		Assert.assertEquals(false, validationResponse.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodWithInputParamStringWhichIsNotIntExpectedException(){
-		validationResponse = sizeValidation.isValid("true", null);
+		validationResponse = sizeValidation.internalValidateAndConvert("true", null);
 		Assert.assertEquals(false, validationResponse.isValid());
 	}
-	
-	
-	
-	
-	
-
 }

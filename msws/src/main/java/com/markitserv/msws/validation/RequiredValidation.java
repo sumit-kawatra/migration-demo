@@ -5,15 +5,15 @@ import java.util.Map;
 public class RequiredValidation extends AbstractValidation {
 
 	@Override
-	public ValidationResponse isValid(Object target,
+	public ValidationAndConversionResponse validate(Object target,
 			Map<String, ? extends Object> map) {
-		ValidationResponse resp;
+		ValidationAndConversionResponse resp;
 
 		if (!isProvided(target)) {
-			resp = ValidationResponse
+			resp = ValidationAndConversionResponse
 					.createInvalidResponse("Required but not provided.");
 		} else {
-			resp = ValidationResponse.createValidResponse();
+			resp = ValidationAndConversionResponse.createValidResponse();
 		}
 		return resp;
 	}
