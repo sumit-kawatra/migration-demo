@@ -22,7 +22,7 @@ import com.markitserv.msws.action.PaginatedActionResult;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.filters.PaginationFilter;
 import com.markitserv.msws.filters.SubstringReflectionFilter;
-import com.markitserv.msws.validation.IntegerMaxMinValidation;
+import com.markitserv.msws.validation.IntegerMaxMinValidationAndConversion;
 import com.markitserv.msws.validation.IntegerValidationAndConversion;
 import com.markitserv.msws.validation.MutuallyExclusiveWithValidation;
 import com.markitserv.msws.validation.RequiredIfAllNotProvidedValidation;
@@ -66,9 +66,12 @@ public class DescribeBooks extends AbstractPaginatedAction {
 				new String[] {
 					PARAM_NAME_USER_NAME
 				}));
-		def.addValidationAndConversion(PARAM_PARTICIPANT_ID, new IntegerValidationAndConversion());
-		def.addValidationAndConversion(PARAM_PARTICIPANT_ID, new IntegerMaxMinValidation(1,
-				IntegerMaxMinValidation.UNLIMITED));
+
+		def.addValidationAndConversion(PARAM_PARTICIPANT_ID,
+				new IntegerValidationAndConversion());
+		def.addValidationAndConversion(PARAM_PARTICIPANT_ID,
+				new IntegerMaxMinValidationAndConversion(1,
+						IntegerMaxMinValidationAndConversion.UNLIMITED));
 
 		return def;
 	}
@@ -103,12 +106,11 @@ public class DescribeBooks extends AbstractPaginatedAction {
 		List<Participant> paList = data.getParticipants();
 
 		if (params.isParameterSet(PARAM_PARTICIPANT_ID)) {
-			participantId = Integer.parseInt((String) params
-					.getParameter(PARAM_PARTICIPANT_ID));
+			participantId = params.getParameter(PARAM_PARTICIPANT_ID, Integer.class);
 		}
 
 		if (params.isParameterSet(PARAM_NAME_USER_NAME)) {
-			userName = (String) params.getParameter(PARAM_NAME_USER_NAME);
+			userName = (String) params.getParameter(PARAM_NAME_USER_NAME, String.class);
 		}
 
 		List<Book> bookList = getBooks(paList, participantId, userName);
@@ -130,11 +132,11 @@ public class DescribeBooks extends AbstractPaginatedAction {
 					f.getSingleFilter(FILTER_NAME_SUBSTR_BOOK_NAME));
 		}
 
-		int pageNumber = p.getParameterAsInt(CommonParamKeys.PageNumber.toString());
-		int pageSize = p.getParameterAsInt(CommonParamKeys.PageSize.toString());
+		int pageNumber = p.getParameter(CommonParamKeys.PageNumber.toString(),
+				Integer.class);
+		int pageSize = p.getParameter(CommonParamKeys.PageSize.toString(), Integer.class);
 
 		books = PaginationFilter.filter(books, pageNumber, pageSize);
 		return books;
 	}
-
 }

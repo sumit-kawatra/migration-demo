@@ -18,10 +18,17 @@ public class ParamsAndFiltersDefinition {
 	private Map<String, Object> defaults = new HashMap<String, Object>();
 
 	public void addValidation(String key, AbstractValidation value) {
-		
-		MswsAssert.mswsAssert(!(value instanceof AbstractConversionValidation),
-				"Should use 'addValidationAndConvertion' instead of 'AddValidation'");
-		
+
+		/*
+		MswsAssert
+				.mswsAssert(
+						!(value instanceof AbstractConversionValidation),
+						"Cannot perform validation for key '" + key + "'.  " +
+								"Class '" + value.getClass().getSimpleName() + 
+								"' requires that when you register with the Param / Filter definition, "
+								+ "you use 'addValidationAndConvertion' instead of 'addValidation'");
+		*/
+
 		if (!validations.containsKey(key)) {
 			List<AbstractValidation> v = new Stack<AbstractValidation>();
 			validations.put(key, v);
@@ -36,15 +43,14 @@ public class ParamsAndFiltersDefinition {
 			AbstractConversionValidation value) {
 		this.addValidation(key.toString(), value);
 	}
-	
-	public void addValidationAndConversion(String key,
-			AbstractConversionValidation value) {
-		
+
+	public void addValidationAndConversion(String key, AbstractConversionValidation value) {
+
 		this.addValidation(key, value);
 	}
 
 	public void addValidation(CommonParamKeys key, AbstractValidation value) {
-		
+
 		this.addValidation(key.toString(), value);
 	}
 

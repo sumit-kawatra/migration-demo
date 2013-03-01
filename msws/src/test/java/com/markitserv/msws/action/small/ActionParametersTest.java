@@ -41,7 +41,7 @@ public class ActionParametersTest {
 	@Test
 	public void canSetAndGetParameters() {
 		target.addParameter("foo", "bar");
-		assertEquals("bar", target.getParameter("foo"));
+		assertEquals("bar", target.getParameter("foo", String.class));
 	}
 	
 	@Test

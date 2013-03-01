@@ -24,7 +24,7 @@ import com.markitserv.msws.filters.SubstringReflectionFilter;
 import com.markitserv.msws.validation.CollectionSizeValidation;
 import com.markitserv.msws.validation.ForEachValidator;
 import com.markitserv.msws.validation.ForEachValidatorAndConverter;
-import com.markitserv.msws.validation.IntegerMaxMinValidation;
+import com.markitserv.msws.validation.IntegerMaxMinValidationAndConversion;
 import com.markitserv.msws.validation.IntegerValidationAndConversion;
 import com.markitserv.msws.validation.RequiredValidation;
 
@@ -53,13 +53,16 @@ public class DescribeLegalEntities extends AbstractPaginatedAction {
 		// Participant ID
 		def.addValidation("ParticipantId", new RequiredValidation());
 		def.addValidation("ParticipantId", new IntegerValidationAndConversion());
-		def.addValidationAndConversion("ParticipantId", new IntegerMaxMinValidation(1,
-				IntegerMaxMinValidation.UNLIMITED));
+		def.addValidationAndConversion("ParticipantId",
+				new IntegerMaxMinValidationAndConversion(1,
+						IntegerMaxMinValidationAndConversion.UNLIMITED));
 
 		// Legal Entity ID
-		def.addValidation("LegalEntityId", new ForEachValidator(new IntegerValidationAndConversion()));
+		def.addValidation("LegalEntityId", new ForEachValidator(
+				new IntegerValidationAndConversion()));
 		def.addValidationAndConversion("LegalEntityId", new ForEachValidatorAndConverter(
-				new IntegerMaxMinValidation(1, IntegerMaxMinValidation.UNLIMITED)));
+				new IntegerMaxMinValidationAndConversion(1,
+						IntegerMaxMinValidationAndConversion.UNLIMITED)));
 		// Only supporting a signle legal entity ID at a time (for now)
 		def.addValidation("LegalEntityId", new CollectionSizeValidation(1, 1));
 
@@ -107,7 +110,7 @@ public class DescribeLegalEntities extends AbstractPaginatedAction {
 		// Note that of course we don't do this in reality but until we get the
 		// DB it'll do. Filters LE's down to a single LE by ID.
 		if (p.isParameterSet("LegalEntityId")) {
-			List<String> leId = (List<String>) p.getParameter("LegalEntityId");
+			List<String> leId = p.getParameter("LegalEntityId", List.class);
 			legalEntities = PropertyEqualsReflectionFilter.filter(legalEntities, "id",
 					Integer.parseInt((String) leId.get(0)));
 		}

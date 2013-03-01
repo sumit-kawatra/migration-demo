@@ -25,7 +25,7 @@ import com.markitserv.msws.definition.SortingPresetDefinitionBuilder;
 import com.markitserv.msws.filters.PaginationFilter;
 import com.markitserv.msws.filters.SubstringReflectionFilter;
 import com.markitserv.msws.validation.CollectionSizeValidation;
-import com.markitserv.msws.validation.IntegerMaxMinValidation;
+import com.markitserv.msws.validation.IntegerMaxMinValidationAndConversion;
 import com.markitserv.msws.validation.IntegerValidationAndConversion;
 import com.markitserv.msws.validation.MutuallyExclusiveWithValidation;
 import com.markitserv.msws.validation.RequiredIfAllNotProvidedValidation;
@@ -72,8 +72,9 @@ public class DescribeSubGroups extends AbstractPaginatedAction {
 					PARAM_NAME_USER_NAME
 				}));
 		def.addValidation(PARAM_PARTICIPANT_ID, new IntegerValidationAndConversion());
-		def.addValidationAndConversion(PARAM_PARTICIPANT_ID, new IntegerMaxMinValidation(1,
-				IntegerMaxMinValidation.UNLIMITED));
+		def.addValidationAndConversion(PARAM_PARTICIPANT_ID,
+				new IntegerMaxMinValidationAndConversion(1,
+						IntegerMaxMinValidationAndConversion.UNLIMITED));
 
 		// Sorting
 		SortingPresetDefinitionBuilder sortBuilder = new SortingPresetDefinitionBuilder();
@@ -104,7 +105,7 @@ public class DescribeSubGroups extends AbstractPaginatedAction {
 		}
 
 		if (params.isParameterSet(PARAM_NAME_USER_NAME)) {
-			userName = (String) params.getParameter(PARAM_NAME_USER_NAME);
+			userName = (String) params.getParameter(PARAM_NAME_USER_NAME, String.class);
 		}
 
 		// Get the SubGroup(s) for the corresponding participantId or the UserName

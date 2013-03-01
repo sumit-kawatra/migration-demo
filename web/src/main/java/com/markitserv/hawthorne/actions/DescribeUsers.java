@@ -27,7 +27,7 @@ import com.markitserv.msws.filters.SubstringReflectionFilter;
 import com.markitserv.msws.validation.CollectionSizeValidation;
 import com.markitserv.msws.validation.ForEachValidator;
 import com.markitserv.msws.validation.ForEachValidatorAndConverter;
-import com.markitserv.msws.validation.IntegerMaxMinValidation;
+import com.markitserv.msws.validation.IntegerMaxMinValidationAndConversion;
 import com.markitserv.msws.validation.IntegerValidationAndConversion;
 import com.markitserv.msws.validation.MutuallyExclusiveWithValidation;
 import com.markitserv.msws.validation.RequiredIfAllNotProvidedValidation;
@@ -76,18 +76,23 @@ public class DescribeUsers extends AbstractPaginatedAction {
 				}));
 
 		// Participant ID
-		def.addValidation(PARAM_PARTICIPANT_ID, new ForEachValidator(
-				new IntegerValidationAndConversion()));
+
 		def.addValidationAndConversion(PARAM_PARTICIPANT_ID,
-				new ForEachValidatorAndConverter(new IntegerMaxMinValidation(1,
-						IntegerMaxMinValidation.UNLIMITED)));
+				new ForEachValidatorAndConverter(new IntegerValidationAndConversion()));
+
+		def.addValidationAndConversion(PARAM_PARTICIPANT_ID,
+				new ForEachValidatorAndConverter(new IntegerMaxMinValidationAndConversion(1,
+						IntegerMaxMinValidationAndConversion.UNLIMITED)));
+
 		// Only supporting a single legal entity ID at a time (for now)
 		def.addValidation(PARAM_PARTICIPANT_ID, new CollectionSizeValidation(1, 1));
+
 		// If ParticipantId is provided UserName & LegalEntityId are not required
 		def.addValidation(PARAM_PARTICIPANT_ID, new MutuallyExclusiveWithValidation(
 				new String[] {
 						PARAM_NAME_USER_NAME, PARAM_NAME_LEGAL_ENTITY_ID
 				}));
+
 		// ParticipantId is required when neither UserName nor LegalEntityId is
 		// provided
 		def.addValidation(PARAM_PARTICIPANT_ID, new RequiredIfAllNotProvidedValidation(
@@ -99,8 +104,8 @@ public class DescribeUsers extends AbstractPaginatedAction {
 		def.addValidation(PARAM_NAME_LEGAL_ENTITY_ID, new ForEachValidator(
 				new IntegerValidationAndConversion()));
 		def.addValidationAndConversion(PARAM_NAME_LEGAL_ENTITY_ID,
-				new ForEachValidatorAndConverter(new IntegerMaxMinValidation(1,
-						IntegerMaxMinValidation.UNLIMITED)));
+				new ForEachValidatorAndConverter(new IntegerMaxMinValidationAndConversion(1,
+						IntegerMaxMinValidationAndConversion.UNLIMITED)));
 		// Only supporting a single legal entity ID at a time (for now)
 		def.addValidation(PARAM_NAME_LEGAL_ENTITY_ID, new CollectionSizeValidation(1, 1));
 
@@ -155,20 +160,20 @@ public class DescribeUsers extends AbstractPaginatedAction {
 		List<User> userList = new ArrayList<User>();
 
 		if (p.isParameterSet(PARAM_PARTICIPANT_ID)) {
-			List<String> participantIdList = (List<String>) p
-					.getParameter(PARAM_PARTICIPANT_ID);
-			for (String id : participantIdList) {
-				userList = data.getUsersForParticipant(Integer.parseInt(id));
+			List<Integer> participantIdList = p.getParameter(PARAM_PARTICIPANT_ID,
+					List.class);
+			for (Integer id : participantIdList) {
+				userList = data.getUsersForParticipant(id);
 			}
 		} else if (p.isParameterSet(PARAM_NAME_USER_NAME)) {
-			List<String> userNameList = (List<String>) p.getParameter(PARAM_NAME_USER_NAME);
+			List<String> userNameList = p.getParameter(PARAM_NAME_USER_NAME, List.class);
 			for (String string : userNameList) {
 				data.getUser(string);
 				userList = data.getUser(string);
 			}
 		} else if (p.isParameterSet(PARAM_NAME_LEGAL_ENTITY_ID)) {
-			List<String> legalEntityIdList = (List<String>) p
-					.getParameter(PARAM_NAME_LEGAL_ENTITY_ID);
+			List<String> legalEntityIdList = (List<String>) p.getParameter(
+					PARAM_NAME_LEGAL_ENTITY_ID, List.class);
 			for (String id : legalEntityIdList) {
 				userList = data.getUsersForLegalEntity(Integer.parseInt(id));
 			}
@@ -196,6 +201,10 @@ public class DescribeUsers extends AbstractPaginatedAction {
 
 		userList = PaginationFilter.filter(userList, pageNumber, pageSize);
 		return userList;
+	}
+
+	public void setHawthorneBackend(HawthorneBackend data) {
+		this.data = data;
 	}
 
 }

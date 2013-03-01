@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.markitserv.msws.internal.Constants;
 
-public class PaginationPageSizeValidation extends IntegerMaxMinValidation {
+public class PaginationPageSizeValidation extends IntegerMaxMinValidationAndConversion {
 
 	private int maxPageSize = Constants.INTEGER_NOT_SET;
 

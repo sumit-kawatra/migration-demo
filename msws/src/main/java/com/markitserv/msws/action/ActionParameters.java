@@ -20,13 +20,19 @@ public class ActionParameters {
 		this.params = paramsMap;
 	}
 
+	/**
+	 * Use getParameter(String key, Class type) instead
+	 * @param key
+	 * @return
+	 */
+	@Deprecated
 	public Object getParameter(String key) {
 		return params.get(key);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public <T> T getParameter(String k, Class<T> type) {
-		return (T)this.getParameter(k);
+		return (T)this.params.get(k);
 	}
 
 	@Deprecated

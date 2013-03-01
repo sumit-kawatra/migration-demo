@@ -28,12 +28,13 @@ import com.markitserv.msws.validation.RequiredValidation;
 
 /**
  * Describe Products
+ * 
  * @author swati.choudhari
- *
+ * 
  */
 @Service
 public class DescribeProducts extends AbstractPaginatedAction {
-	
+
 	private static final String FILTER_NAME_SUBSTR_PRODUCT_NAME = "substr";
 	private static final String PARAMETER_NAME_USERNAME = "UserName";
 	private static final String PPODUCT_NAME = "productName";
@@ -43,7 +44,7 @@ public class DescribeProducts extends AbstractPaginatedAction {
 
 	@Autowired
 	private HawthorneBackend data;
-	
+
 	@Override
 	protected ParamsAndFiltersDefinition createParameterDefinition() {
 
@@ -52,7 +53,7 @@ public class DescribeProducts extends AbstractPaginatedAction {
 
 		// UserName
 		def.addValidation(PARAMETER_NAME_USERNAME, new RequiredValidation());
-		
+
 		// Sorting
 		SortingPresetDefinitionBuilder sortBuilder = new SortingPresetDefinitionBuilder();
 		sortBuilder = sortBuilder.setDefaultSort(PPODUCT_NAME, SortOrder.Asc);
@@ -61,52 +62,50 @@ public class DescribeProducts extends AbstractPaginatedAction {
 
 		return def;
 	}
-	
+
 	@Override
 	protected ParamsAndFiltersDefinition createFilterDefinition() {
 		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
 
-		def.addValidation(FILTER_NAME_SUBSTR_PRODUCT_NAME,
-				new CollectionSizeValidation(
-						CollectionSizeValidation.UNLIMITED, 1));
+		def.addValidation(FILTER_NAME_SUBSTR_PRODUCT_NAME, new CollectionSizeValidation(
+				CollectionSizeValidation.UNLIMITED, 1));
 
 		return def;
 	}
-	
+
 	private List<Product> applyFilters(ActionParameters p, ActionFilters f,
 			List<User> users) {
 		List<Product> productList = new ArrayList<Product>();
 		List<User> UserList = new ArrayList<User>();
 		User filterdUser = new User();
-		
+
 		if (p.isParameterSet(PARAMETER_NAME_USERNAME)) {
-			String userNeme =  (String) p.getParameter(PARAMETER_NAME_USERNAME);
+			String userNeme = (String) p.getParameter(PARAMETER_NAME_USERNAME, String.class);
 			UserList = PropertyEqualsReflectionFilter.filter(users, USER_NAME, userNeme);
 
 		}
 		filterdUser = UserList.get(0);
 		productList = filterdUser.getProducts();
 		if (f.isFilterSet(FILTER_NAME_SUBSTR_PRODUCT_NAME)) {
-			productList = SubstringReflectionFilter.filter(productList, PPODUCT_NAME, f.getSingleFilter(FILTER_NAME_SUBSTR_PRODUCT_NAME));
+			productList = SubstringReflectionFilter.filter(productList, PPODUCT_NAME,
+					f.getSingleFilter(FILTER_NAME_SUBSTR_PRODUCT_NAME));
 		}
 
-		int pageNumber = p.getParameterAsInt(CommonParamKeys.PageNumber
-				.toString());
+		int pageNumber = p.getParameterAsInt(CommonParamKeys.PageNumber.toString());
 		int pageSize = p.getParameterAsInt(CommonParamKeys.PageSize.toString());
-		PaginationFilter.filter(productList, pageNumber,pageSize);
-		
+		PaginationFilter.filter(productList, pageNumber, pageSize);
+
 		return productList;
 	}
 
 	@Override
-	protected ActionResult performAction(ActionParameters params,
-			ActionFilters filters) {
+	protected ActionResult performAction(ActionParameters params, ActionFilters filters) {
 		List<User> userList = data.getAllUsers();
 		List<Product> totalProductList = data.getProducts();
-		int totalsize= totalProductList.size();
-		
+		int totalsize = totalProductList.size();
+
 		List<Product> productList = applyFilters(params, filters, userList);
-        
+
 		PaginatedActionResult res = new PaginatedActionResult(productList);
 		res.getPaginatedMetaData().setTotalRecords(totalsize);
 		return res;

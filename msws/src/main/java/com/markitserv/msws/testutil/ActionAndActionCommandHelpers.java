@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import com.markitserv.msws.Type;
 import com.markitserv.msws.action.AbstractAction;
@@ -78,6 +79,11 @@ public class ActionAndActionCommandHelpers {
 		}
 	}
 	
+	/**
+	 * Used to create an 'ActionCommand' for testing Actions
+	 * @author roy.truelove
+	 *
+	 */
 	public class TestActionCommandBuilder {
 
 		private ActionCommand cmd;
@@ -95,6 +101,22 @@ public class ActionAndActionCommandHelpers {
 
 		public TestActionCommandBuilder addParam(String key, Object value) {
 			cmd.getParameters().addParameter(key, value);
+			return this;
+		}
+		
+		public TestActionCommandBuilder addParamCollectionElement(String key, Object value) {
+			
+			List<Object> col = null;
+			
+			if (cmd.getParameters().isParameterSet(key)) {
+				col = cmd.getParameters().getParameter(key, List.class);
+			} else {
+				col = new ArrayList<Object>();
+			}
+			
+			col.add(value);
+			
+			cmd.getParameters().addParameter(key, col);
 			return this;
 		}
 

@@ -5,14 +5,14 @@ import java.util.Map;
 
 import com.markitserv.msws.exceptions.ProgrammaticException;
 
-public class IntegerMaxMinValidation extends AbstractConversionValidation {
+public class IntegerMaxMinValidationAndConversion extends AbstractConversionValidation {
 
 	public static final int UNLIMITED = -1;
 
 	private int max = UNLIMITED;
 	private int min = UNLIMITED;
 
-	public IntegerMaxMinValidation(int min, int max) {
+	public IntegerMaxMinValidationAndConversion(int min, int max) {
 		super();
 		this.max = max;
 		this.min = min;

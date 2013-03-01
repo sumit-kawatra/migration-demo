@@ -263,6 +263,12 @@ public abstract class AbstractAction implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		this.registerWithActionRegistry();
+		
+		// populates the definitions at startup instead of at runtime.  Will
+		// help to determine errors upfront instead of waiting for when the
+		// action is run.
+		this.getFilterDefinition();
+		this.getParameterDefinition();
 	}
 
 	public UuidGenerator getUuidGenerator() {

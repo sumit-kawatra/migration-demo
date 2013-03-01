@@ -5,7 +5,7 @@ import static com.markitserv.msws.internal.MswsAssert.mswsAssert;
 import com.markitserv.msws.ResponseMetadata;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.internal.Constants;
-import com.markitserv.msws.validation.IntegerMaxMinValidation;
+import com.markitserv.msws.validation.IntegerMaxMinValidationAndConversion;
 import com.markitserv.msws.validation.PaginationPageSizeValidation;
 import com.markitserv.msws.validation.RequiredValidation;
 
@@ -38,8 +38,8 @@ public abstract class AbstractPaginatedAction extends AbstractAction {
 
 		def.addValidation(CommonParamKeys.PageNumber, new RequiredValidation());
 		def.addValidationAndConversion(CommonParamKeys.PageNumber,
-				new IntegerMaxMinValidation(1,
-						IntegerMaxMinValidation.UNLIMITED));
+				new IntegerMaxMinValidationAndConversion(1,
+						IntegerMaxMinValidationAndConversion.UNLIMITED));
 
 		def.addValidation(CommonParamKeys.PageSize, new RequiredValidation());
 		def.addValidationAndConversion(CommonParamKeys.PageSize,
