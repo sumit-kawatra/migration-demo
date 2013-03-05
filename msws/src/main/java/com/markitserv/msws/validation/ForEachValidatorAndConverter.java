@@ -2,6 +2,7 @@ package com.markitserv.msws.validation;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Stack;
 
 public class ForEachValidatorAndConverter extends AbstractConversionValidation {
 
@@ -22,6 +23,7 @@ public class ForEachValidatorAndConverter extends AbstractConversionValidation {
 		}
 
 		Collection<?> col = (Collection<?>) target;
+		Stack<Object> newCol = new Stack<Object>();
 
 		for (Object object : col) {
 			ValidationAndConversionResponse resp = forEachElement
@@ -31,10 +33,10 @@ public class ForEachValidatorAndConverter extends AbstractConversionValidation {
 						+ object.toString() + "' of this collection failed validation: "
 						+ resp.getMessage());
 			} else {
-				target = resp.getConvertedObj();
+				newCol.push(resp.getConvertedObj());
 			}
 		}
 
-		return ValidationAndConversionResponse.createValidConvertedResponse(col);
+		return ValidationAndConversionResponse.createValidConvertedResponse(newCol);
 	}
 }

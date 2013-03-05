@@ -20,9 +20,8 @@ public class ExceptionResult extends AbstractWebserviceResult {
 	Logger log = LoggerFactory.getLogger(ExceptionResult.class);
 	private Stack<MswsError> errors = new Stack<MswsError>();
 
-	public static final String ERRORMESSAGE_GENERIC = "Some error occured. Please contact support team with the requestId";
-	public static final String ERRORCODE_GENERIC = "Generic";
-	public static final String EXCEPTION_MAIN = "UnknownException";
+	public static final String ERRORMESSAGE_GENERIC = "Server Error.  Please contact support team with the requestId of this response.";
+	public static final String ERRORCODE_GENERIC = "Server Error";
 
 	public class MswsError {
 
@@ -65,17 +64,4 @@ public class ExceptionResult extends AbstractWebserviceResult {
 	public List<MswsError> getErrors() {
 		return errors;
 	}
-
-	// NOTE this will be handled by the dispatcher instead.
-	/*
-	 * private void setLogger(Exception exception) { StringBuilder str = new
-	 * StringBuilder(); if(exception instanceof MwwsException) { MwwsException
-	 * mwwsExc = (MwwsException)exception;
-	 * str.append(CommonConstants.ERRORCODE).append(mwwsExc.getErrorCode()); }
-	 * else {
-	 * str.append(CommonConstants.ERRORCODE).append(CommonConstants.EXCEPTION_MAIN
-	 * ); } str.append(CommonConstants.SCOLON);
-	 * str.append(CommonConstants.ERRORMESSAGE) .append(exception.getMessage());
-	 * log.info(str.toString()); }
-	 */
 }

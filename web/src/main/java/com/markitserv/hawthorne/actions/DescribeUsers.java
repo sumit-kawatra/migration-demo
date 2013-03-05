@@ -58,48 +58,33 @@ public class DescribeUsers extends AbstractPaginatedAction {
 		// Add validation
 		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
 
-		// UserName
-		def.addValidation(PARAM_NAME_USER_NAME, new ForEachValidator(
-				new RequiredValidation()));
-		// Only supporting a signle userName at a time (for now)
-		def.addValidation(PARAM_NAME_USER_NAME, new CollectionSizeValidation(1, 1));
-		// If UserName is provided ParticipantId & LegalEntityId are not required
-		def.addValidation(PARAM_NAME_USER_NAME, new MutuallyExclusiveWithValidation(
-				new String[] {
-						PARAM_PARTICIPANT_ID, PARAM_NAME_LEGAL_ENTITY_ID
-				}));
-		// UserName is required when neither ParticipantId nor LegalEntityId is
-		// provided
-		def.addValidation(PARAM_NAME_USER_NAME, new RequiredIfAllNotProvidedValidation(
-				new String[] {
-						PARAM_PARTICIPANT_ID, PARAM_NAME_LEGAL_ENTITY_ID
-				}));
+		addUserNameDefs(def);
+		addParameterIdDefs(def);
+		addLegalEntityIdDef(def);
+		addSortingDefs(def);
 
-		// Participant ID
+		return def;
+	}
 
-		def.addValidationAndConversion(PARAM_PARTICIPANT_ID,
-				new ForEachValidatorAndConverter(new IntegerValidationAndConversion()));
+	@Override
+	protected ActionResult performAction(ActionParameters params, ActionFilters filters) {
 
-		def.addValidationAndConversion(PARAM_PARTICIPANT_ID,
-				new ForEachValidatorAndConverter(new IntegerMaxMinValidationAndConversion(1,
-						IntegerMaxMinValidationAndConversion.UNLIMITED)));
+		List<User> userList = data.getAllUsers();
+		int totalRecords = userList.size();
+		userList = applyFilters(params, filters, userList);
+		PaginatedActionResult res = new PaginatedActionResult(userList);
+		res.getPaginatedMetaData().setTotalRecords(totalRecords);
+		return res;
+	}
 
-		// Only supporting a single legal entity ID at a time (for now)
-		def.addValidation(PARAM_PARTICIPANT_ID, new CollectionSizeValidation(1, 1));
+	private void addSortingDefs(ParamsAndFiltersDefinition def) {
+		SortingPresetDefinitionBuilder sortBuilder = new SortingPresetDefinitionBuilder();
+		sortBuilder = sortBuilder.setDefaultSort("userId", SortOrder.Asc);
 
-		// If ParticipantId is provided UserName & LegalEntityId are not required
-		def.addValidation(PARAM_PARTICIPANT_ID, new MutuallyExclusiveWithValidation(
-				new String[] {
-						PARAM_NAME_USER_NAME, PARAM_NAME_LEGAL_ENTITY_ID
-				}));
+		def.mergeWith(sortBuilder.build());
+	}
 
-		// ParticipantId is required when neither UserName nor LegalEntityId is
-		// provided
-		def.addValidation(PARAM_PARTICIPANT_ID, new RequiredIfAllNotProvidedValidation(
-				new String[] {
-						PARAM_NAME_USER_NAME, PARAM_NAME_LEGAL_ENTITY_ID
-				}));
-
+	private void addLegalEntityIdDef(ParamsAndFiltersDefinition def) {
 		// Legal Entity ID
 		def.addValidation(PARAM_NAME_LEGAL_ENTITY_ID, new ForEachValidator(
 				new IntegerValidationAndConversion()));
@@ -120,14 +105,47 @@ public class DescribeUsers extends AbstractPaginatedAction {
 				new RequiredIfAllNotProvidedValidation(new String[] {
 						PARAM_NAME_USER_NAME, PARAM_PARTICIPANT_ID
 				}));
+	}
 
-		// Sorting
-		SortingPresetDefinitionBuilder sortBuilder = new SortingPresetDefinitionBuilder();
-		sortBuilder = sortBuilder.setDefaultSort("userId", SortOrder.Asc);
+	private void addParameterIdDefs(ParamsAndFiltersDefinition def) {
 
-		def.mergeWith(sortBuilder.build());
+		def.addValidationAndConversion(PARAM_PARTICIPANT_ID,
+				new ForEachValidatorAndConverter(new IntegerMaxMinValidationAndConversion(1,
+						IntegerMaxMinValidationAndConversion.UNLIMITED)));
 
-		return def;
+		// Only supporting a single legal entity ID at a time (for now)
+		def.addValidation(PARAM_PARTICIPANT_ID, new CollectionSizeValidation(1, 1));
+
+		// If ParticipantId is provided UserName & LegalEntityId are not required
+		def.addValidation(PARAM_PARTICIPANT_ID, new MutuallyExclusiveWithValidation(
+				new String[] {
+						PARAM_NAME_USER_NAME, PARAM_NAME_LEGAL_ENTITY_ID
+				}));
+
+		// ParticipantId is required when neither UserName nor LegalEntityId is
+		// provided
+		def.addValidation(PARAM_PARTICIPANT_ID, new RequiredIfAllNotProvidedValidation(
+				new String[] {
+						PARAM_NAME_USER_NAME, PARAM_NAME_LEGAL_ENTITY_ID
+				}));
+	}
+
+	private void addUserNameDefs(ParamsAndFiltersDefinition def) {
+		def.addValidation(PARAM_NAME_USER_NAME, new ForEachValidator(
+				new RequiredValidation()));
+		// Only supporting a signle userName at a time (for now)
+		def.addValidation(PARAM_NAME_USER_NAME, new CollectionSizeValidation(1, 1));
+		// If UserName is provided ParticipantId & LegalEntityId are not required
+		def.addValidation(PARAM_NAME_USER_NAME, new MutuallyExclusiveWithValidation(
+				new String[] {
+						PARAM_PARTICIPANT_ID, PARAM_NAME_LEGAL_ENTITY_ID
+				}));
+		// UserName is required when neither ParticipantId nor LegalEntityId is
+		// provided
+		def.addValidation(PARAM_NAME_USER_NAME, new RequiredIfAllNotProvidedValidation(
+				new String[] {
+						PARAM_PARTICIPANT_ID, PARAM_NAME_LEGAL_ENTITY_ID
+				}));
 	}
 
 	@Override
@@ -144,16 +162,6 @@ public class DescribeUsers extends AbstractPaginatedAction {
 				CollectionSizeValidation.UNLIMITED, 1));
 
 		return def;
-	}
-
-	@Override
-	protected ActionResult performAction(ActionParameters params, ActionFilters filters) {
-		List<User> userList = data.getAllUsers();
-		int totalRecords = userList.size();
-		userList = applyFilters(params, filters, userList);
-		PaginatedActionResult res = new PaginatedActionResult(userList);
-		res.getPaginatedMetaData().setTotalRecords(totalRecords);
-		return res;
 	}
 
 	private List<User> applyFilters(ActionParameters p, ActionFilters f, List<User> users) {
