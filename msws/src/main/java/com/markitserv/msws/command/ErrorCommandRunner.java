@@ -78,4 +78,9 @@ public class ErrorCommandRunner extends AbstractCommandRunner {
 	public void setDispatcher(CommandDispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 	}
+	
+	@Override
+	public Class<?> getCommandType() {
+		return ErrorCommand.class;
+	}
 }

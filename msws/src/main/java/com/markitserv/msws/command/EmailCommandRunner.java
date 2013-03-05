@@ -33,6 +33,7 @@ public class EmailCommandRunner extends AbstractCommandRunner {
 
 	@Override
 	public Object run(Command cmd) throws MswsException {
+		
 		 mswsAssert(cmd!=null, "EmailCommand must be set");
 		 EmailCommand emailCommand = (EmailCommand) cmd;
 		 sendMailMessage(emailCommand);
@@ -71,7 +72,9 @@ public class EmailCommandRunner extends AbstractCommandRunner {
 	public void setSmtpHost(String smtpHost) {
 		this.smtpHost = smtpHost;
 	}
-	
-	
-	
+
+	@Override
+	public Class<?> getCommandType() {
+		return EmailCommand.class;
+	}
 }
