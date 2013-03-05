@@ -20,23 +20,39 @@ public class ErrorCommandRunner extends AbstractCommandRunner {
 	Logger log = LoggerFactory.getLogger(ErrorCommandRunner.class);
 
 	private String env;
-	
+
 	private String errorDistributionGroup;
-	
+
 	@Autowired
-	private CommandDispatcher dispatcher; 
-	
+	private CommandDispatcher dispatcher;
+
 	@Override
 	public Object run(Command cmd) throws MswsException {
-		mswsAssert(cmd!=null, "ErrorCommand must be set");
+
+		mswsAssert(cmd != null, "ErrorCommand must be set");
+
+		ErrorCommand errorCmd = (ErrorCommand) cmd;
+
+		// sendErrorEmail(cmd);
+		log.error("Application threw an unexpected Programmatic Exception:",
+				errorCmd.getError());
+
+		return null; // since it's async
+	}
+
+	private void sendErrorEmail(Command cmd) {
+
+		// TODO clean this up, need email template. Should include stacktrace.
+
 		ErrorCommand errorCommand = (ErrorCommand) cmd;
-		EmailCommand emailCommand = new EmailCommand();		 
-		 emailCommand.setSubject(getEnv() +"  "+ errorCommand.getErrorMessage());
-		 emailCommand.setBody(errorCommand.getErrorMessage());
-		 emailCommand.setTo(getErrorDistributionGroup());
-		 // Sending the mail to error distribution group
-		 dispatcher.dispatchAsyncCommand(emailCommand);
-		return null;
+		EmailCommand emailCommand = new EmailCommand();
+
+		emailCommand.setSubject(getEnv() + "  " + errorCommand.getError());
+		emailCommand.setBody(errorCommand.getError().getLocalizedMessage());
+		emailCommand.setTo(getErrorDistributionGroup());
+
+		// Sending the mail to error distribution group
+		dispatcher.dispatchAsyncCommand(emailCommand);
 	}
 
 	public String getEnv() {
@@ -62,9 +78,4 @@ public class ErrorCommandRunner extends AbstractCommandRunner {
 	public void setDispatcher(CommandDispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 	}
-
-	
-	
-	
-
 }

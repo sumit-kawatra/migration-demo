@@ -55,22 +55,22 @@ public class MswsController {
 					.getParameterMap());
 			result = (ActionResult) dispatcher.dispatchReqRespCommand(actionCmd);
 		} catch (MswsException mwwsException) {
-			log.error("Unknown Exception", mwwsException);
+
 			// If the exception belongs to the programmatic exception the mail goes
 			// to error distribution group
 			if (mwwsException instanceof ProgrammaticException) {
-				dispatcher.dispatchAsyncCommand(createErrorCommand(mwwsException
-						.getErrorMessage()));
+				dispatcher.dispatchAsyncCommand(new ErrorCommand(mwwsException));
 			}
+
 			result = new ExceptionResult(mwwsException);
+
 		} catch (Exception exception) {
-			log.error("Unknown Exception", exception);
+
 			ProgrammaticException programmaticException = new ProgrammaticException(
-					"Unknown error occured.", exception);
-			// If the exception belongs to the programmatic exception the mail goes
-			// to error distribution group
-			dispatcher.dispatchAsyncCommand(createErrorCommand(programmaticException
-					.getErrorMessage()));
+					"Unknown error occured.  See stack trace.", exception);
+
+			dispatcher.dispatchAsyncCommand(new ErrorCommand(programmaticException));
+
 			result = new ExceptionResult(programmaticException);
 		}
 
@@ -81,14 +81,8 @@ public class MswsController {
 
 		result.getMetaData().setSessionExpires(expires);
 		result.getMetaData().setRequestId(uuid);
-		
-		return result;
-	}
 
-	private ErrorCommand createErrorCommand(String errorMessage) {
-		ErrorCommand errorCommand = new ErrorCommand();
-		errorCommand.setErrorMessage(errorMessage);
-		return errorCommand;
+		return result;
 	}
 
 	public void setDispatcher(CommandDispatcher dispatcher) {
@@ -98,7 +92,7 @@ public class MswsController {
 	public void setActionCmdBuilder(HttpParamsToActionCommand actionCmdBuilder) {
 		this.actionCmdBuilder = actionCmdBuilder;
 	}
-	
+
 	public void setReqContextHolder(RequestContextHolderWrapper reqContextHolder) {
 		this.reqContextHolder = reqContextHolder;
 	}

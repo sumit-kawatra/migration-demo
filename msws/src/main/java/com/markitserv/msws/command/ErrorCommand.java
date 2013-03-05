@@ -14,17 +14,18 @@ public class ErrorCommand implements AsyncCommand {
 	 */
 	private static final long serialVersionUID = 1L; 
 
-	private String errorMessage;
-
-
-	public String getErrorMessage() {
-		return errorMessage;
+	private Throwable error;
+	
+	public ErrorCommand(Throwable error) {
+		super();
+		this.error = error;
 	}
 
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
+	public Throwable getError() {
+		return error;
 	}
-	
-	
 
+	public void setError(Throwable errorMessage) {
+		this.error = errorMessage;
+	}
 }
