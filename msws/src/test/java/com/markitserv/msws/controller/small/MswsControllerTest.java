@@ -26,6 +26,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import com.markitserv.msws.ExceptionResult;
 import com.markitserv.msws.AbstractWebserviceResult;
+import com.markitserv.msws.Type;
 import com.markitserv.msws.action.ActionResult;
 import com.markitserv.msws.command.CommandDispatcher;
 import com.markitserv.msws.command.EmailCommandRunner;
@@ -52,6 +53,10 @@ public class MswsControllerTest extends AbstractMswsTest {
 	private HttpParamsToActionCommand actionCmdBuilder;
 	private CommandDispatcher dispatcher;
 	private RequestContextHolderWrapper reqContextHolder;
+	
+	private class FakeType extends Type {
+		
+	}
 
 	@Before
 	public void setupEach() {
@@ -85,7 +90,7 @@ public class MswsControllerTest extends AbstractMswsTest {
 	@Test
 	public void returnsActionResultIfNoErrorIsThrown() throws Exception {
 		when(dispatcher.dispatchReqRespCommand(any(ReqRespCommand.class)))
-				.thenReturn(new ActionResult());
+				.thenReturn(new ActionResult(new FakeType()));
 
 		WebRequest req = new ServletWebRequest(new HttpServletRequestWrapper(
 				new MockMultipartHttpServletRequest()));

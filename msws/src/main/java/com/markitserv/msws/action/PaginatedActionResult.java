@@ -17,10 +17,6 @@ public class PaginatedActionResult extends ActionResult {
 		super(list);
 	}
 	
-	public PaginatedActionResult() {
-		super();
-	}
-	
 	@JsonIgnore
 	public PaginatedActionResponseMetaData getPaginatedMetaData() {
 		return metaData;

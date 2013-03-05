@@ -22,7 +22,7 @@ public abstract class AbstractCommandRunner implements InitializingBean {
 	 * @param cmd The command to run
 	 * @return The result of the command.  Should return null if async
 	 */
-	protected abstract Object run(Command cmd) throws MswsException;
+	protected abstract Object run(Command cmd);
 	
 	/**
 	 * Returns the type of Command that this runner handles

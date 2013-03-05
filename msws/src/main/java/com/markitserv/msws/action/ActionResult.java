@@ -14,9 +14,11 @@ public class ActionResult extends AbstractWebserviceResult {
 	private List<? extends Type> list;
 	private Type item;
 	
+	/*
 	public ActionResult () {
 		super();
 	}
+	*/
 	
 	public ActionResult(Type item) {
 		super();
