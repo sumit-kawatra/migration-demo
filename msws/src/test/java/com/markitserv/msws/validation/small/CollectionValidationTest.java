@@ -9,8 +9,6 @@ import org.junit.Test;
 import com.markitserv.msws.action.ActionCommand;
 import com.markitserv.msws.exceptions.ValidationException;
 import com.markitserv.msws.testutil.AbstractMswsTest;
-import com.markitserv.msws.testutil.ActionAndActionCommandHelpers.TestAction;
-import com.markitserv.msws.testutil.ActionAndActionCommandHelpers.TestActionCommandBuilder;
 import com.markitserv.msws.validation.CollectionValidation;
 
 public class CollectionValidationTest extends AbstractMswsTest {

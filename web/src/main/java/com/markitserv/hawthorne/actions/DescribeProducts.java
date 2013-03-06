@@ -85,15 +85,16 @@ public class DescribeProducts extends AbstractPaginatedAction {
 
 		}
 		filterdUser = UserList.get(0);
-		productList = filterdUser.getProducts();
+		productList = new ArrayList(filterdUser.getProducts());
 		if (f.isFilterSet(FILTER_NAME_SUBSTR_PRODUCT_NAME)) {
 			productList = SubstringReflectionFilter.filter(productList, PPODUCT_NAME,
 					f.getSingleFilter(FILTER_NAME_SUBSTR_PRODUCT_NAME));
 		}
 
-		int pageNumber = p.getParameterAsInt(CommonParamKeys.PageNumber.toString());
-		int pageSize = p.getParameterAsInt(CommonParamKeys.PageSize.toString());
-		PaginationFilter.filter(productList, pageNumber, pageSize);
+		int pageStartIndex = p.getParameter(CommonParamKeys.PageStartIndex.toString(),
+				Integer.class);
+		int pageSize = p.getParameter(CommonParamKeys.PageSize.toString(), Integer.class);
+		PaginationFilter.filter(productList, pageStartIndex, pageSize);
 
 		return productList;
 	}

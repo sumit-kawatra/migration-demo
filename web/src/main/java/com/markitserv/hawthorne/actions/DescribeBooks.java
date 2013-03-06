@@ -3,7 +3,9 @@
  */
 package com.markitserv.hawthorne.actions;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,8 @@ import com.markitserv.msws.action.PaginatedActionResult;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.filters.PaginationFilter;
 import com.markitserv.msws.filters.SubstringReflectionFilter;
-import com.markitserv.msws.validation.IntegerMaxMinValidationAndConversion;
 import com.markitserv.msws.validation.CollectionSizeValidation;
+import com.markitserv.msws.validation.IntegerMaxMinValidationAndConversion;
 import com.markitserv.msws.validation.IntegerValidationAndConversion;
 import com.markitserv.msws.validation.MutuallyExclusiveWithValidation;
 import com.markitserv.msws.validation.RequiredIfAllNotProvidedValidation;
@@ -76,14 +78,13 @@ public class DescribeBooks extends AbstractPaginatedAction {
 
 		return def;
 	}
-	
+
 	@Override
 	protected ParamsAndFiltersDefinition createFilterDefinition() {
 		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
 
-		def.addValidation(FILTER_NAME_SUBSTR_BOOK_NAME,
-				new CollectionSizeValidation(
-						CollectionSizeValidation.UNLIMITED, 1));
+		def.addValidation(FILTER_NAME_SUBSTR_BOOK_NAME, new CollectionSizeValidation(
+				CollectionSizeValidation.UNLIMITED, 1));
 
 		return def;
 	}
@@ -93,17 +94,17 @@ public class DescribeBooks extends AbstractPaginatedAction {
 		if (participantId != null) {
 			for (Participant participant : pariticipantList) {
 				if (participant.getId() == participantId) {
-					return participant.getBookList();
+					return new ArrayList(participant.getBooks());
 				}
 			}
 		}
 		if (StringUtils.isNotBlank(userName)) {
 			for (Participant participant : pariticipantList) {
-				List<User> userList = participant.getAllUsers();
+				Set<User> userList = participant.getUsers();
 				for (User user : userList) {
 					if (userName.contains(user.getUserName())
 							|| userName.equalsIgnoreCase(user.getUserName())) {
-						return participant.getBookList();
+						return new ArrayList(participant.getBooks());
 					}
 				}
 			}
@@ -144,11 +145,11 @@ public class DescribeBooks extends AbstractPaginatedAction {
 					f.getSingleFilter(FILTER_NAME_SUBSTR_BOOK_NAME));
 		}
 
-		int pageNumber = p.getParameter(CommonParamKeys.PageNumber.toString(),
+		int pageStartIndex = p.getParameter(CommonParamKeys.PageStartIndex.toString(),
 				Integer.class);
 		int pageSize = p.getParameter(CommonParamKeys.PageSize.toString(), Integer.class);
 
-		books = PaginationFilter.filter(books, pageNumber, pageSize);
+		books = PaginationFilter.filter(books, pageStartIndex, pageSize);
 		return books;
 	}
 }

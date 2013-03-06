@@ -3,6 +3,8 @@
  */
 package com.markitserv.hawthorne.types;
 
+import java.util.Set;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -17,8 +19,27 @@ import com.markitserv.msws.Type;
 public class BookList extends Type {
 
 	private int id;
-
 	private String name;
+	private Set<Book> books;
+	private int participantId;
+
+	public Set<Book> getBooks() {
+		return books;
+	}
+
+	public void setBooks(Set<Book> books) {
+		this.books = books;
+	}
+
+	public void addBook(Book book) {
+		this.books.add(book);
+	}
+
+	public BookList(int id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
 
 	public int getId() {
 		return id;
@@ -60,6 +81,14 @@ public class BookList extends Type {
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+	public int getParticipantId() {
+		return participantId;
+	}
+
+	public void setParticipantId(int participantId) {
+		this.participantId = participantId;
 	}
 
 }

@@ -6,9 +6,27 @@ import com.markitserv.msws.internal.Constants;
 
 public class PaginatedActionResponseMetaData extends ActionResponseMetadata {
 
-	// using Integer and not int so that they can be null
 	private int totalRecords = Constants.INTEGER_NOT_SET;
 	private int approxTotalRecords = Constants.INTEGER_NOT_SET;
+	private int totalFilteredRecords = Constants.INTEGER_NOT_SET;
+	private int requestRecords = Constants.INTEGER_NOT_SET;
+
+	public int getRequestRecords() {
+		return requestRecords;
+	}
+
+	public void setRequestRecords(int requestRecords) {
+		this.requestRecords = requestRecords;
+	}
+
+	@JsonInclude(Include.NON_DEFAULT)
+	public int getTotalFilteredRecords() {
+		return totalFilteredRecords;
+	}
+
+	public void setTotalFilteredRecords(int totalFilteredRecords) {
+		this.totalFilteredRecords = totalFilteredRecords;
+	}
 
 	@JsonInclude(Include.NON_DEFAULT)
 	public int getTotalRecords() {

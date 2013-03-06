@@ -17,8 +17,14 @@ import com.markitserv.msws.Type;
 public class Book extends Type {
 
 	private int id;
-
 	private String name;
+	private int participantId;
+
+	public Book(int id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
 
 	public int getId() {
 		return id;
@@ -60,6 +66,14 @@ public class Book extends Type {
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+	public int getParticipantId() {
+		return participantId;
+	}
+
+	public void setParticipantId(int participantId) {
+		this.participantId = participantId;
 	}
 
 }

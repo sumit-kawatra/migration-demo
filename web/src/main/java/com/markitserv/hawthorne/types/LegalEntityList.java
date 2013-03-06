@@ -1,4 +1,9 @@
+/**
+ * 
+ */
 package com.markitserv.hawthorne.types;
+
+import java.util.Set;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -7,15 +12,31 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.markitserv.msws.Type;
 
-public class LegalEntity extends Type {
+/**
+ * @author kiran.gogula
+ * 
+ */
+public class LegalEntityList extends Type {
 
 	private int id;
 	private String name;
-	private String bic;
-	private boolean isActive;
+	private Set<LegalEntity> legalEntities;
 	private int participantId;
 
-	public LegalEntity(int id, String name) {
+	public Set<LegalEntity> getLegalEntities() {
+		return legalEntities;
+	}
+
+	public void setLegalEntities(Set<LegalEntity> legalEntities) {
+		this.legalEntities = legalEntities;
+	}
+
+	public void addLegalEntity(LegalEntity legalEntity) {
+		this.legalEntities.add(legalEntity);
+	}
+
+	public LegalEntityList(int id, String name) {
+		super();
 		this.id = id;
 		this.name = name;
 	}
@@ -36,22 +57,6 @@ public class LegalEntity extends Type {
 		this.name = name;
 	}
 
-	public String getBic() {
-		return bic;
-	}
-
-	public void setBic(String bic) {
-		this.bic = bic;
-	}
-
-	public boolean isActive() {
-		return isActive;
-	}
-
-	public void setActive(boolean isActive) {
-		this.isActive = isActive;
-	}
-
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(id);
@@ -68,9 +73,9 @@ public class LegalEntity extends Type {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		LegalEntity legalEntity = (LegalEntity) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-				.append(id, legalEntity.id).isEquals();
+		LegalEntityList book = (LegalEntityList) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj)).append(id, book.id)
+				.isEquals();
 	}
 
 	@Override
@@ -83,7 +88,7 @@ public class LegalEntity extends Type {
 	}
 
 	public void setParticipantId(int participantId) {
-		this.participantId = participantId;
+		participantId = participantId;
 	}
 
 }

@@ -1,4 +1,9 @@
+/**
+ * 
+ */
 package com.markitserv.hawthorne.types;
+
+import java.util.Set;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -7,15 +12,31 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.markitserv.msws.Type;
 
-public class LegalEntity extends Type {
+/**
+ * @author kiran.gogula
+ * 
+ */
+public class ProductList extends Type {
 
 	private int id;
 	private String name;
-	private String bic;
-	private boolean isActive;
+	private Set<Product> products;
 	private int participantId;
 
-	public LegalEntity(int id, String name) {
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}
+
+	public void addProduct(Product product) {
+		this.products.add(product);
+	}
+
+	public ProductList(int id, String name) {
+		super();
 		this.id = id;
 		this.name = name;
 	}
@@ -36,22 +57,6 @@ public class LegalEntity extends Type {
 		this.name = name;
 	}
 
-	public String getBic() {
-		return bic;
-	}
-
-	public void setBic(String bic) {
-		this.bic = bic;
-	}
-
-	public boolean isActive() {
-		return isActive;
-	}
-
-	public void setActive(boolean isActive) {
-		this.isActive = isActive;
-	}
-
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(id);
@@ -68,9 +73,9 @@ public class LegalEntity extends Type {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		LegalEntity legalEntity = (LegalEntity) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-				.append(id, legalEntity.id).isEquals();
+		ProductList book = (ProductList) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj)).append(id, book.id)
+				.isEquals();
 	}
 
 	@Override
@@ -85,5 +90,4 @@ public class LegalEntity extends Type {
 	public void setParticipantId(int participantId) {
 		this.participantId = participantId;
 	}
-
 }

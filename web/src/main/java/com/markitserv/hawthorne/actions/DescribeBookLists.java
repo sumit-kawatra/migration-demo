@@ -5,6 +5,7 @@ package com.markitserv.hawthorne.actions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,40 +69,42 @@ public class DescribeBookLists extends AbstractPaginatedAction {
 				new String[] {
 					PARAM_NAME_USER_NAME
 				}));
-		def.addValidationAndConversion(PARAM_PARTICIPANT_ID, new IntegerValidationAndConversion());
-		def.addValidationAndConversion(PARAM_PARTICIPANT_ID, new IntegerMaxMinValidationAndConversion(1,
-				IntegerMaxMinValidationAndConversion.UNLIMITED));
+		def.addValidationAndConversion(PARAM_PARTICIPANT_ID,
+				new IntegerValidationAndConversion());
+		def.addValidationAndConversion(PARAM_PARTICIPANT_ID,
+				new IntegerMaxMinValidationAndConversion(1,
+						IntegerMaxMinValidationAndConversion.UNLIMITED));
 
 		return def;
 	}
-	
+
 	@Override
 	protected ParamsAndFiltersDefinition createFilterDefinition() {
 		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
 
-		def.addValidation(FILTER_NAME_SUBSTR_BOOK_LIST_NAME,
-				new CollectionSizeValidation(
-						CollectionSizeValidation.UNLIMITED, 1));
+		def.addValidation(FILTER_NAME_SUBSTR_BOOK_LIST_NAME, new CollectionSizeValidation(
+				CollectionSizeValidation.UNLIMITED, 1));
 
 		return def;
 	}
 
-	private List<BookList> getBookLists(List<Participant> pariticipantList, Integer participantId,
-			String userName) {
-		List<BookList> booklist = new ArrayList<BookList>();
+	private Set<BookList> getBookLists(List<Participant> pariticipantList,
+			Integer participantId, String userName) {
+		Set<BookList> booklist = null;
 		if (participantId != null) {
 			for (Participant participant : pariticipantList) {
 				if (participant.getId() == participantId) {
-					booklist = participant.getListOfBookList();
+					booklist = participant.getBookLists();
 				}
 			}
-		}if (StringUtils.isNotBlank(userName)) {
+		}
+		if (StringUtils.isNotBlank(userName)) {
 			for (Participant participant : pariticipantList) {
-				List<User> userList = participant.getAllUsers();
+				Set<User> userList = participant.getUsers();
 				for (User user : userList) {
 					if (userName.contains(user.getUserName())
 							|| userName.equalsIgnoreCase(user.getUserName())) {
-						booklist = participant.getListOfBookList();
+						booklist = participant.getBookLists();
 					}
 				}
 			}
@@ -123,30 +126,31 @@ public class DescribeBookLists extends AbstractPaginatedAction {
 			userName = (String) params.getParameter(PARAM_NAME_USER_NAME);
 		}
 
-		List<BookList> listOfBookList = getBookLists(paList, participantId, userName);
-		
-		
+		Set<BookList> listOfBookList = getBookLists(paList, participantId, userName);
+		List<BookList> bookListAsList = new ArrayList<BookList>(listOfBookList);
+
 		int totalRecords = listOfBookList.size();
 
-		listOfBookList = applyFilters(params, filters, listOfBookList);
+		bookListAsList = applyFilters(params, filters, bookListAsList);
 
-		PaginatedActionResult res = new PaginatedActionResult(listOfBookList);
+		PaginatedActionResult res = new PaginatedActionResult(bookListAsList);
 		res.getPaginatedMetaData().setTotalRecords(totalRecords);
 
 		return res;
 	}
 
-	private List<BookList> applyFilters(ActionParameters p, ActionFilters f, List<BookList> booklists) {
+	private List<BookList> applyFilters(ActionParameters p, ActionFilters f,
+			List<BookList> booklists) {
 
 		if (f.isFilterSet(FILTER_NAME_SUBSTR_BOOK_LIST_NAME)) {
 			booklists = SubstringReflectionFilter.filter(booklists, "name",
 					f.getSingleFilter(FILTER_NAME_SUBSTR_BOOK_LIST_NAME));
 		}
 
-		int pageNumber = p.getParameterAsInt(CommonParamKeys.PageNumber.toString());
+		int pageStartIndex = p.getParameterAsInt(CommonParamKeys.PageStartIndex.toString());
 		int pageSize = p.getParameterAsInt(CommonParamKeys.PageSize.toString());
 
-		booklists = PaginationFilter.filter(booklists, pageNumber, pageSize);
+		booklists = PaginationFilter.filter(booklists, pageStartIndex, pageSize);
 		return booklists;
 	}
 

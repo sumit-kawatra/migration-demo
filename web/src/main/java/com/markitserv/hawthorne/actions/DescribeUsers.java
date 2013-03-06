@@ -18,6 +18,7 @@ import com.markitserv.msws.action.ActionFilters;
 import com.markitserv.msws.action.ActionParameters;
 import com.markitserv.msws.action.ActionResult;
 import com.markitserv.msws.action.CommonParamKeys;
+import com.markitserv.msws.action.PaginatedActionResponseMetaData;
 import com.markitserv.msws.action.PaginatedActionResult;
 import com.markitserv.msws.action.SortOrder;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
@@ -71,9 +72,19 @@ public class DescribeUsers extends AbstractPaginatedAction {
 
 		List<User> userList = data.getAllUsers();
 		int totalRecords = userList.size();
-		userList = applyFilters(params, filters, userList);
+
+		userList = mungeUserList(params, filters, userList);
+
+		int pageStartIndex = params.getParameter(CommonParamKeys.PageStartIndex.toString(),
+				Integer.class);
+		int pageSize = params.getParameter(CommonParamKeys.PageSize.toString(),
+				Integer.class);
+
 		PaginatedActionResult res = new PaginatedActionResult(userList);
-		res.getPaginatedMetaData().setTotalRecords(totalRecords);
+		PaginatedActionResponseMetaData paginatedMetaData = res.getPaginatedMetaData();
+
+		paginatedMetaData.setTotalRecords(totalRecords);
+
 		return res;
 	}
 
@@ -164,9 +175,44 @@ public class DescribeUsers extends AbstractPaginatedAction {
 		return def;
 	}
 
-	private List<User> applyFilters(ActionParameters p, ActionFilters f, List<User> users) {
+	private List<User> mungeUserList(ActionParameters p, ActionFilters f, List<User> users) {
 		List<User> userList = new ArrayList<User>();
 
+		userList = limitToUserNameParticpantOrLe(p, userList);
+		userList = applyFilters(f, userList);
+
+		// Paginate
+
+		int pageStartIndex = p.getParameter(CommonParamKeys.PageStartIndex.toString(),
+				Integer.class);
+		int pageSize = p.getParameter(CommonParamKeys.PageSize.toString(), Integer.class);
+
+		userList = PaginationFilter.filter(userList, pageStartIndex, pageSize);
+		return userList;
+	}
+
+	private List<User> applyFilters(ActionFilters f, List<User> userList) {
+		if (f.isFilterSet(FILTER_NAME_SUBSTR_LAST_NAME)) {
+			userList = SubstringReflectionFilter.filter(userList, "lastName",
+					f.getSingleFilter(FILTER_NAME_SUBSTR_LAST_NAME));
+		}
+
+		if (f.isFilterSet(FILTER_NAME_SUBSTR_FIRST_NAME)) {
+
+			userList = SubstringReflectionFilter.filter(userList, "firstName",
+					f.getSingleFilter(FILTER_NAME_SUBSTR_FIRST_NAME));
+		}
+
+		if (f.isFilterSet(FILTER_NAME_SUBSTR_USER_NAME)) {
+
+			userList = SubstringReflectionFilter.filter(userList, "userName",
+					f.getSingleFilter(FILTER_NAME_SUBSTR_USER_NAME));
+		}
+		return userList;
+	}
+
+	private List<User> limitToUserNameParticpantOrLe(ActionParameters p,
+			List<User> userList) {
 		if (p.isParameterSet(PARAM_PARTICIPANT_ID)) {
 			List<Integer> participantIdList = p.getParameter(PARAM_PARTICIPANT_ID,
 					List.class);
@@ -186,28 +232,6 @@ public class DescribeUsers extends AbstractPaginatedAction {
 				userList = data.getUsersForLegalEntity(Integer.parseInt(id));
 			}
 		}
-
-		if (f.isFilterSet(FILTER_NAME_SUBSTR_LAST_NAME)) {
-			userList = SubstringReflectionFilter.filter(userList, "lastName",
-					f.getSingleFilter(FILTER_NAME_SUBSTR_LAST_NAME));
-		}
-
-		if (f.isFilterSet(FILTER_NAME_SUBSTR_FIRST_NAME)) {
-
-			userList = SubstringReflectionFilter.filter(userList, "firstName",
-					f.getSingleFilter(FILTER_NAME_SUBSTR_FIRST_NAME));
-		}
-
-		if (f.isFilterSet(FILTER_NAME_SUBSTR_USER_NAME)) {
-
-			userList = SubstringReflectionFilter.filter(userList, "userName",
-					f.getSingleFilter(FILTER_NAME_SUBSTR_USER_NAME));
-		}
-
-		int pageNumber = p.getParameterAsInt(CommonParamKeys.PageNumber.toString());
-		int pageSize = p.getParameterAsInt(CommonParamKeys.PageSize.toString());
-
-		userList = PaginationFilter.filter(userList, pageNumber, pageSize);
 		return userList;
 	}
 

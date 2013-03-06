@@ -1,12 +1,14 @@
 package com.markitserv.msws.testutil;
 
+import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
+
 import static org.mockito.Mockito.RETURNS_SMART_NULLS;
 import org.mockito.Mockito;
 
+import com.markitserv.msws.Type;
 import com.markitserv.msws.internal.UuidGenerator;
-import com.markitserv.msws.testutil.ActionAndActionCommandHelpers.TestAction;
-import com.markitserv.msws.testutil.ActionAndActionCommandHelpers.TestActionCommandBuilder;
 
 /** 
  * Exposes some useful variables to the subclasses:
@@ -21,28 +23,26 @@ import com.markitserv.msws.testutil.ActionAndActionCommandHelpers.TestActionComm
  */
 public abstract class AbstractMswsTest {
 
-	private ActionAndActionCommandHelpers helper;
-	
-	protected TestActionCommandBuilder actionCommandBuilder;
-	protected TestAction fakeTestAction;
+	// common utilities
+	protected static TestActionCommandBuilder actionCommandBuilder;
 
 	// commonly used mocks
-	protected UuidGenerator uuidGeneratorMock;
+	protected static UuidGenerator uuidGeneratorMock;
 
-	@Before
-	public void setupEach() {
+	@BeforeClass
+	public static void setupAll() {
+		
+		System.err.println("Setting up all");
 
 		// Stubs
 		uuidGeneratorMock = Mockito.mock(UuidGenerator.class, RETURNS_SMART_NULLS);
 		Mockito.when(uuidGeneratorMock.generateUuid()).thenReturn("Stubbed UUID");
 
-		helper = new ActionAndActionCommandHelpers();
-		if (actionCommandBuilder == null) {
-			actionCommandBuilder = helper.new TestActionCommandBuilder();
-		}
-		
-		fakeTestAction = helper.new TestAction();
-
-		fakeTestAction.setUuidGenerator(uuidGeneratorMock);
+		actionCommandBuilder = new TestActionCommandBuilder();
+	}
+	
+	@After
+	public void setup() {
+		Mockito.reset(uuidGeneratorMock);
 	}
 }

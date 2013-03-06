@@ -15,27 +15,33 @@ import com.markitserv.msws.Type;
  */
 public class PaginationFilter<T extends Type> extends AbstractFilter<T> {
 
-	private int pageNumber;
 	private int pageSize;
+	private int pageStartIndex;
 
+	/**
+	 * @param Collection to filter
+	 * @param Starting index.  First element is index # 1
+	 * @param Size of the page to return
+	 * @return
+	 */
 	public static <T extends Type> List<T> filter(List<T> toFilter,
-			int pageNumber, int pageSize) {
+			int pageStartIndex, int pageSize) {
 
-		PaginationFilter<T> f = new PaginationFilter<T>(pageNumber, pageSize);
+		PaginationFilter<T> f = new PaginationFilter<T>(pageStartIndex, pageSize);
 		return f.filter(toFilter);
 	}
 
-	private PaginationFilter(int pageNumber, int pageSize) {
+	private PaginationFilter(int pageStartIndex, int pageSize) {
 		super();
-		this.pageNumber = pageNumber;
+		this.pageStartIndex = pageStartIndex;
 		this.pageSize = pageSize;
 	}
 
 	@Override
 	public List<T> filter(List<T> toFilter) {
 
-		int startingIndex = ((pageNumber - 1) * pageSize);
-		int endingIndex = startingIndex + pageSize;
+		int startingIndex = pageStartIndex - 1;
+		int endingIndex = startingIndex + pageStartIndex;
 		
 		// returns an empty list if the pageNumber is too high
 		if (startingIndex > toFilter.size() - 1) {
@@ -50,4 +56,4 @@ public class PaginationFilter<T extends Type> extends AbstractFilter<T> {
 		
 		return subList;
 	}
-}
+} 

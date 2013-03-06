@@ -36,8 +36,8 @@ public abstract class AbstractPaginatedAction extends AbstractAction {
 	protected ParamsAndFiltersDefinition addAdditionalParameterDefinitions(
 			ParamsAndFiltersDefinition def) {
 
-		def.addValidation(CommonParamKeys.PageNumber, new RequiredValidation());
-		def.addValidationAndConversion(CommonParamKeys.PageNumber,
+		def.addValidation(CommonParamKeys.PageStartIndex, new RequiredValidation());
+		def.addValidationAndConversion(CommonParamKeys.PageStartIndex,
 				new IntegerMaxMinValidationAndConversion(1,
 						IntegerMaxMinValidationAndConversion.UNLIMITED));
 
@@ -45,7 +45,7 @@ public abstract class AbstractPaginatedAction extends AbstractAction {
 		def.addValidationAndConversion(CommonParamKeys.PageSize,
 				new PaginationPageSizeValidation(this.getMaxPageSize()));
 
-		def.addDefaultParam(CommonParamKeys.PageNumber.toString(), "1");
+		def.addDefaultParam(CommonParamKeys.PageStartIndex.toString(), "1");
 		def.addDefaultParam(CommonParamKeys.PageSize.toString(),
 				this.getDefaultPageSize() + "");
 
@@ -65,7 +65,7 @@ public abstract class AbstractPaginatedAction extends AbstractAction {
 		mswsAssert(
 				metaData.getApproxTotalRecords() != Constants.INTEGER_NOT_SET
 						|| metaData.getTotalRecords() != Constants.INTEGER_NOT_SET,
-				"Either totalRecords or approxTotalRecords must be set.");
+				"Either totalRecords or approxTotalRecords must be set on a pagingated action result.");
 
 		mswsAssert(
 				!(metaData.getApproxTotalRecords() != Constants.INTEGER_NOT_SET && metaData

@@ -136,10 +136,11 @@ public class DescribeSubGroups extends AbstractPaginatedAction {
 					f.getSingleFilter(FILTER_NAME_SUBSTR_SUB_GROUP_NAME)));
 		}
 
-		int pageNumber = p.getParameterAsInt(CommonParamKeys.PageNumber.toString());
-		int pageSize = p.getParameterAsInt(CommonParamKeys.PageSize.toString());
+		int pageStartIndex = p.getParameter(CommonParamKeys.PageStartIndex.toString(),
+				Integer.class);
+		int pageSize = p.getParameter(CommonParamKeys.PageSize.toString(), Integer.class);
 
-		return PaginationFilter.filter(subGrpList, pageNumber, pageSize);
+		return PaginationFilter.filter(subGrpList, pageStartIndex, pageSize);
 	}
 
 }

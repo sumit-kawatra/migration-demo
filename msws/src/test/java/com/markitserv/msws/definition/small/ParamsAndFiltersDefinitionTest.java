@@ -2,17 +2,24 @@ package com.markitserv.msws.definition.small;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.markitserv.msws.action.ActionCommand;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.testutil.AbstractMswsTest;
-import com.markitserv.msws.testutil.ActionAndActionCommandHelpers;
-import com.markitserv.msws.testutil.ActionAndActionCommandHelpers.TestActionCommandBuilder;
+import com.markitserv.msws.testutil.FakeAction;
 import com.markitserv.msws.validation.OneOfValidation;
 import com.markitserv.msws.validation.RequiredValidation;
 
 public class ParamsAndFiltersDefinitionTest extends AbstractMswsTest {
+	
+	FakeAction fakeTestAction;
+	
+	@Before
+	public void setupEach() {
+		fakeTestAction = new FakeAction();
+	}
 
 	@Test
 	public void isAbleToMergeDefaultsWithExistingDefinition() {

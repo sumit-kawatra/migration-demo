@@ -1,8 +1,14 @@
 package com.markitserv.hawthorne.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -18,10 +24,13 @@ import com.markitserv.hawthorne.types.Book;
 import com.markitserv.hawthorne.types.BookList;
 import com.markitserv.hawthorne.types.InterestGroup;
 import com.markitserv.hawthorne.types.LegalEntity;
+import com.markitserv.hawthorne.types.LegalEntityList;
 import com.markitserv.hawthorne.types.Participant;
 import com.markitserv.hawthorne.types.Product;
+import com.markitserv.hawthorne.types.ProductList;
 import com.markitserv.hawthorne.types.SubGroup;
 import com.markitserv.hawthorne.types.User;
+import com.markitserv.msws.exceptions.ProgrammaticException;
 
 /**
  * Hardcodes data that will eventually come from the server. This class will not
@@ -33,19 +42,151 @@ import com.markitserv.hawthorne.types.User;
 @Service
 public class HardcodedHawthorneBackend implements HawthorneBackend {
 
+	private static final int SIZE_PRODUCTS = 30;
+
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private RandomNameGenerator nameGen;
+	private DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
+
+	private Map<Integer, Participant> participantMap = new HashMap<Integer, Participant>();
+	private Map<Integer, Product> productMap = new HashMap<Integer, Product>();
+	private Map<Integer, ProductList> productListMap = new HashMap<Integer, ProductList>();
+	private Map<Integer, Book> bookMap = new HashMap<Integer, Book>();
+	private Map<Integer, BookList> booklistMap = new HashMap<Integer, BookList>();
+	private Map<Integer, LegalEntity> legalEntityMap = new HashMap<Integer, LegalEntity>();
+	private Map<Integer, LegalEntityList> legalEntityListMap = new HashMap<Integer, LegalEntityList>();
+	private Map<Integer, SubGroup> subGroupMap = new HashMap<Integer, SubGroup>();
+	private Map<Integer, User> userMap = new HashMap<Integer, User>();
+	// TODO Interest Group
+
+	private int nextBookListId = 1;
+	private int nextBookId = 1;
+	private int nextLegalEntityId = 1;
+	private int nextLegalEntityListId = 1;
+	private int nextProductListId = 1;
+	private int nextSubGroupId = 1;
+
+	// NOTE we shouldn't need these after the cleanup
 	private List<LegalEntity> legalEntities;
 	private List<Book> books;
 	private List<BookList> bookLists;
 	private List<Participant> participants;
-	private DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
 	private List<InterestGroup> interestGroupList;
 	private List<Product> products;
 	private List<User> users;
 
+	@Override
+	@Deprecated
+	public List<Participant> getParticipants() {
+		if (participants == null) {
+			buildAndGetParticipants();
+		}
+		return participants;
+	}
+
+	@Override
+	@Deprecated
+	public List<User> getAllUsers() {
+		if (users == null) {
+			populateUsers(10000);
+		}
+		return users;
+	}
+
+	@Override
+	@Deprecated
+	public List<LegalEntity> getLegalEntities() {
+		if (legalEntities == null) {
+			populateLegalEntities(100000);
+		}
+		return legalEntities;
+	}
+
+	@Override
+	@Deprecated
+	public List<InterestGroup> getInterestGroups() {
+		if (interestGroupList == null) {
+			populateInterestGroupList(10000);
+		}
+		return this.interestGroupList;
+	}
+
+	@Override
+	@Deprecated
+	public List<Product> getProducts() {
+		if (products == null) {
+			return populateAllProducts();
+		} else {
+			return products;
+		}
+	}
+
+	@Override
+	@Deprecated
+	public List<User> getUsersForLegalEntity(int id) {
+		List<User> userList = new ArrayList<User>();
+		for (User user : this.users) {
+			if (user.getLegalEntityId() == id) {
+				userList.add(user);
+			}
+		}
+		return userList;
+	}
+
+	@Override
+	@Deprecated
+	public List<User> getUsersForParticipant(int id) {
+		List<User> userList = new ArrayList<User>();
+		for (User user : this.users) {
+			if (user.getParticipantId() == id) {
+				userList.add(user);
+			}
+		}
+		return userList;
+	}
+
+	@Override
+	@Deprecated
+	public List<User> getUser(String userName) {
+		List<User> userList = new ArrayList<User>();
+		for (User user : this.users) {
+			if (user.getUserName().equals(userName)) {
+				userList.add(user);
+			}
+		}
+		return userList;
+	}
+
+	@Override
+	@Deprecated
+	public List<SubGroup> getSubGroups(Integer participantId, String userName) {
+		if (participants == null) {
+			buildAndGetParticipants();
+		}
+		if (participantId != null) {
+			for (Participant participant : participants) {
+				if (participant.getId() == participantId) {
+					return new ArrayList(participant.getSubgroups());
+				}
+			}
+		}
+		if (StringUtils.isNotBlank(userName)) {
+			for (Participant participant : participants) {
+				Set<User> userList = participant.getUsers();
+				for (User user : userList) {
+					if (userName.contains(user.getUserName())
+							|| userName.equalsIgnoreCase(user.getUserName())) {
+						return new ArrayList(participant.getSubgroups());
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	@Deprecated
 	private void populateInterestGroupList(int count) {
 		interestGroupList = new ArrayList<InterestGroup>();
 		for (int i = 1; i <= count; i++) {
@@ -55,198 +196,12 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 			group.setActive(new Random().nextBoolean());
 			interestGroupList.add(group);
 		}
-
 	}
 
-	public List<Participant> getParticipants() {
-		if (participants == null) {
-			populateParticipants();
-		}
-		return participants;
-	}
-
-	private void populateParticipants() {
-		participants = new ArrayList<Participant>();
-		int j = 20;
-		int start = 1;
-		int end = 1;
-		for (int i = 1; i < j; i++) {
-			if (i == 1) {
-				start = 1;
-				end = 50;
-			} else {
-				start = end;
-				end = end + 50;
-			}
-			Participant p = new Participant();
-			p.setId(i);
-			p.setName("Participant " + i);
-			p.setBookList(populateBooks(start, end));
-			p.setListOfBookList(populateBookLists(start, end));
-			p.setUsers(getUserList(start, end, p.getId()));
-			p.setSubGroupList(populateSubGroups(start, end, p.getUsers()));
-			participants.add(p);
-		}
-	}
-
-	private List<SubGroup> populateSubGroups(int start, int end, List<User> subGrpUsers) {
-		List<SubGroup> subGroupList = new ArrayList<SubGroup>();
-		for (int j = start; j < end; j++) {
-			SubGroup group = new SubGroup();
-			group.setName("SubGroup" + j);
-			group.setShortName("SG" + j);
-			group.setActive(new Random().nextBoolean());
-			group.setSubGroupUser(subGrpUsers);
-			subGroupList.add(group);
-		}
-		return subGroupList;
-	}
-
-	private List<User> getUserList(int start, int end, int participantId) {
-		List<User> list = new ArrayList<User>();
-		for (int j = start; j < end; j++) {
-			User user = new User();
-			user.setUserId(j);
-			user.setFirstName("FirstName" + j);
-			user.setLastName("LastName" + j);
-			user.setUserName(user.getFirstName() + " " + user.getLastName());
-			user.setLegalEntityId(j);
-			user.setParticipantId(participantId);
-			user.setEmailAddress(user.getFirstName() + "." + user.getLastName()
-					+ "@example.com");
-			user.setPhoneNumber(randomPhoneNumGen());
-			list.add(user);
-		}
-		return list;
-	}
-
-	private List<Book> populateBooks(int start, int end) {
-		if (books == null) {
-			books = new ArrayList<Book>();
-			for (int j = start; j < end; j++) {
-				Book book = new Book();
-				book.setId(j);
-				book.setName("Book " + j);
-				books.add(book);
-			}
-		}
-		return books;
-	}
-
-	private List<BookList> populateBookLists(int start, int end) {
-		if (bookLists == null) {
-			bookLists = new ArrayList<BookList>();
-			for (int j = start; j < end; j++) {
-				BookList bookList = new BookList();
-				bookList.setId(j);
-				bookList.setName("BookList " + j);
-				bookLists.add(bookList);
-			}
-		}
-		return bookLists;
-	}
-	private void populateUsers(int count) {
-		users = new ArrayList<User>();
-		for (int i = 0; i < 100; i++) {
-			users.add(createUser(i));
-		}
-	}
-
-	@Override
-	public List<User> getAllUsers() {
-		if (users == null) {
-			populateUsers(100);
-		}
-		return users;
-	}
-
-	private User createUser(int j) {
-		User user = new User();
-		user.setUserId(j);
-		user.setFirstName("FirstName" + j);
-		user.setLastName("LastName" + j);
-		user.setUserName(user.getFirstName() + " " + user.getLastName());
-		user.setLegalEntityId(j);
-		user.setParticipantId(j);
-		user.setEmailAddress(user.getFirstName() + "." + user.getLastName()
-				+ "@example.com");
-		user.setPhoneNumber(randomPhoneNumGen());
-		DateTime date = formatter.parseDateTime(randomDateGen());
-		user.setLastLogin(date);
-		user.setProducts(populateProducts(getRandomNumberFrom(0, 4)));
-		return user;
-	}
-
-	private String randomPhoneNumGen() {
-		Random generator = new Random();
-		int num1 = 0;
-		int num2 = 0;
-		int num3 = 0;
-		num1 = generator.nextInt(600) + 100;
-		num2 = generator.nextInt(641) + 100;
-		num3 = generator.nextInt(8999) + 1000;
-		return num1 + "-" + num2 + "-" + num3;
-	}
-
-	private String randomDateGen() {
-		Random generator = new Random();
-		int num1 = 0;
-		int num2 = 0;
-		num1 = generator.nextInt(9) + 10;
-		num2 = generator.nextInt(10) + 1;
-		return num1 + "/" + num2 + "/" + 2012;
-	}
-
-	public static int getRandomNumberFrom(int min, int max) {
-		Random num = new Random();
-		int randomNumber = num.nextInt((max + 1) - min) + min;
-		return randomNumber;
-
-	}
-
-	private void populateLegalEntities(int count) {
-		legalEntities = new ArrayList<LegalEntity>();
-
-		for (int i = 1; i <= count; i++) {
-			legalEntities.add(createLegalEntity(i));
-		}
-	}
-
-	private List<Product> populateAllProducts() {
-		products = new ArrayList<Product>();
-		products.add(new Product(1, "Credit"));
-		products.add(new Product(2, "Rates"));
-		products.add(new Product(3, "Equity"));
-		products.add(new Product(4, "FX"));
-		return products;
-	}
-
-	private List<Product> populateProducts(int count) {
-		List<Product> products = new ArrayList<Product>();
-		if (count == 1) {
-			products.add(new Product(1, "Credit"));
-		} else if (count == 2) {
-			products.add(new Product(1, "Credit"));
-			products.add(new Product(2, "Rates"));
-		} else if (count == 3) {
-			products.add(new Product(1, "Credit"));
-			products.add(new Product(2, "Rates"));
-			products.add(new Product(3, "Equity"));
-		} else if (count == 4) {
-			products.add(new Product(1, "Credit"));
-			products.add(new Product(2, "Rates"));
-			products.add(new Product(3, "Equity"));
-			products.add(new Product(4, "FX"));
-		} else if (count == 0) {
-			// Do nothing
-		}
-		return products;
-
-	}
-
+	@Deprecated
 	private LegalEntity createLegalEntity(int id) {
 
-		LegalEntity le = new LegalEntity();
+		LegalEntity le = new LegalEntity(id, null);
 		// for easy & consistent search by name - "john boby test LLC"
 		String firstName;
 		String secondName;
@@ -283,86 +238,391 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 		return le;
 	}
 
-	public List<LegalEntity> getLegalEntities() {
-		if (legalEntities == null) {
-			populateLegalEntities(100000);
+	@Deprecated
+	private List<Product> populateProducts(int count) {
+		List<Product> products = new ArrayList<Product>();
+		if (count == 1) {
+			products.add(new Product(1, "Credit"));
+		} else if (count == 2) {
+			products.add(new Product(1, "Credit"));
+			products.add(new Product(2, "Rates"));
+		} else if (count == 3) {
+			products.add(new Product(1, "Credit"));
+			products.add(new Product(2, "Rates"));
+			products.add(new Product(3, "Equity"));
+		} else if (count == 4) {
+			products.add(new Product(1, "Credit"));
+			products.add(new Product(2, "Rates"));
+			products.add(new Product(3, "Equity"));
+			products.add(new Product(4, "FX"));
+		} else if (count == 0) {
+			// Do nothing
 		}
-		return legalEntities;
+		return products;
 	}
 
-	public List<InterestGroup> getInterestGroups() {
-		if (interestGroupList == null) {
-			populateInterestGroupList(10000);
+	// TODO !!! Move this to private. Only public now for testing
+	public Map<Integer, Participant> buildAndGetParticipants() {
+
+		if (participantMap.size() > 0) {
+			return participantMap;
 		}
-		return this.interestGroupList;
+
+		// Only 2 participants for now, hardcoded
+
+		Participant p = new Participant();
+		p.setId(1);
+		p.setName("Hawthorne Test Bank Alpha");
+
+		p.setProducts(new HashSet<Product>(getRandomSamplingFrom(buildAndGetProducts(), 25)
+				.values()));
+		p.setProductLists(new HashSet<ProductList>(buildProductList(p, 100).values()));
+		p.setBooks(new HashSet<Book>(buildBooks(p, 100).values()));
+		p.setBookLists(new HashSet<BookList>(buildBookLists(p, 100).values()));
+		p.setLegalEntities(new HashSet<LegalEntity>(buildLegalEntities(p, 100).values()));
+		p.setLegalEntityLists(new HashSet<LegalEntityList>(buildLegalEntityList(p, 100)
+				.values()));
+		p.setSubgroups(new HashSet<SubGroup>(buildSubGroups(p, 100, 20).values()));
+
+		// TODO Users
+		participantMap.put(1, p);
+
+		// TODO make another participant
+
+		return participantMap;
+
+		/*
+		 * participants = new ArrayList<Participant>();
+		 * 
+		 * int j = 20; int start = 1; int end = 1; for (int i = 1; i < j; i++) {
+		 * if (i == 1) { start = 1; end = 50; } else { start = end; end = end +
+		 * 50; } Participant p = new Participant(); p.setId(i);
+		 * p.setName("Participant " + i); p.setBookList(populateBooks(start,
+		 * end)); p.setListOfBookList(populateBookLists(start, end));
+		 * p.setUsers(populateUserList(start, end, p.getId()));
+		 * p.setSubGroupList(populateSubGroups(start, end, p.getUsers()));
+		 * participants.add(p); }
+		 */
 	}
 
-	@Override
-	public List<Product> getProducts() {
-		if (products == null) {
-			return populateAllProducts();
-		} else {
-			return products;
+	private <T> HashMap<Integer, T> sliceMap(Map<Integer, T> srcMap, double offsetPercent,
+			double slicePercent) {
+
+		HashMap<Integer, T> targetMap = new HashMap<Integer, T>();
+
+		int size = srcMap.size();
+
+		// NOTE this is not exactly right - it will create some overlaps. That's
+		// ok for now..
+		int offset = (int) Math.round(offsetPercent * size);
+		int sliceSize = (int) Math.round(slicePercent * size);
+		int sliceEnd = offset + sliceSize;
+
+		log.debug(String.format("Slices = offset: %d, sliceSize: %d, sliceEnd: %d", offset,
+				sliceSize, sliceEnd));
+
+		for (int i = offset; i <= sliceEnd; i++) {
+			targetMap.put(i, srcMap.get(i));
 		}
+
+		return targetMap;
 	}
 
-	@Override
-	public List<User> getUsersForLegalEntity(int id) {
-		List<User> userList = new ArrayList<User>();
-		for (User user : this.users) {
-			if (user.getLegalEntityId() == id) {
-				userList.add(user);
+	/**
+	 * Gets a random sampling from a map
+	 * 
+	 * @param map
+	 * @param size
+	 * @return
+	 */
+	private <R, T> Map<R, T> getRandomSamplingFrom(Map<R, T> map, int size) {
+
+		Set<R> keys = map.keySet();
+		List<R> randomizedKeys = new ArrayList<R>(keys);
+		Collections.shuffle(randomizedKeys);
+		randomizedKeys = randomizedKeys.subList(0, size);
+
+		Map<R, T> newMap = new HashMap<R, T>();
+
+		for (R key : randomizedKeys) {
+			newMap.put(key, map.get(key));
+		}
+		return newMap;
+	}
+
+	private <T> Set<T> getRandomSamplingFrom(Set<T> set, int size) {
+
+		List<T> list = new LinkedList<T>(set);
+		Collections.shuffle(list);
+		return new HashSet<T>(list.subList(0, size));
+	}
+
+	@Deprecated
+	private List<SubGroup> populateSubGroups(int start, int end, List<User> subGrpUsers) {
+		List<SubGroup> subGroupList = new ArrayList<SubGroup>();
+		for (int j = start; j < end; j++) {
+			SubGroup group = null;
+			group.setName("SubGroup" + j);
+			group.setShortName("SG" + j);
+			group.setActive(new Random().nextBoolean());
+			// group.setSubGroupUser(subGrpUsers);
+			subGroupList.add(group);
+		}
+		return subGroupList;
+	}
+
+	@Deprecated
+	private List<User> populateUserList(int start, int end, int participantId) {
+		List<User> list = new ArrayList<User>();
+		for (int j = start; j < end; j++) {
+			User user = new User();
+			// user.setUserId(j);
+			user.setFirstName("FirstName" + j);
+			user.setLastName("LastName" + j);
+			user.setUserName(user.getFirstName() + " " + user.getLastName());
+			user.setLegalEntityId(j);
+			user.setParticipantId(participantId);
+			user.setEmailAddress(user.getFirstName() + "." + user.getLastName()
+					+ "@example.com");
+			user.setPhoneNumber(randomPhoneNumGen());
+			list.add(user);
+		}
+		return list;
+	}
+
+	@Deprecated
+	private List<Book> populateBooks(int start, int end) {
+		if (books == null) {
+			books = new ArrayList<Book>();
+			for (int j = start; j < end; j++) {
+				Book book = new Book(j, "Book" + j);
+				book.setId(j);
+				book.setName("Book " + j);
+				books.add(book);
 			}
 		}
-		return userList;
+		return books;
 	}
 
-	@Override
-	public List<User> getUsersForParticipant(int id) {
-		List<User> userList = new ArrayList<User>();
-		for (User user : this.users) {
-			if (user.getParticipantId() == id) {
-				userList.add(user);
-			}
+	private Map<Integer, Book> buildBooks(Participant p, int size) {
+
+		int lastId = nextBookId + size;
+
+		for (; nextBookId <= lastId; nextBookId++) {
+			Book bl = new Book(nextBookId, "Book" + nextBookId);
+			bl.setParticipantId(p.getId());
+			bookMap.put(nextBookId, bl);
 		}
-		return userList;
+
+		return bookMap;
 	}
 
-	@Override
-	public List<User> getUser(String userName) {
-		List<User> userList = new ArrayList<User>();
-		for (User user : this.users) {
-			if (user.getUserName().equals(userName)) {
-				userList.add(user);
-			}
+	private Map<Integer, LegalEntity> buildLegalEntities(Participant p, int size) {
+
+		int lastId = nextLegalEntityId + size;
+
+		for (; nextLegalEntityId <= lastId; nextLegalEntityId++) {
+			LegalEntity bl = new LegalEntity(nextLegalEntityId, "LegalEntity "
+					+ nextLegalEntityId);
+			bl.setParticipantId(p.getId());
+			legalEntityMap.put(nextLegalEntityId, bl);
 		}
-		return userList;
+
+		return legalEntityMap;
 	}
 
-	@Override
-	public List<SubGroup> getSubGroups(Integer participantId, String userName) {
-		if (participants == null) {
-			populateParticipants();
+	private Map<Integer, LegalEntityList> buildLegalEntityList(Participant p, int size) {
+
+		int lastId = nextLegalEntityListId + size;
+
+		for (; nextLegalEntityListId <= lastId; nextLegalEntityListId++) {
+			LegalEntityList bl = new LegalEntityList(nextLegalEntityId, "LegalEntityList "
+					+ nextLegalEntityId);
+			bl.setParticipantId(p.getId());
+			// TODO this should populate some LE's from the participant's list
+			legalEntityListMap.put(nextLegalEntityListId, bl);
 		}
-		if (participantId != null) {
-			for (Participant participant : participants) {
-				if (participant.getId() == participantId) {
-					return participant.getSubGroupList();
-				}
-			}
-		}
-		if (StringUtils.isNotBlank(userName)) {
-			for (Participant participant : participants) {
-				List<User> userList = participant.getAllUsers();
-				for (User user : userList) {
-					if (userName.contains(user.getUserName())
-							|| userName.equalsIgnoreCase(user.getUserName())) {
-						return participant.getSubGroupList();
-					}
-				}
-			}
-		}
-		return null;
+
+		return legalEntityListMap;
 	}
 
+	private Map<Integer, SubGroup> buildSubGroups(Participant p, int size, int memberSizes) {
+
+		int lastId = nextSubGroupId + size;
+
+		for (; nextSubGroupId <= lastId; nextSubGroupId++) {
+			SubGroup bl = new SubGroup(nextSubGroupId, "SubGroup " + nextSubGroupId);
+			bl.setParticipantId(p.getId());
+
+			bl.setProductList(getRandomSamplingFrom(p.getProductLists(), memberSizes));
+			bl.setProduct(getRandomSamplingFrom(p.getProducts(), memberSizes));
+			bl.setBookLists(getRandomSamplingFrom(p.getBookLists(), memberSizes));
+			bl.setBooks(getRandomSamplingFrom(p.getBooks(), memberSizes));
+			bl.setLegalEntities(getRandomSamplingFrom(p.getLegalEntities(), memberSizes));
+			bl.setLegalEntityLists(getRandomSamplingFrom(p.getLegalEntityLists(),
+					memberSizes));
+
+			subGroupMap.put(nextSubGroupId, bl);
+		}
+
+		return subGroupMap;
+	}
+
+	private Map<Integer, ProductList> buildProductList(Participant p, int size) {
+
+		int lastId = nextProductListId + size;
+
+		for (; nextProductListId <= lastId; nextProductListId++) {
+			ProductList bl = new ProductList(nextProductListId, "ProductList "
+					+ nextProductListId);
+			bl.setParticipantId(p.getId());
+			// TODO add some random products from the participant to these lists
+			productListMap.put(nextProductListId, bl);
+		}
+
+		return productListMap;
+	}
+
+	private Map<Integer, BookList> buildBookLists(Participant p, int size) {
+
+		int lastId = nextBookListId + size;
+
+		for (; nextBookListId <= lastId; nextBookListId++) {
+			BookList bl = new BookList(nextBookListId, "BookList" + nextBookListId);
+			bl.setParticipantId(p.getId());
+			// TODO this should also add books to the list from the participant.
+			booklistMap.put(nextBookListId, bl);
+		}
+
+		return booklistMap;
+	}
+
+	/**
+	 * private Map<Integer, SubGroup> buildAndGetBooks() {
+	 * 
+	 * if (bookMap == null) {
+	 * 
+	 * bookMap = new HashMap<Integer, SubGroup>();
+	 * 
+	 * for (int i = 1; i <= SIZE_BOOKS; i++) { SubGroup bl = new SubGroup(i,
+	 * "Subgroup" + i); bookMap.put(i, bl); } }
+	 * 
+	 * return bookMap; }
+	 **/
+
+	@Deprecated
+	private void populateUsers(int count) {
+		users = new ArrayList<User>();
+		for (int i = 0; i < count; i++) {
+			users.add(createUser(i));
+		}
+	}
+
+	private User createUser(int id, Participant p) {
+
+		User user = new User();
+		user.setId(id);
+		user.setFirstName(nameGen.compose(2));
+		user.setLastName(nameGen.compose(3));
+		user.setUserName(StringUtils.left(user.getFirstName(), 1).toLowerCase()
+				+ StringUtils.left(user.getLastName(), 7));
+
+		user.setParticipantId(p.getId());
+		user.setEmailAddress(user.getFirstName() + "." + user.getLastName()
+				+ "@hawthorneBank.com");
+		user.setPhoneNumber(randomPhoneNumGen());
+		DateTime date = formatter.parseDateTime(randomDateGen());
+		user.setLastLogin(date);
+
+		// TODO finish this up!
+
+		return user;
+	}
+
+	@Deprecated
+	private User createUser(int j) {
+		User user = new User();
+		user.setId(j);
+		user.setFirstName("FirstName" + j);
+		user.setLastName("LastName" + j);
+		user.setUserName(user.getFirstName() + " " + user.getLastName());
+		user.setLegalEntityId(j);
+		user.setParticipantId(1); // only one particpant for now
+		user.setEmailAddress(user.getFirstName() + "." + user.getLastName()
+				+ "@example.com");
+		user.setPhoneNumber(randomPhoneNumGen());
+		DateTime date = formatter.parseDateTime(randomDateGen());
+		user.setLastLogin(date);
+		// user.setProducts(populateProducts(getRandomNumberFrom(0, 4)));
+		return user;
+	}
+
+	private String randomPhoneNumGen() {
+		Random generator = new Random();
+		int num1 = 0;
+		int num2 = 0;
+		int num3 = 0;
+		num1 = generator.nextInt(600) + 100;
+		num2 = generator.nextInt(641) + 100;
+		num3 = generator.nextInt(8999) + 1000;
+		return num1 + "-" + num2 + "-" + num3;
+	}
+
+	private String randomDateGen() {
+		Random generator = new Random();
+		int num1 = 0;
+		int num2 = 0;
+		num1 = generator.nextInt(9) + 10;
+		num2 = generator.nextInt(10) + 1;
+		return num1 + "/" + num2 + "/" + 2012;
+	}
+
+	private void populateLegalEntities(int count) {
+		legalEntities = new ArrayList<LegalEntity>();
+
+		for (int i = 1; i <= count; i++) {
+			legalEntities.add(createLegalEntity(i));
+		}
+	}
+
+	@Deprecated
+	private List<Product> populateAllProducts() {
+		products = new ArrayList<Product>();
+		products.add(new Product(1, "Credit"));
+		products.add(new Product(2, "Rates"));
+		products.add(new Product(3, "Equity"));
+		products.add(new Product(4, "FX"));
+		return products;
+	}
+
+	private Map<Integer, Product> buildAndGetProducts() {
+
+		productMap = new HashMap<Integer, Product>();
+
+		for (int i = 1; i <= SIZE_PRODUCTS; i++) {
+			String productName = "Product " + generateLetter(i);
+			productMap.put(i, new Product(i, productName));
+		}
+
+		return productMap;
+	}
+
+	private static int getRandomNumberFrom(int min, int max) {
+		Random num = new Random();
+		int randomNumber = num.nextInt((max + 1) - min) + min;
+		return randomNumber;
+	}
+
+	private char generateLetter(int index) {
+
+		if (index > 52) {
+			throw new ProgrammaticException("Sorry, cant do > 52");
+		}
+
+		int code = index + 64;
+		if (index > 26) {
+			code = code + 6;
+		}
+		return Character.toChars(code)[0];
+	}
 }

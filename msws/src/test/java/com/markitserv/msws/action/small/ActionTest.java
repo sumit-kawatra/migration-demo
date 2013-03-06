@@ -9,9 +9,8 @@ import org.mockito.Mockito;
 
 import com.markitserv.msws.action.ActionCommand;
 import com.markitserv.msws.internal.UuidGenerator;
-import com.markitserv.msws.testutil.ActionAndActionCommandHelpers;
-import com.markitserv.msws.testutil.ActionAndActionCommandHelpers.TestAction;
-import com.markitserv.msws.testutil.ActionAndActionCommandHelpers.TestActionCommandBuilder;
+import com.markitserv.msws.testutil.FakeAction;
+import com.markitserv.msws.testutil.TestActionCommandBuilder;
 import com.markitserv.msws.validation.OneOfValidation;
 import com.markitserv.msws.validation.RequiredValidation;
 
@@ -23,7 +22,6 @@ import com.markitserv.msws.validation.RequiredValidation;
 public class ActionTest {
 	
 	private static UuidGenerator uuidGenerator;
-	private static ActionAndActionCommandHelpers helpers;
 	private static TestActionCommandBuilder cmdBuilder;
 
 	@BeforeClass
@@ -33,15 +31,14 @@ public class ActionTest {
 		uuidGenerator = Mockito.mock(UuidGenerator.class);
 		Mockito.when(uuidGenerator.generateUuid()).thenReturn("Stubbed UUID");
 
-		helpers = new ActionAndActionCommandHelpers();
-		cmdBuilder = helpers.new TestActionCommandBuilder();
+		cmdBuilder = new TestActionCommandBuilder();
 	}
 
-	private TestAction action;
+	private FakeAction action;
 	
 	@Before
 	public void setupEach() {
-		action = helpers.new TestAction();
+		action = new FakeAction();
 		action.setUuidGenerator(uuidGenerator);
 	}
 

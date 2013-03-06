@@ -25,12 +25,11 @@ import com.markitserv.msws.filters.PaginationFilter;
 
 /**
  * @author kiran.gogula
- *
+ * 
  */
 @Service
-public class DescribeInterestGroups extends AbstractPaginatedAction{
+public class DescribeInterestGroups extends AbstractPaginatedAction {
 
-	
 	Logger log = LoggerFactory.getLogger(DescribeInterestGroups.class);
 
 	@Autowired
@@ -41,7 +40,7 @@ public class DescribeInterestGroups extends AbstractPaginatedAction{
 
 		// Add validation
 		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
-		
+
 		// Sorting
 		SortingPresetDefinitionBuilder sortBuilder = new SortingPresetDefinitionBuilder();
 		sortBuilder = sortBuilder.setDefaultSort("name", SortOrder.Asc);
@@ -50,12 +49,9 @@ public class DescribeInterestGroups extends AbstractPaginatedAction{
 
 		return def;
 	}
-	
-	
-	
+
 	@Override
-	protected ActionResult performAction(ActionParameters params,
-			ActionFilters filters) {
+	protected ActionResult performAction(ActionParameters params, ActionFilters filters) {
 		List<InterestGroup> groupList = data.getInterestGroups();
 
 		int totalRecords = groupList.size();
@@ -67,16 +63,15 @@ public class DescribeInterestGroups extends AbstractPaginatedAction{
 
 		return res;
 	}
-	
-	
+
 	private List<InterestGroup> applyFilters(ActionParameters p, ActionFilters f,
-			List<InterestGroup> interestGroups) {		
+			List<InterestGroup> interestGroups) {
 
-		int pageNumber = p.getParameterAsInt(CommonParamKeys.PageNumber
-				.toString());
-		int pageSize = p.getParameterAsInt(CommonParamKeys.PageSize.toString());
+		int pageStartIndex = p.getParameter(CommonParamKeys.PageStartIndex.toString(),
+				Integer.class);
+		int pageSize = p.getParameter(CommonParamKeys.PageSize.toString(), Integer.class);
 
-		interestGroups = PaginationFilter.filter(interestGroups, pageNumber, pageSize);
+		interestGroups = PaginationFilter.filter(interestGroups, pageStartIndex, pageSize);
 		return interestGroups;
 	}
 

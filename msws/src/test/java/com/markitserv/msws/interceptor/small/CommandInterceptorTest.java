@@ -18,7 +18,6 @@ public class CommandInterceptorTest extends AbstractMswsTest {
 	private final String STUBBED_UUID_VALUE = "Stubbed UUID";
 	private CommandInterceptor interceptor;
 
-	
 	@Test
 	public void testCommandInterceptor()
 		throws Exception {
@@ -40,10 +39,8 @@ public class CommandInterceptorTest extends AbstractMswsTest {
 	}
 
 	@Before
-	public void setUp()
-		throws Exception {
+	public void setUp() {
 		interceptor = new CommandInterceptor();
-		interceptor.setUuidGenerator(this.uuidGeneratorMock);
+		interceptor.setUuidGenerator(CommandInterceptorTest.uuidGeneratorMock);
 	}
-
 }
