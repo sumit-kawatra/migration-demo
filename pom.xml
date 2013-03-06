@@ -26,6 +26,7 @@
 		<jackson.version>2.1.2</jackson.version>
 		<hibernate-validation.version>4.3.0.Final</hibernate-validation.version>
 		<jcl-over-slf4.version>1.7.1</jcl-over-slf4.version>
+		<ehcache.version>2.6.5</ehcache.version>
 		<guava.version>13.0</guava.version>
 
 		<!-- Plugin Versions -->
@@ -171,6 +172,26 @@
 			  <groupId>com.google.guava</groupId>
 			  <artifactId>guava</artifactId>
 			  <version>${guava.version}</version>
+			</dependency>
+
+			<!-- spring cache abstraction -->
+			<dependency>
+		    	<groupId>org.springframework</groupId>
+			    <artifactId>spring-context-support</artifactId>
+			    <version>${spring.version}</version>
+			</dependency>
+			<!-- ehcache -->
+			<dependency>
+				<groupId>net.sf.ehcache</groupId>
+			    <artifactId>ehcache-core</artifactId>
+			    <version>${ehcache.version}</version>
+			</dependency>
+			
+			<!-- guava library -->
+			<dependency>
+				<groupId>com.google.guava</groupId>
+			    <artifactId>guava</artifactId>
+			    <version>${guava.version}</version>
 			</dependency>
 
 			<dependency>

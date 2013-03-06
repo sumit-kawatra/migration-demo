@@ -5,21 +5,19 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Objects;
 import com.markitserv.msws.AbstractWebserviceResult;
-import com.markitserv.msws.ResponseMetadata;
 import com.markitserv.msws.Type;
 
 public class ActionResult extends AbstractWebserviceResult {
-	
+
 	private List<? extends Type> list;
 	private Type item;
-	
+
 	/*
-	public ActionResult () {
-		super();
-	}
-	*/
-	
+	 * public ActionResult () { super(); }
+	 */
+
 	public ActionResult(Type item) {
 		super();
 		this.item = item;
@@ -31,7 +29,7 @@ public class ActionResult extends AbstractWebserviceResult {
 	}
 
 	@JsonInclude(Include.NON_NULL)
-	@JsonProperty(value="list")
+	@JsonProperty(value = "list")
 	public List<? extends Type> getList() {
 		return list;
 	}
@@ -48,4 +46,15 @@ public class ActionResult extends AbstractWebserviceResult {
 	public void setItem(Type item) {
 		this.item = item;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(list, item);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return Objects.equal(this, obj);
+	}
+
 }

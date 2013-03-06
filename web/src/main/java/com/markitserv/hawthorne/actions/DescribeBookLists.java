@@ -123,7 +123,7 @@ public class DescribeBookLists extends AbstractPaginatedAction {
 		}
 
 		if (params.isParameterSet(PARAM_NAME_USER_NAME)) {
-			userName = (String) params.getParameter(PARAM_NAME_USER_NAME);
+			userName = (String) params.getParameter(PARAM_NAME_USER_NAME, String.class);
 		}
 
 		Set<BookList> listOfBookList = getBookLists(paList, participantId, userName);
@@ -153,5 +153,4 @@ public class DescribeBookLists extends AbstractPaginatedAction {
 		booklists = PaginationFilter.filter(booklists, pageStartIndex, pageSize);
 		return booklists;
 	}
-
 }

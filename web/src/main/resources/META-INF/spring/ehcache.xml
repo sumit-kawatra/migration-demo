@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd" updateCheck="false">
+    
+ <!-- Default Cache Configuration, with name 'default' -->
+ <!-- For now, we can use it for static data and it will never expire -->   
+ <defaultCache
+      maxElementsInMemory="500"
+      eternal="true"
+      overflowToDisk="false"
+      memoryStoreEvictionPolicy="LFU" />
+               
+  <cache name="userListCache"
+      maxElementsInMemory="100"
+      eternal="false"
+      overflowToDisk="false"
+      memoryStoreEvictionPolicy="LFU" 
+      />
+</ehcache>

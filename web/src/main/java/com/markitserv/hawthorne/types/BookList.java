@@ -5,11 +5,10 @@ package com.markitserv.hawthorne.types;
 
 import java.util.Set;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.google.common.base.Objects;
 import com.markitserv.msws.Type;
 
 /**
@@ -59,23 +58,12 @@ public class BookList extends Type {
 
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(id);
+		return Objects.hashCode(id, name);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (this == obj) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		BookList book = (BookList) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj)).append(id, book.id)
-				.isEquals();
+		return Objects.equal(this, obj);
 	}
 
 	@Override

@@ -112,6 +112,14 @@
 		  <groupId>com.google.guava</groupId>
 		  <artifactId>guava</artifactId>
 		</dependency>		
+		<dependency>
+		 	<groupId>org.springframework</groupId>
+		    <artifactId>spring-context-support</artifactId>
+		</dependency>
+		<dependency>
+	 		<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+		</dependency>		
 
 		<!-- Jetty, and it's dependencies. These are expanded into the root dir 
 			when creating a dist with the 'dist' profile -->

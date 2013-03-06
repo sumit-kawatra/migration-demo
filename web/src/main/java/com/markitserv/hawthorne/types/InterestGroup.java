@@ -16,6 +16,7 @@ import com.markitserv.msws.Type;
  * 
  */
 public class InterestGroup extends Type {
+
 	private int id;
 	private String name;
 	private String shortName;

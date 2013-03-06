@@ -2,6 +2,7 @@ package com.markitserv.hawthorne.types;
 
 import java.util.List;
 
+import com.google.common.base.Objects;
 import com.markitserv.msws.Type;
 
 public class SessionInfo extends Type {
@@ -42,5 +43,15 @@ public class SessionInfo extends Type {
 
 	public void setParticipantName(String participantName) {
 		this.participantName = participantName;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(username, roles, participantName, fullName);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return Objects.equal(this, obj);
 	}
 }

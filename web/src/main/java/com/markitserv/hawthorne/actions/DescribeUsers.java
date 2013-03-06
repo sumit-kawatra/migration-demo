@@ -97,7 +97,7 @@ public class DescribeUsers extends AbstractPaginatedAction {
 
 	private void addLegalEntityIdDef(ParamsAndFiltersDefinition def) {
 		// Legal Entity ID
-		def.addValidation(PARAM_NAME_LEGAL_ENTITY_ID, new ForEachValidator(
+		def.addValidation(PARAM_NAME_LEGAL_ENTITY_ID, new ForEachValidatorAndConverter(
 				new IntegerValidationAndConversion()));
 		def.addValidationAndConversion(PARAM_NAME_LEGAL_ENTITY_ID,
 				new ForEachValidatorAndConverter(new IntegerMaxMinValidationAndConversion(1,

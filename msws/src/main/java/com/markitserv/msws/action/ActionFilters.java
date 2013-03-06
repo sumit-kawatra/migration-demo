@@ -1,11 +1,11 @@
 package com.markitserv.msws.action;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Objects;
 import com.markitserv.msws.internal.MswsAssert;
 
 /**
@@ -44,41 +44,27 @@ public class ActionFilters {
 
 	/**
 	 * Assumes that there's only one value for this filter
+	 * 
 	 * @param key
 	 * @return
 	 */
 	public String getSingleFilter(String key) {
-		
+
 		List<String> filtersForKey = filters.get(key);
 		MswsAssert.mswsAssert(filtersForKey.size() == 1,
 				"Expected filter '%s' to have only one value.", key);
-		
+
 		return filtersForKey.get(0);
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((filters == null) ? 0 : filters.hashCode());
-		return result;
+		return Objects.hashCode(filters);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ActionFilters other = (ActionFilters) obj;
-		if (filters == null) {
-			if (other.filters != null)
-				return false;
-		} else if (!filters.equals(other.filters))
-			return false;
-		return true;
+		return Objects.equal(this, obj);
 	}
 
 	@Override
@@ -86,8 +72,8 @@ public class ActionFilters {
 		final int maxLen = 10;
 		StringBuilder builder = new StringBuilder();
 		builder.append("ActionFilters [filters=")
-				.append(filters != null ? toString(filters.entrySet(), maxLen)
-						: null).append("]");
+				.append(filters != null ? toString(filters.entrySet(), maxLen) : null)
+				.append("]");
 		return builder.toString();
 	}
 
@@ -95,8 +81,7 @@ public class ActionFilters {
 		StringBuilder builder = new StringBuilder();
 		builder.append("[");
 		int i = 0;
-		for (Iterator<?> iterator = collection.iterator(); iterator.hasNext()
-				&& i < maxLen; i++) {
+		for (Iterator<?> iterator = collection.iterator(); iterator.hasNext() && i < maxLen; i++) {
 			if (i > 0)
 				builder.append(", ");
 			builder.append(iterator.next());

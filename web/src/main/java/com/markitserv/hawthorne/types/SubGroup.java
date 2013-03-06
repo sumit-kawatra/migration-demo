@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.google.common.base.Objects;
 import com.markitserv.msws.Type;
 
 /**
@@ -136,4 +137,13 @@ public class SubGroup extends Type {
 		this.id = id;
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return Objects.equal(this, obj);
+	}
 }

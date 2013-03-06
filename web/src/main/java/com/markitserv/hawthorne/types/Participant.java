@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.google.common.base.Objects;
 import com.markitserv.msws.Type;
 
 /**
@@ -121,5 +122,15 @@ public class Participant extends Type {
 
 	public void setInterestGroups(Set<InterestGroup> interestGroups) {
 		this.interestGroups = interestGroups;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return Objects.equal(this, obj);
 	}
 }

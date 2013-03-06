@@ -100,8 +100,7 @@ public class DescribeSubGroups extends AbstractPaginatedAction {
 		String userName = null;
 
 		if (params.isParameterSet(PARAM_PARTICIPANT_ID)) {
-			participantId = Integer.parseInt((String) params
-					.getParameter(PARAM_PARTICIPANT_ID));
+			participantId = params.getParameter(PARAM_PARTICIPANT_ID, Integer.class);
 		}
 
 		if (params.isParameterSet(PARAM_NAME_USER_NAME)) {

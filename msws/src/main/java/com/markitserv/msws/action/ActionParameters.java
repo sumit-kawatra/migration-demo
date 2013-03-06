@@ -1,16 +1,10 @@
 package com.markitserv.msws.action;
 
 import java.util.Collection;
-
-import static com.markitserv.msws.internal.MswsAssert.mswsAssert;
-
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
-import com.markitserv.msws.exceptions.ProgrammaticException;
-import com.markitserv.msws.internal.Constants;
-import com.markitserv.msws.internal.MswsAssert;
+import com.google.common.base.Objects;
 
 public class ActionParameters {
 
@@ -22,6 +16,7 @@ public class ActionParameters {
 
 	/**
 	 * Use getParameter(String key, Class type) instead
+	 * 
 	 * @param key
 	 * @return
 	 */
@@ -29,10 +24,10 @@ public class ActionParameters {
 	public Object getParameter(String key) {
 		return params.get(key);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <T> T getParameter(String k, Class<T> type) {
-		return (T)this.params.get(k);
+		return (T) this.params.get(k);
 	}
 
 	@Deprecated
@@ -48,7 +43,7 @@ public class ActionParameters {
 	public void addParameter(String key, Object value) {
 		params.put(key, value);
 	}
-	
+
 	public Map<String, Object> getAllParameters() {
 		return params;
 	}
@@ -59,27 +54,12 @@ public class ActionParameters {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((params == null) ? 0 : params.hashCode());
-		return result;
+		return Objects.hashCode(params);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ActionParameters other = (ActionParameters) obj;
-		if (params == null) {
-			if (other.params != null)
-				return false;
-		} else if (!params.equals(other.params))
-			return false;
-		return true;
+		return Objects.equal(this, obj);
 	}
 
 	@Override
@@ -87,8 +67,8 @@ public class ActionParameters {
 		final int maxLen = 10;
 		StringBuilder builder = new StringBuilder();
 		builder.append("ActionParameters [params=")
-				.append(params != null ? toString(params.entrySet(), maxLen)
-						: null).append("]");
+				.append(params != null ? toString(params.entrySet(), maxLen) : null)
+				.append("]");
 		return builder.toString();
 	}
 
@@ -96,8 +76,7 @@ public class ActionParameters {
 		StringBuilder builder = new StringBuilder();
 		builder.append("[");
 		int i = 0;
-		for (Iterator<?> iterator = collection.iterator(); iterator.hasNext()
-				&& i < maxLen; i++) {
+		for (Iterator<?> iterator = collection.iterator(); iterator.hasNext() && i < maxLen; i++) {
 			if (i > 0)
 				builder.append(", ");
 			builder.append(iterator.next());
