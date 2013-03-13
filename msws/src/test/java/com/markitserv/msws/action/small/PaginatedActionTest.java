@@ -23,7 +23,7 @@ public class PaginatedActionTest extends AbstractMswsTest {
 	}
 	
 	@Test(expected=AssertionException.class)
-	public void failsIfEitherTotalSizeNotSet() {
+	public void failsIfTotalSizeNotSet() {
 		ActionCommand cmd = actionCommandBuilder.addParam("Size", 10).build();
 		target.dontSetTotalSize(true);
 		target.performAction(cmd);

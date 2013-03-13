@@ -16,6 +16,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +41,7 @@ import com.markitserv.msws.exceptions.ProgrammaticException;
  * 
  */
 @Service
-public class HardcodedHawthorneBackend implements HawthorneBackend {
+public class HardcodedHawthorneBackend implements HawthorneBackend, InitializingBean {
 
 	private static final int SIZE_PRODUCTS = 30;
 
@@ -60,6 +61,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 	private Map<Integer, SubGroup> subGroupMap = new HashMap<Integer, SubGroup>();
 	private Map<Integer, User> userMap = new HashMap<Integer, User>();
 	// TODO Interest Group
+	private Map<Integer, InterestGroup> interestGroupMap = new HashMap<Integer, InterestGroup>();
 
 	private int nextBookListId = 1;
 	private int nextBookId = 1;
@@ -67,6 +69,8 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 	private int nextLegalEntityListId = 1;
 	private int nextProductListId = 1;
 	private int nextSubGroupId = 1;
+	private int nextInterestGroupId = 1;
+	private int nextUserId = 1;
 
 	// NOTE we shouldn't need these after the cleanup
 	private List<LegalEntity> legalEntities;
@@ -77,11 +81,13 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 	private List<Product> products;
 	private List<User> users;
 
+	private Set<InterestGroup> interestGroupSet;
+
 	@Override
 	@Deprecated
 	public List<Participant> getParticipants() {
 		if (participants == null) {
-			buildAndGetParticipants();
+			populateAllHardcodedData();
 		}
 		return participants;
 	}
@@ -104,13 +110,21 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 		return legalEntities;
 	}
 
-	@Override
 	@Deprecated
 	public List<InterestGroup> getInterestGroups() {
 		if (interestGroupList == null) {
 			populateInterestGroupList(10000);
 		}
 		return this.interestGroupList;
+	}
+
+	@Deprecated
+	public Set<InterestGroup> retrieveInterestGroups() {
+		if (interestGroupMap.size() == 0) {
+			populateAllHardcodedData();
+		}
+		Set<InterestGroup> grpSet = new HashSet<InterestGroup>(interestGroupMap.values());
+		return grpSet;
 	}
 
 	@Override
@@ -163,7 +177,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 	@Deprecated
 	public List<SubGroup> getSubGroups(Integer participantId, String userName) {
 		if (participants == null) {
-			buildAndGetParticipants();
+			populateAllHardcodedData();
 		}
 		if (participantId != null) {
 			for (Participant participant : participants) {
@@ -262,7 +276,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 	}
 
 	// TODO !!! Move this to private. Only public now for testing
-	public Map<Integer, Participant> buildAndGetParticipants() {
+	public Map<Integer, Participant> populateAllHardcodedData() {
 
 		if (participantMap.size() > 0) {
 			return participantMap;
@@ -276,6 +290,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 
 		p.setProducts(new HashSet<Product>(getRandomSamplingFrom(buildAndGetProducts(), 25)
 				.values()));
+
 		p.setProductLists(new HashSet<ProductList>(buildProductList(p, 100).values()));
 		p.setBooks(new HashSet<Book>(buildBooks(p, 100).values()));
 		p.setBookLists(new HashSet<BookList>(buildBookLists(p, 100).values()));
@@ -283,10 +298,32 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 		p.setLegalEntityLists(new HashSet<LegalEntityList>(buildLegalEntityList(p, 100)
 				.values()));
 		p.setSubgroups(new HashSet<SubGroup>(buildSubGroups(p, 100, 20).values()));
+		p.setUsers(new HashSet<User>(buildUserList(p, 50).values()));
+		p.setInterestGroups(new HashSet<InterestGroup>(buildInterestGroups(p, 1000, 1)
+				.values()));
 
 		// TODO Users
-		participantMap.put(1, p);
 
+		Participant p1 = new Participant();
+		p1.setId(2);
+		p1.setName("Hawthorne Test Bank Beta");
+
+		p1.setProducts(new HashSet<Product>(
+				getRandomSamplingFrom(buildAndGetProducts(), 25).values()));
+
+		p1.setProductLists(new HashSet<ProductList>(buildProductList(p1, 100).values()));
+		p1.setBooks(new HashSet<Book>(buildBooks(p1, 100).values()));
+		p1.setBookLists(new HashSet<BookList>(buildBookLists(p1, 100).values()));
+		p1.setLegalEntities(new HashSet<LegalEntity>(buildLegalEntities(p1, 100).values()));
+		p1.setLegalEntityLists(new HashSet<LegalEntityList>(buildLegalEntityList(p1, 100)
+				.values()));
+		p1.setSubgroups(new HashSet<SubGroup>(buildSubGroups(p1, 100, 20).values()));
+		p1.setUsers(new HashSet<User>(buildUserList(p1, 50).values()));
+		p1.setInterestGroups(new HashSet<InterestGroup>(buildInterestGroups(p1, 10, 1)
+				.values()));
+
+		participantMap.put(1, p);
+		participantMap.put(2, p1);
 		// TODO make another participant
 
 		return participantMap;
@@ -303,6 +340,33 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 		 * p.setSubGroupList(populateSubGroups(start, end, p.getUsers()));
 		 * participants.add(p); }
 		 */
+	}
+
+	private Map<Integer, User> buildUserList(Participant p, int size) {
+
+		int lastId = nextUserId + size;
+
+		for (; nextUserId <= lastId; nextUserId++) {
+			User usr = createUser(nextUserId, p);
+			userMap.put(nextUserId, usr);
+		}
+
+		return userMap;
+	}
+
+	private Map<Integer, InterestGroup> buildInterestGroups(Participant p, int size,
+			int memberSizes) {
+		int lastId = nextInterestGroupId + size;
+		for (; nextInterestGroupId <= lastId; nextInterestGroupId++) {
+			InterestGroup i1 = new InterestGroup(nextInterestGroupId, "InterestGroup "
+					+ nextInterestGroupId);
+			i1.setParticipantId(p.getId());
+			i1.setShortName("IG-" + nextInterestGroupId);
+			i1.setActive(true);
+			// i1.setUsers(getRandomSamplingFrom(p.getUsers(), memberSizes));
+			interestGroupMap.put(nextInterestGroupId, i1);
+		}
+		return interestGroupMap;
 	}
 
 	private <T> HashMap<Integer, T> sliceMap(Map<Integer, T> srcMap, double offsetPercent,
@@ -425,6 +489,8 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 			LegalEntity bl = new LegalEntity(nextLegalEntityId, "LegalEntity "
 					+ nextLegalEntityId);
 			bl.setParticipantId(p.getId());
+			bl.setBic("LE-" + nextLegalEntityId);
+			bl.setActive(true);
 			legalEntityMap.put(nextLegalEntityId, bl);
 		}
 
@@ -440,6 +506,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 					+ nextLegalEntityId);
 			bl.setParticipantId(p.getId());
 			// TODO this should populate some LE's from the participant's list
+			bl.setLegalEntities(getRandomSamplingFrom(p.getLegalEntities(), 2));
 			legalEntityListMap.put(nextLegalEntityListId, bl);
 		}
 
@@ -476,6 +543,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 			ProductList bl = new ProductList(nextProductListId, "ProductList "
 					+ nextProductListId);
 			bl.setParticipantId(p.getId());
+			bl.setProducts(getRandomSamplingFrom(p.getProducts(), 3));
 			// TODO add some random products from the participant to these lists
 			productListMap.put(nextProductListId, bl);
 		}
@@ -491,6 +559,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 			BookList bl = new BookList(nextBookListId, "BookList" + nextBookListId);
 			bl.setParticipantId(p.getId());
 			// TODO this should also add books to the list from the participant.
+			bl.setBooks(getRandomSamplingFrom(p.getBooks(), 2));
 			booklistMap.put(nextBookListId, bl);
 		}
 
@@ -535,6 +604,15 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 		user.setLastLogin(date);
 
 		// TODO finish this up!
+		user.setBooks(getRandomSamplingFrom(p.getBooks(), 5));
+		user.setBookLists(getRandomSamplingFrom(p.getBookLists(), 5));
+		user.setParticipantId(p.getId());
+		user.setProductList(getRandomSamplingFrom(p.getProductLists(), 3));
+		user.setProducts(getRandomSamplingFrom(p.getProducts(), 5));
+		user.setLegalEntityId(getRandomSamplingFrom(p.getLegalEntities(), 1).iterator()
+				.next().getId());
+		user.setLegalEntities(getRandomSamplingFrom(p.getLegalEntities(), 5));
+		user.setLegalEntityLists(getRandomSamplingFrom(p.getLegalEntityLists(), 3));
 
 		return user;
 	}
@@ -624,5 +702,32 @@ public class HardcodedHawthorneBackend implements HawthorneBackend {
 			code = code + 6;
 		}
 		return Character.toChars(code)[0];
+	}
+
+	@Override
+	public Set<InterestGroup> retrieveInterestGrpsForUser(int id) {
+		// TODO filter the interest groups where the user is part of the grp
+
+		return null;
+	}
+
+	public void setNameGen(RandomNameGenerator namegen) {
+		this.nameGen = namegen;
+	}
+
+	@Override
+	public Set<InterestGroup> getInterestGroupsForParticipant(int participantId) {
+		return this.getParticipant(participantId).getInterestGroups();
+	}
+
+	@Override
+	public Participant getParticipant(int participantId) {
+		return this.participantMap.get(participantId);
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		// TODO ! make this async
+		this.populateAllHardcodedData();
 	}
 }

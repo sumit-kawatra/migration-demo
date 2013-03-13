@@ -1,6 +1,7 @@
 package com.markitserv.hawthorne;
 
 import java.util.List;
+import java.util.Set;
 
 import com.markitserv.hawthorne.types.InterestGroup;
 import com.markitserv.hawthorne.types.LegalEntity;
@@ -25,10 +26,14 @@ public interface HawthorneBackend {
 
 	List<Participant> getParticipants();
 
-	List<InterestGroup> getInterestGroups();
-
 	List<Product> getProducts();
 
 	List<SubGroup> getSubGroups(Integer participantId, String userName);
+
+	Set<InterestGroup> retrieveInterestGrpsForUser(int id);
+
+	Set<InterestGroup> getInterestGroupsForParticipant(int participantId);
+
+	Participant getParticipant(int participantId);
 
 }

@@ -43,7 +43,17 @@ public abstract class AbstractAction implements InitializingBean {
 		ActionResult result = this.performAction(parameters, filters);
 
 		validateResult(result);
+		result = postProcessResult(result);
 
+		return result;
+	}
+
+	/**
+	 * Gives subclasses a place to process a result after it's been performed.
+	 * @param result
+	 * @return
+	 */
+	protected ActionResult postProcessResult(ActionResult result) {
 		return result;
 	}
 

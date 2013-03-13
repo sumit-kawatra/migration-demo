@@ -107,6 +107,11 @@
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 		</dependency>
+		   <!-- guava library -->
+		<dependency>
+		  <groupId>com.google.guava</groupId>
+		  <artifactId>guava</artifactId>
+		</dependency>		
 
 		<!-- Jetty, and it's dependencies. These are expanded into the root dir 
 			when creating a dist with the 'dist' profile -->

@@ -19,13 +19,16 @@ public class PaginationFilter<T extends Type> extends AbstractFilter<T> {
 	private int pageStartIndex;
 
 	/**
-	 * @param Collection to filter
-	 * @param Starting index.  First element is index # 1
-	 * @param Size of the page to return
+	 * @param Collection
+	 *           to filter
+	 * @param Starting
+	 *           index. First element is index # 1
+	 * @param Size
+	 *           of the page to return
 	 * @return
 	 */
-	public static <T extends Type> List<T> filter(List<T> toFilter,
-			int pageStartIndex, int pageSize) {
+	public static <T extends Type> List<T> filter(List<T> toFilter, int pageStartIndex,
+			int pageSize) {
 
 		PaginationFilter<T> f = new PaginationFilter<T>(pageStartIndex, pageSize);
 		return f.filter(toFilter);
@@ -41,8 +44,8 @@ public class PaginationFilter<T extends Type> extends AbstractFilter<T> {
 	public List<T> filter(List<T> toFilter) {
 
 		int startingIndex = pageStartIndex - 1;
-		int endingIndex = startingIndex + pageStartIndex;
-		
+		int endingIndex = startingIndex + pageSize;
+
 		// returns an empty list if the pageNumber is too high
 		if (startingIndex > toFilter.size() - 1) {
 			return new ArrayList<T>();
@@ -51,9 +54,9 @@ public class PaginationFilter<T extends Type> extends AbstractFilter<T> {
 		if (endingIndex > toFilter.size()) {
 			endingIndex = toFilter.size();
 		}
-		
+
 		List<T> subList = toFilter.subList(startingIndex, endingIndex);
-		
+
 		return subList;
 	}
-} 
+}

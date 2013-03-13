@@ -51,7 +51,7 @@ public abstract class AbstractPaginatedAction extends AbstractAction {
 
 		return def;
 	}
-
+	
 	@Override
 	protected void validateResult(ActionResult result) {
 		super.validateResult(result);
@@ -62,22 +62,28 @@ public abstract class AbstractPaginatedAction extends AbstractAction {
 		PaginatedActionResult pRes = (PaginatedActionResult) result;
 		PaginatedActionResponseMetaData metaData = pRes.getPaginatedMetaData();
 
-		mswsAssert(
-				metaData.getApproxTotalRecords() != Constants.INTEGER_NOT_SET
-						|| metaData.getTotalRecords() != Constants.INTEGER_NOT_SET,
-				"Either totalRecords or approxTotalRecords must be set on a pagingated action result.");
-
-		mswsAssert(
-				!(metaData.getApproxTotalRecords() != Constants.INTEGER_NOT_SET && metaData
-						.getTotalRecords() != Constants.INTEGER_NOT_SET),
-				"Either totalRecords or approxTotalRecords must be set, but not both.");
-
 		mswsAssert(result.getItem() == null,
 				"Cannot set an 'item' on a paginated action.  Must set a 'list'");
-
+		
+		mswsAssert(metaData.getTotalRecords() != Constants.INTEGER_NOT_SET, "Total Records is requried.");
+		
 		mswsAssert(
 				result.getList().size() <= this.getMaxPageSize(),
 				"List size (%d) cannot be greater than the max page size of %d",
 				result.getList().size(), this.getMaxPageSize());
+	}
+	
+	/**
+	 * Tacks the totalResults onto the response metadata
+	 */
+	@Override
+	protected ActionResult postProcessResult(ActionResult result) {
+		
+		PaginatedActionResult pRes = (PaginatedActionResult) result;
+		PaginatedActionResponseMetaData metaData = pRes.getPaginatedMetaData();
+		metaData.setRequestRecords(pRes.getList().size());
+		result.setMetaData(metaData);
+		return result;
+		
 	}
 }

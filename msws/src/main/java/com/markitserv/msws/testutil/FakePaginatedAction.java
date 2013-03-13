@@ -46,10 +46,6 @@ public class FakePaginatedAction extends AbstractPaginatedAction {
 			metaData.setTotalRecords(payload.size());
 		}
 		
-		if (!dontSetApproxSize) {
-			metaData.setApproxTotalRecords(payload.size());
-		}
-
 		return res;
 	}
 

@@ -26,7 +26,7 @@ public class TestBackendDataAction extends AbstractAction {
 	@Override
 	protected ActionResult performAction(ActionParameters params, ActionFilters filters) {
 
-		Map<Integer, Participant> x = backend.buildAndGetParticipants();
+		Map<Integer, Participant> x = backend.populateAllHardcodedData();
 		TestBackendType data = new TestBackendType();
 		data.data = x;
 

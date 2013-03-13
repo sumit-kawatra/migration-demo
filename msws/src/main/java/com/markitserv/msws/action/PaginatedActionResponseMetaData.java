@@ -7,10 +7,13 @@ import com.markitserv.msws.internal.Constants;
 public class PaginatedActionResponseMetaData extends ActionResponseMetadata {
 
 	private int totalRecords = Constants.INTEGER_NOT_SET;
-	private int approxTotalRecords = Constants.INTEGER_NOT_SET;
 	private int totalFilteredRecords = Constants.INTEGER_NOT_SET;
 	private int requestRecords = Constants.INTEGER_NOT_SET;
 
+	/**
+	 * The number of records actually returned by this request, after pagination
+	 */
+	@JsonInclude(Include.NON_DEFAULT)
 	public int getRequestRecords() {
 		return requestRecords;
 	}
@@ -19,6 +22,11 @@ public class PaginatedActionResponseMetaData extends ActionResponseMetadata {
 		this.requestRecords = requestRecords;
 	}
 
+	/**
+	 * The number of records after filtering (i.e. the total number of records after
+	 * filtering has been applied - not just the number of records being
+	 * returned in this result set)
+	 */
 	@JsonInclude(Include.NON_DEFAULT)
 	public int getTotalFilteredRecords() {
 		return totalFilteredRecords;
@@ -28,6 +36,10 @@ public class PaginatedActionResponseMetaData extends ActionResponseMetadata {
 		this.totalFilteredRecords = totalFilteredRecords;
 	}
 
+	/**
+	 * Total number of records, before filtering and pagination (if known)
+	 * @return
+	 */
 	@JsonInclude(Include.NON_DEFAULT)
 	public int getTotalRecords() {
 		return totalRecords;
@@ -35,14 +47,5 @@ public class PaginatedActionResponseMetaData extends ActionResponseMetadata {
 
 	public void setTotalRecords(int totalRecords) {
 		this.totalRecords = totalRecords;
-	}
-
-	@JsonInclude(Include.NON_DEFAULT)
-	public int getApproxTotalRecords() {
-		return approxTotalRecords;
-	}
-
-	public void setApproxTotalRecords(int approxTotalRecords) {
-		this.approxTotalRecords = approxTotalRecords;
 	}
 } 
