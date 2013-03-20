@@ -3,6 +3,8 @@ package com.markitserv.msws.command;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.markitserv.msws.exceptions.MswsException;
@@ -16,6 +18,8 @@ import com.markitserv.msws.exceptions.UnknownCommandException;
  */
 @Service
 public class CommandRunnerRegistry {
+	
+	Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	Map<Class<?>, AbstractCommandRunner> registry = new HashMap<Class<?>, AbstractCommandRunner>();
 	
@@ -31,6 +35,7 @@ public class CommandRunnerRegistry {
 	}
 	
 	public void registerCommandRunner(AbstractCommandRunner runner) {
+		log.info("Adding a Command Runner registry for " + runner.getClass().getSimpleName());
 		registry.put(runner.getCommandType(), runner);
 	}
 } 

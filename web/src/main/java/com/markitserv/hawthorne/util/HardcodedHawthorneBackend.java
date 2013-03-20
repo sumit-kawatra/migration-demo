@@ -16,11 +16,13 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.HawthorneBackend;
+import com.markitserv.hawthorne.commands.PopulateHardcodedDataCommand;
 import com.markitserv.hawthorne.types.Book;
 import com.markitserv.hawthorne.types.BookList;
 import com.markitserv.hawthorne.types.InterestGroup;
@@ -31,6 +33,7 @@ import com.markitserv.hawthorne.types.Product;
 import com.markitserv.hawthorne.types.ProductList;
 import com.markitserv.hawthorne.types.SubGroup;
 import com.markitserv.hawthorne.types.User;
+import com.markitserv.msws.command.CommandDispatcher;
 import com.markitserv.msws.exceptions.ProgrammaticException;
 
 /**
@@ -41,7 +44,8 @@ import com.markitserv.msws.exceptions.ProgrammaticException;
  * 
  */
 @Service
-public class HardcodedHawthorneBackend implements HawthorneBackend, InitializingBean {
+public class HardcodedHawthorneBackend implements HawthorneBackend,
+		ApplicationListener<ContextRefreshedEvent> {
 
 	private static final int SIZE_PRODUCTS = 30;
 
@@ -49,6 +53,10 @@ public class HardcodedHawthorneBackend implements HawthorneBackend, Initializing
 
 	@Autowired
 	private RandomNameGenerator nameGen;
+
+	@Autowired
+	private CommandDispatcher cmdDispatcher;
+
 	private DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
 
 	private Map<Integer, Participant> participantMap = new HashMap<Integer, Participant>();
@@ -726,8 +734,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend, Initializing
 	}
 
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		// TODO ! make this async
-		this.populateAllHardcodedData();
+	public void onApplicationEvent(ContextRefreshedEvent event) {
+		cmdDispatcher.dispatchAsyncCommand(new PopulateHardcodedDataCommand());
 	}
 }
