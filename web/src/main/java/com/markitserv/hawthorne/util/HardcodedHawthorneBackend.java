@@ -47,8 +47,6 @@ import com.markitserv.msws.exceptions.ProgrammaticException;
 public class HardcodedHawthorneBackend implements HawthorneBackend,
 		ApplicationListener<ContextRefreshedEvent> {
 
-	private static final int SIZE_PRODUCTS = 30;
-
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -139,13 +137,8 @@ public class HardcodedHawthorneBackend implements HawthorneBackend,
 	}
 
 	@Override
-	@Deprecated
-	public List<Product> getProducts() {
-		if (products == null) {
-			return populateAllProducts();
-		} else {
-			return products;
-		}
+	public Set<Product> getProducts() {
+		return new HashSet<Product>(this.buildAndGetProducts().values());
 	}
 
 	@Override
@@ -615,8 +608,6 @@ public class HardcodedHawthorneBackend implements HawthorneBackend,
 		user.setPhoneNumber(randomPhoneNumGen());
 		DateTime date = formatter.parseDateTime(randomDateGen());
 		user.setLastLogin(date);
-
-		// TODO finish this up!
 		user.setBooks(getRandomSamplingFrom(p.getBooks(), 5));
 		user.setBookLists(getRandomSamplingFrom(p.getBookLists(), 5));
 		user.setParticipantId(p.getId());
@@ -688,11 +679,57 @@ public class HardcodedHawthorneBackend implements HawthorneBackend,
 
 	private Map<Integer, Product> buildAndGetProducts() {
 
+		if (productMap.size() > 0) {
+			return productMap;
+		}
+
 		productMap = new HashMap<Integer, Product>();
 
-		for (int i = 1; i <= SIZE_PRODUCTS; i++) {
-			String productName = "Product " + generateLetter(i);
-			productMap.put(i, new Product(i, productName));
+		List<String> productNames = new ArrayList<String>();
+
+		productNames.add("CBOA");
+		productNames.add("Block Cancel");
+		productNames.add("CapFloor");
+		productNames.add("CDS");
+		productNames.add("CDS Checkout");
+		productNames.add("CDS Index");
+		productNames.add("CDS Index Checkout");
+		productNames.add("CDS Index Swaption");
+		productNames.add("CDS Master");
+		productNames.add("CDS Matrix");
+		productNames.add("Commodity Forward");
+		productNames.add("Commodity Option");
+		productNames.add("Commodity Spread");
+		productNames.add("Commodity Swap");
+		productNames.add("Cross Currency Basis Swap");
+		productNames.add("Cross Currency IRS");
+		productNames.add("Equity Dispersion Variance Swap");
+		productNames.add("Equity Index Dividend Swap");
+		productNames.add("Equity Index Option");
+		productNames.add("Equity Index Swap");
+		productNames.add("Equity Index Variance Option");
+		productNames.add("Equity Index Variance Swap");
+		productNames.add("Equity Share Dividend Swap");
+		productNames.add("Equity Share Option");
+		productNames.add("Equity Share Swap");
+		productNames.add("Equity Share Variance Option");
+		productNames.add("Equity Share Variance Swap");
+		productNames.add("FRA");
+		productNames.add("FX SpotForward");
+		productNames.add("Generic Product");
+		productNames.add("Offline Trade Credit");
+		productNames.add("Offline Trade Credit Summary");
+		productNames.add("Offline Trade Rates");
+		productNames.add("OIS");
+		productNames.add("Single Currency Basis Swap");
+		productNames.add("Single Currency Interest Rate Swap");
+		productNames.add("Swaption");
+		productNames.add("Universal Equity Index Option");
+		productNames.add("Universal Equity Share Option");
+		productNames.add("ZC Inflation Swap");
+
+		for (int i = 0; i < productNames.size(); i++) {
+			productMap.put(i, new Product(i, productNames.get(i)));
 		}
 
 		return productMap;

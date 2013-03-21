@@ -1,7 +1,10 @@
 package com.markitserv.hawthorne.actions;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.HawthorneBackend;
+import com.markitserv.hawthorne.types.Participant;
 import com.markitserv.hawthorne.types.Product;
-import com.markitserv.hawthorne.types.User;
+import com.markitserv.hawthorne.util.HawthorneParamsAndFilters;
 import com.markitserv.msws.action.AbstractPaginatedAction;
 import com.markitserv.msws.action.ActionFilters;
 import com.markitserv.msws.action.ActionParameters;
@@ -21,10 +25,8 @@ import com.markitserv.msws.action.SortOrder;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.definition.SortingPresetDefinitionBuilder;
 import com.markitserv.msws.filters.PaginationFilter;
-import com.markitserv.msws.filters.PropertyEqualsReflectionFilter;
-import com.markitserv.msws.filters.SubstringReflectionFilter;
-import com.markitserv.msws.validation.CollectionSizeValidation;
-import com.markitserv.msws.validation.RequiredValidation;
+import com.markitserv.msws.validation.IntegerValidationAndConversion;
+import com.markitserv.msws.validation.OptionalValidation;
 
 /**
  * Describe Products
@@ -35,11 +37,6 @@ import com.markitserv.msws.validation.RequiredValidation;
 @Service
 public class DescribeProducts extends AbstractPaginatedAction {
 
-	private static final String FILTER_NAME_SUBSTR_PRODUCT_NAME = "substr";
-	private static final String PARAMETER_NAME_USERNAME = "UserName";
-	private static final String PPODUCT_NAME = "productName";
-	private static final String USER_NAME = "userName";
-
 	Logger log = LoggerFactory.getLogger(DescribeProducts.class);
 
 	@Autowired
@@ -48,15 +45,18 @@ public class DescribeProducts extends AbstractPaginatedAction {
 	@Override
 	protected ParamsAndFiltersDefinition createParameterDefinition() {
 
-		// Add validation
-		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
+		ParamsAndFiltersDefinition def = super.createParameterDefinition();
 
-		// UserName
-		def.addValidation(PARAMETER_NAME_USERNAME, new RequiredValidation());
+		// Participant Id
+		def.addValidation(HawthorneParamsAndFilters.PARAM_PARTICIPANT_ID,
+				new OptionalValidation());
+		def.addValidationAndConversion(HawthorneParamsAndFilters.PARAM_PARTICIPANT_ID,
+				new IntegerValidationAndConversion());
 
 		// Sorting
 		SortingPresetDefinitionBuilder sortBuilder = new SortingPresetDefinitionBuilder();
-		sortBuilder = sortBuilder.setDefaultSort(PPODUCT_NAME, SortOrder.Asc);
+		sortBuilder = sortBuilder.addSortOption("name");
+		sortBuilder = sortBuilder.setDefaultSort("name", SortOrder.Asc);
 
 		def.mergeWith(sortBuilder.build());
 
@@ -64,52 +64,58 @@ public class DescribeProducts extends AbstractPaginatedAction {
 	}
 
 	@Override
-	protected ParamsAndFiltersDefinition createFilterDefinition() {
-		ParamsAndFiltersDefinition def = new ParamsAndFiltersDefinition();
-
-		def.addValidation(FILTER_NAME_SUBSTR_PRODUCT_NAME, new CollectionSizeValidation(
-				CollectionSizeValidation.UNLIMITED, 1));
-
-		return def;
-	}
-
-	private List<Product> applyFilters(ActionParameters p, ActionFilters f,
-			List<User> users) {
-		List<Product> productList = new ArrayList<Product>();
-		List<User> UserList = new ArrayList<User>();
-		User filterdUser = new User();
-
-		if (p.isParameterSet(PARAMETER_NAME_USERNAME)) {
-			String userNeme = (String) p.getParameter(PARAMETER_NAME_USERNAME, String.class);
-			UserList = PropertyEqualsReflectionFilter.filter(users, USER_NAME, userNeme);
-
-		}
-		filterdUser = UserList.get(0);
-		productList = new ArrayList(filterdUser.getProducts());
-		if (f.isFilterSet(FILTER_NAME_SUBSTR_PRODUCT_NAME)) {
-			productList = SubstringReflectionFilter.filter(productList, PPODUCT_NAME,
-					f.getSingleFilter(FILTER_NAME_SUBSTR_PRODUCT_NAME));
-		}
-
-		int pageStartIndex = p.getParameter(CommonParamKeys.PageStartIndex.toString(),
-				Integer.class);
-		int pageSize = p.getParameter(CommonParamKeys.PageSize.toString(), Integer.class);
-		PaginationFilter.filter(productList, pageStartIndex, pageSize);
-
-		return productList;
-	}
-
-	@Override
 	protected ActionResult performAction(ActionParameters params, ActionFilters filters) {
-		List<User> userList = data.getAllUsers();
-		List<Product> totalProductList = data.getProducts();
-		int totalsize = totalProductList.size();
 
-		List<Product> productList = applyFilters(params, filters, userList);
+		Set<Product> productSet;
 
-		PaginatedActionResult res = new PaginatedActionResult(productList);
-		res.getPaginatedMetaData().setTotalRecords(totalsize);
+		if (params.isParameterSet(HawthorneParamsAndFilters.PARAM_PARTICIPANT_ID)) {
+			int participantId = params.getParameter(
+					HawthorneParamsAndFilters.PARAM_PARTICIPANT_ID, Integer.class);
+
+			Participant participant = data.getParticipant(participantId);
+			productSet = participant.getProducts();
+		} else {
+			// get all products in the system
+			productSet = data.getProducts();
+		}
+
+		List<Product> products = new ArrayList<Product>(productSet);
+
+		int totalSize = products.size();
+
+		sortByName(products);
+
+		products = paginate(params, products);
+
+		PaginatedActionResult res = new PaginatedActionResult(products);
+		res.getPaginatedMetaData().setTotalRecords(totalSize);
 		return res;
 	}
 
+	/**
+	 * NOTE right now this is hardcoded.. needs to be abstracted out if we ever
+	 * have to sort by anything else other than name.
+	 * 
+	 * @param products
+	 */
+	private void sortByName(List<Product> products) {
+		Comparator<Product> byName = new Comparator<Product>() {
+			public int compare(Product o1, Product o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		};
+
+		Collections.sort(products, byName);
+	}
+
+	private List<Product> paginate(ActionParameters params, List<Product> products) {
+		// Add pagination
+		int pageStartIndex = params.getParameter(CommonParamKeys.PageStartIndex.toString(),
+				Integer.class);
+		int pageSize = params.getParameter(CommonParamKeys.PageSize.toString(),
+				Integer.class);
+		products = PaginationFilter.filter(products, pageStartIndex, pageSize);
+
+		return products;
+	}
 }

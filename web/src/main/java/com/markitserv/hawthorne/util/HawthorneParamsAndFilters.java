@@ -7,15 +7,21 @@ package com.markitserv.hawthorne.util;
  * 
  */
 public interface HawthorneParamsAndFilters {
+
 	// Params
-	static final String PARAM_PARTICIPANT_ID = "ParticipantId";
-	static final String PARAM_USER_ID = "UserId";
 	static final String PARAM_INTERESTGROUP_ID = "InterestGroupId";
 	static final String PARAM_LEGAL_ENTITY_ID = "LegalEntityId";
+	static final String PARAM_PARTICIPANT_ID = "ParticipantId";
+	static final String PARAM_USER_ID = "UserId";
 	static final String PARAM_USER_NAME = "UserName";
 
 	// Filters
+
+	// These are deprecated because the interest group action should only have a
+	// single substr param
+	@Deprecated
 	static final String FILTER_SUBSTR_INTERESTGROUP_NAME = "substrName";
+	@Deprecated
 	static final String FILTER_SUBSTR_INTERESTGROUP_SHORT_NAME = "substrShortName";
 	static final String FILTER_SUBSTR_LAST_NAME = "substrLastName";
 	static final String FILTER_SUBSTR_USER_NAME = "substrUserName";

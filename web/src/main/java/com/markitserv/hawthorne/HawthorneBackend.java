@@ -26,7 +26,7 @@ public interface HawthorneBackend {
 
 	List<Participant> getParticipants();
 
-	List<Product> getProducts();
+	Set<Product> getProducts();
 
 	List<SubGroup> getSubGroups(Integer participantId, String userName);
 

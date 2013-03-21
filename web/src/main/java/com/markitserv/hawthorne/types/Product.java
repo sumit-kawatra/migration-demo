@@ -13,23 +13,24 @@ import com.markitserv.msws.Type;
  * 
  */
 public class Product extends Type {
-	private int productId;
-	private String productName;
 
-	public int getProductId() {
-		return productId;
+	private int id;
+	private String name;
+
+	public int getId() {
+		return id;
 	}
 
-	public void setProductId(int productId) {
-		this.productId = productId;
+	public void setId(int productId) {
+		this.id = productId;
 	}
 
-	public String getProductName() {
-		return productName;
+	public String getName() {
+		return name;
 	}
 
-	public void setProductName(String productName) {
-		this.productName = productName;
+	public void setName(String productName) {
+		this.name = productName;
 	}
 
 	@Override
@@ -39,13 +40,13 @@ public class Product extends Type {
 
 	public Product(int productId, String productName) {
 		super();
-		this.productId = productId;
-		this.productName = productName;
+		this.id = productId;
+		this.name = productName;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(productId, productName);
+		return Objects.hashCode(id, name);
 	}
 
 	@Override
