@@ -26,7 +26,9 @@ import com.markitserv.msws.definition.SortingPresetDefinitionBuilder;
 import com.markitserv.msws.filters.PaginationFilter;
 import com.markitserv.msws.filters.PropertyEqualsReflectionFilter;
 import com.markitserv.msws.filters.SubstringReflectionFilter;
+import com.markitserv.msws.validation.BooleanValidationAndConversion;
 import com.markitserv.msws.validation.CollectionSizeValidation;
+import com.markitserv.msws.validation.ForEachValidatorAndConverter;
 import com.markitserv.msws.validation.IntegerMaxMinValidationAndConversion;
 import com.markitserv.msws.validation.IntegerValidationAndConversion;
 import com.markitserv.msws.validation.OptionalValidation;
@@ -89,6 +91,10 @@ public class DescribeInterestGroups extends AbstractPaginatedAction {
 				new CollectionSizeValidation(CollectionSizeValidation.UNLIMITED, 1));
 		def.addValidation(HawthorneParamsAndFilters.FILTER_SUBSTR_INTERESTGROUP_SHORT_NAME,
 				new CollectionSizeValidation(CollectionSizeValidation.UNLIMITED, 1));
+		def.addValidation(HawthorneParamsAndFilters.FILTER_ACTIVE,
+				new CollectionSizeValidation(CollectionSizeValidation.UNLIMITED, 1));
+		def.addValidationAndConversion(HawthorneParamsAndFilters.FILTER_ACTIVE,
+				new ForEachValidatorAndConverter(new BooleanValidationAndConversion()));
 
 		return def;
 	}
@@ -143,19 +149,21 @@ public class DescribeInterestGroups extends AbstractPaginatedAction {
 					usrId);
 		}
 		if (f.isFilterSet(HawthorneParamsAndFilters.FILTER_SUBSTR_INTERESTGROUP_NAME)) {
-			interestGroups = SubstringReflectionFilter
-					.filter(
-							interestGroups,
-							"name",
-							f.getSingleFilter(HawthorneParamsAndFilters.FILTER_SUBSTR_INTERESTGROUP_NAME));
+			interestGroups = SubstringReflectionFilter.filter(interestGroups, "name", f
+					.getSingleFilter(
+							HawthorneParamsAndFilters.FILTER_SUBSTR_INTERESTGROUP_NAME,
+							String.class));
 		}
 
 		if (f.isFilterSet(HawthorneParamsAndFilters.FILTER_SUBSTR_INTERESTGROUP_SHORT_NAME)) {
-			interestGroups = SubstringReflectionFilter
-					.filter(
-							interestGroups,
-							"shortName",
-							f.getSingleFilter(HawthorneParamsAndFilters.FILTER_SUBSTR_INTERESTGROUP_SHORT_NAME));
+			interestGroups = SubstringReflectionFilter.filter(interestGroups, "shortName", f
+					.getSingleFilter(
+							HawthorneParamsAndFilters.FILTER_SUBSTR_INTERESTGROUP_SHORT_NAME,
+							String.class));
+		}
+		if (f.isFilterSet(HawthorneParamsAndFilters.FILTER_ACTIVE)) {
+			interestGroups = PropertyEqualsReflectionFilter.filter(interestGroups, "active",
+					f.getSingleFilter(HawthorneParamsAndFilters.FILTER_ACTIVE, Boolean.class));
 		}
 
 		return interestGroups;

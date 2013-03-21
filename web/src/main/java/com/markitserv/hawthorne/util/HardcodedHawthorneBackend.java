@@ -371,7 +371,11 @@ public class HardcodedHawthorneBackend implements HawthorneBackend,
 					+ nextInterestGroupId);
 			i1.setParticipantId(p.getId());
 			i1.setShortName("IG-" + nextInterestGroupId);
-			i1.setActive(true);
+			if (nextInterestGroupId % 2 == 0) {
+				i1.setActive(true);
+			} else {
+				i1.setActive(false);
+			}
 			i1.setUsers(getRandomSamplingFrom(p.getUsers(), memberSizes));
 			interestGroupMap.put(nextInterestGroupId, i1);
 		}

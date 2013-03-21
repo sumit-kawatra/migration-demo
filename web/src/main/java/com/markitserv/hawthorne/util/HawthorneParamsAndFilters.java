@@ -20,4 +20,5 @@ public interface HawthorneParamsAndFilters {
 	static final String FILTER_SUBSTR_LAST_NAME = "substrLastName";
 	static final String FILTER_SUBSTR_USER_NAME = "substrUserName";
 	static final String FILTER_SUBSTR_FIRST_NAME = "substrFirstName";
+	static final String FILTER_ACTIVE = "active";
 }
