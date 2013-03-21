@@ -102,10 +102,15 @@ public class DescribeInterestGroups extends AbstractPaginatedAction {
 		List<InterestGroup> groupList = new ArrayList<InterestGroup>(
 				data.getInterestGroupsForParticipant(participantId));
 
+		groupList = applyFilters(params, filters, groupList);
 		int totalRecords = groupList.size();
 
-		groupList = applyFilters(params, filters, groupList);
+		int pageStartIndex = params.getParameter(CommonParamKeys.PageStartIndex.toString(),
+				Integer.class);
+		int pageSize = params.getParameter(CommonParamKeys.PageSize.toString(),
+				Integer.class);
 
+		groupList = PaginationFilter.filter(groupList, pageStartIndex, pageSize);
 		// TODO add 'filter size' to the metadata, after we see how this field is
 		// used by datatables
 
@@ -153,11 +158,6 @@ public class DescribeInterestGroups extends AbstractPaginatedAction {
 							f.getSingleFilter(HawthorneParamsAndFilters.FILTER_SUBSTR_INTERESTGROUP_SHORT_NAME));
 		}
 
-		int pageStartIndex = p.getParameter(CommonParamKeys.PageStartIndex.toString(),
-				Integer.class);
-		int pageSize = p.getParameter(CommonParamKeys.PageSize.toString(), Integer.class);
-
-		interestGroups = PaginationFilter.filter(interestGroups, pageStartIndex, pageSize);
 		return interestGroups;
 	}
 }

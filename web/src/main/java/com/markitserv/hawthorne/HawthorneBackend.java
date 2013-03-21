@@ -16,11 +16,11 @@ public interface HawthorneBackend {
 
 	List<LegalEntity> getLegalEntities();
 
-	List<User> getUsersForLegalEntity(int id);
+	Set<User> getUsersForLegalEntity(int id);
 
-	List<User> getUsersForParticipant(int id);
+	Set<User> getUsersForParticipant(int id);
 
-	List<User> getUser(String userName);
+	Set<User> getUser(String userName);
 
 	List<User> getAllUsers();
 
@@ -35,5 +35,7 @@ public interface HawthorneBackend {
 	Set<InterestGroup> getInterestGroupsForParticipant(int participantId);
 
 	Participant getParticipant(int participantId);
+
+	Set<User> getUsersForInterestGrp(int interestGroupId);
 
 }

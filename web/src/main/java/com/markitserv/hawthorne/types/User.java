@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Objects;
 import com.markitserv.msws.Type;
@@ -118,6 +119,7 @@ public class User extends Type {
 		return legalEntities;
 	}
 
+	@JsonIgnore
 	public void setLegalEntities(Set<LegalEntity> legalEntities) {
 		this.legalEntities = legalEntities;
 	}
@@ -126,6 +128,7 @@ public class User extends Type {
 		return legalEntityLists;
 	}
 
+	@JsonIgnore
 	public void setLegalEntityLists(Set<LegalEntityList> legalEntityLists) {
 		this.legalEntityLists = legalEntityLists;
 	}
@@ -134,6 +137,7 @@ public class User extends Type {
 		return books;
 	}
 
+	@JsonIgnore
 	public void setBooks(Set<Book> books) {
 		this.books = books;
 	}
@@ -142,6 +146,7 @@ public class User extends Type {
 		return bookLists;
 	}
 
+	@JsonIgnore
 	public void setBookLists(Set<BookList> bookLists) {
 		this.bookLists = bookLists;
 	}
@@ -150,6 +155,7 @@ public class User extends Type {
 		return products;
 	}
 
+	@JsonIgnore
 	public void setProducts(Set<Product> products) {
 		this.products = products;
 	}
@@ -158,6 +164,7 @@ public class User extends Type {
 		return productList;
 	}
 
+	@JsonIgnore
 	public void setProductList(Set<ProductList> productList) {
 		this.productList = productList;
 	}

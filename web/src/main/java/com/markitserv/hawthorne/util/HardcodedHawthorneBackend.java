@@ -91,6 +91,9 @@ public class HardcodedHawthorneBackend implements HawthorneBackend,
 
 	private Set<InterestGroup> interestGroupSet;
 
+	private Set<InterestGroup> emptyInterestGrpSet = new HashSet<InterestGroup>();
+	private Set<User> emptyUserSet = new HashSet<User>();
+
 	@Override
 	@Deprecated
 	public List<Participant> getParticipants() {
@@ -146,39 +149,37 @@ public class HardcodedHawthorneBackend implements HawthorneBackend,
 	}
 
 	@Override
-	@Deprecated
-	public List<User> getUsersForLegalEntity(int id) {
-		List<User> userList = new ArrayList<User>();
-		for (User user : this.users) {
-			if (user.getLegalEntityId() == id) {
-				userList.add(user);
+	public Set<User> getUsersForLegalEntity(int id) {
+		Set<User> userSet = new HashSet<User>();
+		LegalEntity le = this.legalEntityMap.get(id);
+		if (le != null) {
+			Set<User> participantUsers = getUsersForParticipant(le.getParticipantId());
+			for (User user : participantUsers) {
+				if (user.getLegalEntityId() == id) {
+					userSet.add(user);
+				}
 			}
 		}
-		return userList;
+		return userSet;
 	}
 
 	@Override
-	@Deprecated
-	public List<User> getUsersForParticipant(int id) {
-		List<User> userList = new ArrayList<User>();
-		for (User user : this.users) {
-			if (user.getParticipantId() == id) {
-				userList.add(user);
-			}
+	public Set<User> getUsersForParticipant(int id) {
+		if (getParticipant(id) != null) {
+			return getParticipant(id).getUsers();
 		}
-		return userList;
+		return emptyUserSet;
 	}
 
 	@Override
-	@Deprecated
-	public List<User> getUser(String userName) {
-		List<User> userList = new ArrayList<User>();
-		for (User user : this.users) {
+	public Set<User> getUser(String userName) {
+		Set<User> userSet = new HashSet<User>();
+		for (User user : this.userMap.values()) {
 			if (user.getUserName().equals(userName)) {
-				userList.add(user);
+				userSet.add(user);
 			}
 		}
-		return userList;
+		return userSet;
 	}
 
 	@Override
@@ -307,7 +308,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend,
 				.values()));
 		p.setSubgroups(new HashSet<SubGroup>(buildSubGroups(p, 100, 20).values()));
 		p.setUsers(new HashSet<User>(buildUserList(p, 50).values()));
-		p.setInterestGroups(new HashSet<InterestGroup>(buildInterestGroups(p, 1000, 1)
+		p.setInterestGroups(new HashSet<InterestGroup>(buildInterestGroups(p, 1000, 10)
 				.values()));
 
 		// TODO Users
@@ -327,7 +328,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend,
 				.values()));
 		p1.setSubgroups(new HashSet<SubGroup>(buildSubGroups(p1, 100, 20).values()));
 		p1.setUsers(new HashSet<User>(buildUserList(p1, 50).values()));
-		p1.setInterestGroups(new HashSet<InterestGroup>(buildInterestGroups(p1, 10, 1)
+		p1.setInterestGroups(new HashSet<InterestGroup>(buildInterestGroups(p1, 10, 5)
 				.values()));
 
 		participantMap.put(1, p);
@@ -371,7 +372,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend,
 			i1.setParticipantId(p.getId());
 			i1.setShortName("IG-" + nextInterestGroupId);
 			i1.setActive(true);
-			// i1.setUsers(getRandomSamplingFrom(p.getUsers(), memberSizes));
+			i1.setUsers(getRandomSamplingFrom(p.getUsers(), memberSizes));
 			interestGroupMap.put(nextInterestGroupId, i1);
 		}
 		return interestGroupMap;
@@ -725,12 +726,24 @@ public class HardcodedHawthorneBackend implements HawthorneBackend,
 
 	@Override
 	public Set<InterestGroup> getInterestGroupsForParticipant(int participantId) {
-		return this.getParticipant(participantId).getInterestGroups();
+		if (getParticipant(participantId) != null) {
+			return this.getParticipant(participantId).getInterestGroups();
+		}
+		return emptyInterestGrpSet;
 	}
 
 	@Override
 	public Participant getParticipant(int participantId) {
 		return this.participantMap.get(participantId);
+	}
+
+	@Override
+	public Set<User> getUsersForInterestGrp(int interestGroupId) {
+
+		if (interestGroupMap.get(interestGroupId) != null) {
+			return interestGroupMap.get(interestGroupId).getUsers();
+		}
+		return emptyUserSet;
 	}
 
 	@Override
