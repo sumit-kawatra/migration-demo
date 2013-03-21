@@ -23,7 +23,7 @@ public class TestActionCommandBuilder {
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
 		ActionParameters params = new ActionParameters(paramsMap);
 
-		Map<String, List<String>> filtersMap = new HashMap<String, List<String>>();
+		Map<String, List<Object>> filtersMap = new HashMap<String, List<Object>>();
 		ActionFilters filters = new ActionFilters(filtersMap);
 
 		cmd = new ActionCommand("TestAction", params, filters);
@@ -52,13 +52,13 @@ public class TestActionCommandBuilder {
 
 	public TestActionCommandBuilder addFilter(String key, String value) {
 
-		Map<String, List<String>> map = cmd.getFilters().getAllFilters();
+		Map<String, List<Object>> map = cmd.getFilters().getAllFilters();
 
-		List<String> filters = null;
+		List<Object> filters = null;
 		if (map.containsKey(key)) {
 			filters = map.get(key);
 		} else {
-			filters = new ArrayList<String>();
+			filters = new ArrayList<Object>();
 		}
 
 		filters.add(value);

@@ -137,7 +137,7 @@ public class HttpParamsToActionCommand {
 	 */
 	private ActionFilters processFilterParams(HashMap<String, String[]> params) throws MswsException {
 
-		Map<String, List<String>> filtersMap = new HashMap<String, List<String>>();
+		Map<String, List<Object>> filtersMap = new HashMap<String, List<Object>>();
 
 		int nameCounter = 0;
 		boolean stillHaveFilters = true;
@@ -160,7 +160,7 @@ public class HttpParamsToActionCommand {
 
 				String filterName = filterNameArr[0];
 
-				List<String> allValues = processFilterValues(params,
+				List<Object> allValues = processFilterValues(params,
 						nameCounter);
 
 				if (allValues.size() == 0) {
@@ -181,13 +181,13 @@ public class HttpParamsToActionCommand {
 		return filters;
 	}
 
-	private List<String> processFilterValues(HashMap<String, String[]> params,
+	private List<Object> processFilterValues(HashMap<String, String[]> params,
 			int nameCounter) throws MswsException {
 		// iterate through the values of the filter and push them to a stack
 
 		int valueCounter = 0;
 		boolean stillHaveFilterValues = true;
-		Stack<String> filterValues = new Stack<String>();
+		Stack<Object> filterValues = new Stack<Object>();
 
 		do {
 			valueCounter++;

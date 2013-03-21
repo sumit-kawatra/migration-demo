@@ -38,7 +38,7 @@ public class HttpParamsToActionCommandTest {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		ActionParameters params = new ActionParameters(paramMap);
 		
-		Map<String, List<String>> filtersMap = new HashMap<String, List<String>>();
+		Map<String, List<Object>> filtersMap = new HashMap<String, List<Object>>();
 		ActionFilters filters = new ActionFilters(filtersMap);
 		
 		expectedActionCommand = new ActionCommand(ACTION_NAME, params, filters);
@@ -87,11 +87,11 @@ public class HttpParamsToActionCommandTest {
 		p = buildHttpParams(p, "Filter.2.Name", "boo");
 		p = buildHttpParams(p, "Filter.2.Value.1", "baz");
 
-		List<String> values1 = new ArrayList<String>();
+		List<Object> values1 = new ArrayList<Object>();
 		values1.add("bar");
 		expectedActionCommand.getFilters().addFilter("foo", values1);
 
-		List<String> values2 = new ArrayList<String>();
+		List<Object> values2 = new ArrayList<Object>();
 		values2.add("baz");
 		expectedActionCommand.getFilters().addFilter("boo", values2);
 
@@ -107,7 +107,7 @@ public class HttpParamsToActionCommandTest {
 		p = buildHttpParams(p, "Filter.1.Value.1", "bar");
 		p = buildHttpParams(p, "Filter.1.Value.2", "baz");
 
-		List<String> values1 = new ArrayList<String>();
+		List<Object> values1 = new ArrayList<Object>();
 		values1.add("bar");
 		values1.add("baz");
 		expectedActionCommand.getFilters().addFilter("foo", values1);

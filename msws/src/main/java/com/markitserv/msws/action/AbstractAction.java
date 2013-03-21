@@ -150,7 +150,7 @@ public abstract class AbstractAction implements InitializingBean {
 
 		ValidationExceptionBuilder veb = new ValidationExceptionBuilder();
 		
-		Map<String, List<String>> allFilters = f.getAllFilters();
+		Map<String, List<Object>> allFilters = f.getAllFilters();
 
 		veb = validateInputs(FilterOrParam.param, p.getAllParameters(),
 				getParameterDefinition().getValidations(), veb);

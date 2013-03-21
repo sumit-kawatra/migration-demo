@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import com.google.common.base.Objects;
 import com.markitserv.msws.internal.MswsAssert;
@@ -16,9 +17,9 @@ import com.markitserv.msws.internal.MswsAssert;
  */
 public class ActionFilters {
 
-	private Map<String, List<String>> filters;
+	private Map<String, List<Object>> filters;
 
-	public ActionFilters(Map<String, List<String>> filtersMap) {
+	public ActionFilters(Map<String, List<Object>> filtersMap) {
 		this.filters = filtersMap;
 	}
 
@@ -26,20 +27,40 @@ public class ActionFilters {
 		return filters.size();
 	}
 
-	public void addFilter(String key, List<String> values) {
+	public void addFilter(String key, List<Object> values) {
 		filters.put(key, values);
 	}
 
-	public Map<String, List<String>> getAllFilters() {
+	public Map<String, List<Object>> getAllFilters() {
 		return filters;
 	}
 
 	public boolean isFilterSet(String key) {
 		return filters.containsKey(key);
 	}
-
+	
+	@Deprecated
 	public List<String> getFilter(String key) {
-		return filters.get(key);
+		
+		return this.getFilter(key, String.class);
+		
+	}
+
+	public <T> List<T> getFilter(String key, Class<T> type) {
+		
+		List<Object> filt = filters.get(key);
+		Stack<T> convertedFilters = new Stack<T>();
+		
+		for (Object filter : filt) {
+			convertedFilters.push((T)filter);
+		}
+		
+		return convertedFilters;
+	}
+	
+	@Deprecated
+	public String getSingleFilter(String key) {
+		return this.getSingleFilter(key, String.class);
 	}
 
 	/**
@@ -48,13 +69,13 @@ public class ActionFilters {
 	 * @param key
 	 * @return
 	 */
-	public String getSingleFilter(String key) {
+	public <T> T getSingleFilter(String key, Class<T> type) {
 
-		List<String> filtersForKey = filters.get(key);
+		List<Object> filtersForKey = filters.get(key);
 		MswsAssert.mswsAssert(filtersForKey.size() == 1,
 				"Expected filter '%s' to have only one value.", key);
 
-		return filtersForKey.get(0);
+		return (T)filtersForKey.get(0);
 	}
 
 	@Override
