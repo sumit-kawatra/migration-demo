@@ -37,6 +37,7 @@ import com.markitserv.msws.validation.RequiredValidation;
 /**
  * @author kiran.gogula
  * 
+ *         modified
  */
 @Service
 public class DescribeInterestGroups extends AbstractPaginatedAction {
@@ -108,20 +109,16 @@ public class DescribeInterestGroups extends AbstractPaginatedAction {
 		List<InterestGroup> groupList = new ArrayList<InterestGroup>(
 				data.getInterestGroupsForParticipant(participantId));
 
-		groupList = applyFilters(params, filters, groupList);
 		int totalRecords = groupList.size();
 
-		int pageStartIndex = params.getParameter(CommonParamKeys.PageStartIndex.toString(),
-				Integer.class);
-		int pageSize = params.getParameter(CommonParamKeys.PageSize.toString(),
-				Integer.class);
+		groupList = applyFilters(params, filters, groupList);
+		int totalFilteredRecords = groupList.size();
 
-		groupList = PaginationFilter.filter(groupList, pageStartIndex, pageSize);
-		// TODO add 'filter size' to the metadata, after we see how this field is
-		// used by datatables
+		groupList = applyPaginationFilter(params, groupList);
 
 		PaginatedActionResult res = new PaginatedActionResult(groupList);
 		res.getPaginatedMetaData().setTotalRecords(totalRecords);
+		res.getPaginatedMetaData().setTotalFilteredRecords(totalFilteredRecords);
 
 		return res;
 	}
@@ -166,6 +163,16 @@ public class DescribeInterestGroups extends AbstractPaginatedAction {
 					f.getSingleFilter(HawthorneParamsAndFilters.FILTER_ACTIVE, Boolean.class));
 		}
 
+		return interestGroups;
+	}
+
+	private List<InterestGroup> applyPaginationFilter(ActionParameters p,
+			List<InterestGroup> interestGroups) {
+		int pageStartIndex = p.getParameter(CommonParamKeys.PageStartIndex.toString(),
+				Integer.class);
+		int pageSize = p.getParameter(CommonParamKeys.PageSize.toString(), Integer.class);
+
+		interestGroups = PaginationFilter.filter(interestGroups, pageStartIndex, pageSize);
 		return interestGroups;
 	}
 }

@@ -5,14 +5,13 @@ package com.markitserv.hawthorne.actions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.HawthorneBackend;
 import com.markitserv.hawthorne.types.Book;
+import com.markitserv.hawthorne.types.InterestGroup;
 import com.markitserv.hawthorne.types.Participant;
 import com.markitserv.hawthorne.types.User;
 import com.markitserv.msws.action.AbstractPaginatedAction;
@@ -89,29 +88,6 @@ public class DescribeBooks extends AbstractPaginatedAction {
 		return def;
 	}
 
-	private List<Book> getBooks(List<Participant> pariticipantList, Integer participantId,
-			String userName) {
-		if (participantId != null) {
-			for (Participant participant : pariticipantList) {
-				if (participant.getId() == participantId) {
-					return new ArrayList(participant.getBooks());
-				}
-			}
-		}
-		if (StringUtils.isNotBlank(userName)) {
-			for (Participant participant : pariticipantList) {
-				Set<User> userList = participant.getUsers();
-				for (User user : userList) {
-					if (userName.contains(user.getUserName())
-							|| userName.equalsIgnoreCase(user.getUserName())) {
-						return new ArrayList(participant.getBooks());
-					}
-				}
-			}
-		}
-		return null;
-	}
-
 	@Override
 	protected ActionResult performAction(ActionParameters params, ActionFilters filters) {
 		String userName = null;
@@ -126,8 +102,8 @@ public class DescribeBooks extends AbstractPaginatedAction {
 			userName = (String) params.getParameter(PARAM_NAME_USER_NAME, String.class);
 		}
 
-		List<Book> bookList = getBooks(paList, participantId, userName);
-
+		List<Book> bookList =  new ArrayList<Book>(data.getBooksForParticipant(participantId));
+		
 		int totalRecords = bookList.size();
 
 		bookList = applyFilters(params, filters, bookList);

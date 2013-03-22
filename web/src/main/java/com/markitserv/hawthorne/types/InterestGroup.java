@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import com.markitserv.msws.Type;
 
@@ -33,6 +34,7 @@ public class InterestGroup extends Type {
 		// TODO Auto-generated constructor stub
 	}
 
+	@JsonIgnore
 	public Set<User> getUsers() {
 		return users;
 	}

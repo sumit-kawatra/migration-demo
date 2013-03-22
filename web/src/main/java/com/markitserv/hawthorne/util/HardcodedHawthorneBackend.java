@@ -791,4 +791,14 @@ public class HardcodedHawthorneBackend implements HawthorneBackend,
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		cmdDispatcher.dispatchAsyncCommand(new PopulateHardcodedDataCommand());
 	}
+
+	@Override
+	public Set<Book> getBooksForParticipant(int participantId) {
+		return this.getParticipant(participantId).getBooks();
+	}
+
+	@Override
+	public Set<BookList> getBookListsForParticipant(int participantId) {
+		return this.getParticipant(participantId).getBookLists();
+	}
 }

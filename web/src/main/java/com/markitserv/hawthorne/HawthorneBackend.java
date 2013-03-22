@@ -3,6 +3,8 @@ package com.markitserv.hawthorne;
 import java.util.List;
 import java.util.Set;
 
+import com.markitserv.hawthorne.types.Book;
+import com.markitserv.hawthorne.types.BookList;
 import com.markitserv.hawthorne.types.InterestGroup;
 import com.markitserv.hawthorne.types.LegalEntity;
 import com.markitserv.hawthorne.types.Participant;
@@ -33,6 +35,10 @@ public interface HawthorneBackend {
 	Set<InterestGroup> retrieveInterestGrpsForUser(int id);
 
 	Set<InterestGroup> getInterestGroupsForParticipant(int participantId);
+
+	Set<Book> getBooksForParticipant(int participantId);
+
+	Set<BookList> getBookListsForParticipant(int participantId);
 
 	Participant getParticipant(int participantId);
 
