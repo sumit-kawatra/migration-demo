@@ -358,7 +358,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend,
 			int memberSizes) {
 		int lastId = nextInterestGroupId + size;
 		for (; nextInterestGroupId <= lastId; nextInterestGroupId++) {
-			InterestGroup i1 = new InterestGroup(nextInterestGroupId, "InterestGroup "
+			InterestGroup i1 = new InterestGroup(nextInterestGroupId, "Interest Group "
 					+ nextInterestGroupId);
 			i1.setParticipantId(p.getId());
 			i1.setShortName("IG-" + nextInterestGroupId);
@@ -477,7 +477,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend,
 		int lastId = nextBookId + size;
 
 		for (; nextBookId <= lastId; nextBookId++) {
-			Book bl = new Book(nextBookId, "Book" + nextBookId);
+			Book bl = new Book(nextBookId, "Book " + nextBookId);
 			bl.setParticipantId(p.getId());
 			bookMap.put(nextBookId, bl);
 		}
@@ -560,7 +560,7 @@ public class HardcodedHawthorneBackend implements HawthorneBackend,
 		int lastId = nextBookListId + size;
 
 		for (; nextBookListId <= lastId; nextBookListId++) {
-			BookList bl = new BookList(nextBookListId, "BookList" + nextBookListId);
+			BookList bl = new BookList(nextBookListId, "BookList " + nextBookListId);
 			bl.setParticipantId(p.getId());
 			// TODO this should also add books to the list from the participant.
 			bl.setBooks(getRandomSamplingFrom(p.getBooks(), 2));

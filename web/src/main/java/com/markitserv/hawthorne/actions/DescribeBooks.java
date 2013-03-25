@@ -4,6 +4,8 @@
 package com.markitserv.hawthorne.actions;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +13,16 @@ import org.springframework.stereotype.Service;
 
 import com.markitserv.hawthorne.HawthorneBackend;
 import com.markitserv.hawthorne.types.Book;
-import com.markitserv.hawthorne.types.InterestGroup;
 import com.markitserv.hawthorne.types.Participant;
-import com.markitserv.hawthorne.types.User;
 import com.markitserv.msws.action.AbstractPaginatedAction;
 import com.markitserv.msws.action.ActionFilters;
 import com.markitserv.msws.action.ActionParameters;
 import com.markitserv.msws.action.ActionResult;
 import com.markitserv.msws.action.CommonParamKeys;
 import com.markitserv.msws.action.PaginatedActionResult;
+import com.markitserv.msws.action.SortOrder;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
+import com.markitserv.msws.definition.SortingPresetDefinitionBuilder;
 import com.markitserv.msws.filters.PaginationFilter;
 import com.markitserv.msws.filters.SubstringReflectionFilter;
 import com.markitserv.msws.validation.CollectionSizeValidation;
@@ -75,6 +77,13 @@ public class DescribeBooks extends AbstractPaginatedAction {
 				new IntegerMaxMinValidationAndConversion(1,
 						IntegerMaxMinValidationAndConversion.UNLIMITED));
 
+		// Sorting
+		SortingPresetDefinitionBuilder sortBuilder = new SortingPresetDefinitionBuilder();
+		sortBuilder = sortBuilder.setDefaultSort("Id", SortOrder.Asc);
+		sortBuilder = sortBuilder.addSortOption("StartDate");
+
+		def.mergeWith(sortBuilder.build());
+
 		return def;
 	}
 
@@ -102,16 +111,47 @@ public class DescribeBooks extends AbstractPaginatedAction {
 			userName = (String) params.getParameter(PARAM_NAME_USER_NAME, String.class);
 		}
 
-		List<Book> bookList =  new ArrayList<Book>(data.getBooksForParticipant(participantId));
-		
+		List<Book> bookList = new ArrayList<Book>(
+				data.getBooksForParticipant(participantId));
+
 		int totalRecords = bookList.size();
 
 		bookList = applyFilters(params, filters, bookList);
+
+		sortById(bookList);
 
 		PaginatedActionResult res = new PaginatedActionResult(bookList);
 		res.getPaginatedMetaData().setTotalRecords(totalRecords);
 
 		return res;
+	}
+
+	/**
+	 * NOTE right now this is hardcoded..
+	 * 
+	 * @param bookList
+	 */
+	private void sortByName(List<Book> bookList) {
+		Comparator<Book> byName = new Comparator<Book>() {
+			public int compare(Book b1, Book b2) {
+				return b1.getName().compareTo(b2.getName());
+			}
+		};
+		Collections.sort(bookList, byName);
+	}
+
+	/**
+	 * NOTE right now this is hardcoded..
+	 * 
+	 * @param bookList
+	 */
+	private void sortById(List<Book> bookList) {
+		Comparator<Book> byId = new Comparator<Book>() {
+			public int compare(Book b1, Book b2) {
+				return b1.getId() - b2.getId();
+			}
+		};
+		Collections.sort(bookList, byId);
 	}
 
 	private List<Book> applyFilters(ActionParameters p, ActionFilters f, List<Book> books) {

@@ -4,6 +4,8 @@
 package com.markitserv.hawthorne.actions;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -114,7 +116,9 @@ public class DescribeInterestGroups extends AbstractPaginatedAction {
 		groupList = applyFilters(params, filters, groupList);
 		int totalFilteredRecords = groupList.size();
 
-		groupList = applyPaginationFilter(params, groupList);
+		sortById(groupList);
+
+		groupList = paginate(params, groupList);
 
 		PaginatedActionResult res = new PaginatedActionResult(groupList);
 		res.getPaginatedMetaData().setTotalRecords(totalRecords);
@@ -159,14 +163,44 @@ public class DescribeInterestGroups extends AbstractPaginatedAction {
 							String.class));
 		}
 		if (f.isFilterSet(HawthorneParamsAndFilters.FILTER_ACTIVE)) {
-			interestGroups = PropertyEqualsReflectionFilter.filter(interestGroups, "active",
-					f.getSingleFilter(HawthorneParamsAndFilters.FILTER_ACTIVE, Boolean.class));
+			if (f.getSingleFilter(HawthorneParamsAndFilters.FILTER_ACTIVE, Boolean.class))
+				interestGroups = PropertyEqualsReflectionFilter.filter(interestGroups,
+						"active", f.getSingleFilter(HawthorneParamsAndFilters.FILTER_ACTIVE,
+								Boolean.class));
 		}
 
 		return interestGroups;
 	}
 
-	private List<InterestGroup> applyPaginationFilter(ActionParameters p,
+	/**
+	 * NOTE right now this is hardcoded..
+	 * 
+	 * @param interestGroups
+	 */
+	private void sortByName(List<InterestGroup> interestGroups) {
+		Comparator<InterestGroup> byName = new Comparator<InterestGroup>() {
+			public int compare(InterestGroup ig1, InterestGroup ig2) {
+				return ig1.getName().compareTo(ig2.getName());
+			}
+		};
+		Collections.sort(interestGroups, byName);
+	}
+
+	/**
+	 * NOTE right now this is hardcoded..
+	 * 
+	 * @param interestGroups
+	 */
+	private void sortById(List<InterestGroup> interestGroups) {
+		Comparator<InterestGroup> byId = new Comparator<InterestGroup>() {
+			public int compare(InterestGroup ig1, InterestGroup ig2) {
+				return ig1.getId() - ig2.getId();
+			}
+		};
+		Collections.sort(interestGroups, byId);
+	}
+
+	private List<InterestGroup> paginate(ActionParameters p,
 			List<InterestGroup> interestGroups) {
 		int pageStartIndex = p.getParameter(CommonParamKeys.PageStartIndex.toString(),
 				Integer.class);

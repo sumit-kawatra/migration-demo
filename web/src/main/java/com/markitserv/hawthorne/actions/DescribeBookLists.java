@@ -4,6 +4,8 @@
 package com.markitserv.hawthorne.actions;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,9 @@ import com.markitserv.msws.action.ActionParameters;
 import com.markitserv.msws.action.ActionResult;
 import com.markitserv.msws.action.CommonParamKeys;
 import com.markitserv.msws.action.PaginatedActionResult;
+import com.markitserv.msws.action.SortOrder;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
+import com.markitserv.msws.definition.SortingPresetDefinitionBuilder;
 import com.markitserv.msws.filters.PaginationFilter;
 import com.markitserv.msws.filters.SubstringReflectionFilter;
 import com.markitserv.msws.validation.CollectionSizeValidation;
@@ -72,6 +76,13 @@ public class DescribeBookLists extends AbstractPaginatedAction {
 				new IntegerMaxMinValidationAndConversion(1,
 						IntegerMaxMinValidationAndConversion.UNLIMITED));
 
+		// Sorting
+		SortingPresetDefinitionBuilder sortBuilder = new SortingPresetDefinitionBuilder();
+		sortBuilder = sortBuilder.setDefaultSort("Id", SortOrder.Asc);
+		sortBuilder = sortBuilder.addSortOption("StartDate");
+
+		def.mergeWith(sortBuilder.build());
+
 		return def;
 	}
 
@@ -106,10 +117,40 @@ public class DescribeBookLists extends AbstractPaginatedAction {
 
 		bookLists = applyFilters(params, filters, bookLists);
 
+		sortById(bookLists);
+
 		PaginatedActionResult res = new PaginatedActionResult(bookLists);
 		res.getPaginatedMetaData().setTotalRecords(totalRecords);
 
 		return res;
+	}
+
+	/**
+	 * NOTE right now this is hardcoded..
+	 * 
+	 * @param bookLists
+	 */
+	private void sortByName(List<BookList> bookLists) {
+		Comparator<BookList> byName = new Comparator<BookList>() {
+			public int compare(BookList bl1, BookList bl2) {
+				return bl1.getName().compareTo(bl2.getName());
+			}
+		};
+		Collections.sort(bookLists, byName);
+	}
+
+	/**
+	 * NOTE right now this is hardcoded..
+	 * 
+	 * @param bookLists
+	 */
+	private void sortById(List<BookList> bookLists) {
+		Comparator<BookList> byId = new Comparator<BookList>() {
+			public int compare(BookList bl1, BookList bl2) {
+				return bl1.getId() - bl2.getId();
+			}
+		};
+		Collections.sort(bookLists, byId);
 	}
 
 	private List<BookList> applyFilters(ActionParameters p, ActionFilters f,

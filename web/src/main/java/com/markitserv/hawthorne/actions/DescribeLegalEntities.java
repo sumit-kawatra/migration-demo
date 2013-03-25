@@ -1,5 +1,7 @@
 package com.markitserv.hawthorne.actions;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -68,7 +70,7 @@ public class DescribeLegalEntities extends AbstractPaginatedAction {
 
 		// Sorting
 		SortingPresetDefinitionBuilder sortBuilder = new SortingPresetDefinitionBuilder();
-		sortBuilder = sortBuilder.setDefaultSort("Id", SortOrder.Asc);
+		sortBuilder = sortBuilder.setDefaultSort("Id", SortOrder.Desc);
 		sortBuilder = sortBuilder.addSortOption("StartDate");
 
 		def.mergeWith(sortBuilder.build());
@@ -97,6 +99,8 @@ public class DescribeLegalEntities extends AbstractPaginatedAction {
 		int totalRecords = legalEntities.size();
 
 		legalEntities = applyFilters(params, filters, legalEntities);
+
+		sortByName(legalEntities);
 
 		PaginatedActionResult res = new PaginatedActionResult(legalEntities);
 		res.getPaginatedMetaData().setTotalRecords(totalRecords);
@@ -133,5 +137,19 @@ public class DescribeLegalEntities extends AbstractPaginatedAction {
 
 		legalEntities = PaginationFilter.filter(legalEntities, pageStartIndex, pageSize);
 		return legalEntities;
+	}
+
+	/**
+	 * NOTE right now this is hardcoded..
+	 * 
+	 * @param legalEntities
+	 */
+	private void sortByName(List<LegalEntity> legalEntities) {
+		Comparator<LegalEntity> byName = new Comparator<LegalEntity>() {
+			public int compare(LegalEntity le1, LegalEntity le2) {
+				return le1.getName().compareTo(le2.getName());
+			}
+		};
+		Collections.sort(legalEntities, byName);
 	}
 }
