@@ -65,8 +65,12 @@ public class DescribeUsers extends AbstractPaginatedAction {
 	@Override
 	protected ActionResult performAction(ActionParameters params, ActionFilters filters) {
 
-		List<User> userList = mungeUserList(params, filters);
+		List<User> userList = new ArrayList<User>(getUsers(params));
 		int totalRecords = userList.size();
+
+		userList = applyFilters(filters, userList);
+		int totalFilteredRecords = userList.size();
+
 		// Paginate
 
 		int pageStartIndex = params.getParameter(CommonParamKeys.PageStartIndex.toString(),
@@ -80,6 +84,7 @@ public class DescribeUsers extends AbstractPaginatedAction {
 		PaginatedActionResponseMetaData paginatedMetaData = res.getPaginatedMetaData();
 
 		paginatedMetaData.setTotalRecords(totalRecords);
+		paginatedMetaData.setTotalFilteredRecords(totalFilteredRecords);
 
 		return res;
 	}

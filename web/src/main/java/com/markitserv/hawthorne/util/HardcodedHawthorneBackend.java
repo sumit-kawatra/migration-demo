@@ -300,11 +300,9 @@ public class HardcodedHawthorneBackend implements HawthorneBackend,
 		p.setLegalEntityLists(new HashSet<LegalEntityList>(buildLegalEntityList(p, 100)
 				.values()));
 		p.setSubgroups(new HashSet<SubGroup>(buildSubGroups(p, 100, 20).values()));
-		p.setUsers(new HashSet<User>(buildUserList(p, 50).values()));
+		p.setUsers(new HashSet<User>(buildUserList(p, 1200).values()));
 		p.setInterestGroups(new HashSet<InterestGroup>(buildInterestGroups(p, 1000, 10)
 				.values()));
-
-		// TODO Users
 
 		Participant p1 = new Participant();
 		p1.setId(2);
