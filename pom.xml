@@ -2,16 +2,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.markitserv</groupId>
-	<artifactId>hawthorne-parent</artifactId>
-	<name>Hawthorne Parent</name>
+	<artifactId>msws-parent</artifactId>
+	<name>MarkitSERV Web Service Library</name>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<description>Server for the Hawthorne project</description>
+	<description>Generic project for MarkitSERV Web Services</description>
 
 	<modules>
 		<module>msws</module>
-		<module>web</module>
 	</modules>
 
 	<properties>
@@ -245,9 +244,9 @@
 	</dependencies>
 
 	<scm>
-		<connection>scm:git:ssh://git@usmtpdevapp001.mserv.local/crossplatform/HawthorneServer.git
+		<connection>scm:git:ssh://git@devsrca01.mserv.local/crossplatform/msws.git
 		</connection>
-		<developerConnection>scm:git:ssh://git@usmtpdevapp001.mserv.local/crossplatform/HawthorneServer.git
+		<developerConnection>scm:git:ssh://git@devsrca01.mserv.local/crossplatform/msws.git
 		</developerConnection>
 	</scm>
 	<build>
@@ -293,7 +292,7 @@
 
 		<site>
 			<id>developer-docs-server</id>
-			<url>scp://devsrcp1/var/www/html/developerDocumentation/crossplatform/hawthorne</url>
+			<url>scp://devsrcp1/var/www/html/developerDocumentation/crossplatform/msws</url>
 		</site>
 
 	</distributionManagement>
