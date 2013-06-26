@@ -3,9 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.markitserv</groupId>
 	<artifactId>msws-parent</artifactId>
-	<name>MarkitSERV Web Service Library</name>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
+
+	<name>MarkitSERV Web Service Library - Parent</name>
 
 	<description>Generic project for MarkitSERV Web Services</description>
 
