@@ -8,6 +8,7 @@ import static com.markitserv.msws.internal.MswsAssert.mswsAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.markitserv.msws.exceptions.MswsException;
 
@@ -15,7 +16,9 @@ import com.markitserv.msws.exceptions.MswsException;
  * @author kiran.gogula
  * 
  */
+@Service
 public class ErrorCommandRunner extends AbstractCommandRunner {
+	
 
 	Logger log = LoggerFactory.getLogger(ErrorCommandRunner.class);
 

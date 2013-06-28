@@ -29,8 +29,8 @@ public class SortingPresetDefinitionBuilder {
 
 		def = new ParamsAndFiltersDefinition();
 
-		def.addValidation(CommonParamKeys.SortBy, new RequiredValidation());
-		def.addValidation(CommonParamKeys.SortBy, new CollectionValidation());
+		def.addValidation(CommonParamKeys.PARAM_SORT_BY, new RequiredValidation());
+		def.addValidation(CommonParamKeys.PARAM_SORT_BY, new CollectionValidation());
 	}
 
 	public SortingPresetDefinitionBuilder addSortOption(String sortBy) {
@@ -61,26 +61,26 @@ public class SortingPresetDefinitionBuilder {
 				defaultSortBy != null && defaultSortOrder != null,
 				"If you're using sorting you need to specify a default sort");
 
-		def.addValidation(CommonParamKeys.SortBy, new ForEachValidator(
+		def.addValidation(CommonParamKeys.PARAM_SORT_BY, new ForEachValidator(
 				new SortByValidation(validSortByValues)));
 
 		// ensure that they have the correct values and count for sort order
 		String[] sortOrders = { SortOrder.Asc.toString(),
 				SortOrder.Desc.toString() };
-		def.addValidation(CommonParamKeys.SortOrder, new ForEachValidator(
+		def.addValidation(CommonParamKeys.PARAM_SORT_ORDER, new ForEachValidator(
 				new OneOfValidation(sortOrders)));
 		
-		def.addValidation(CommonParamKeys.SortOrder,
-				new CollectionSizesMatchValidation(CommonParamKeys.SortBy.toString()));
+		def.addValidation(CommonParamKeys.PARAM_SORT_ORDER,
+				new CollectionSizesMatchValidation(CommonParamKeys.PARAM_SORT_BY.toString()));
 
 		// Add default sorts
 		List<String> defaultSortByValues = new ArrayList<String>(1);
 		defaultSortByValues.add(0, defaultSortBy);
-		def.addDefaultParam(CommonParamKeys.SortBy, defaultSortByValues);
+		def.addDefaultParam(CommonParamKeys.PARAM_SORT_BY, defaultSortByValues);
 
 		List<String> defaultSortOrders = new ArrayList<String>(1);
 		defaultSortOrders.add(0, defaultSortOrder.toString());
-		def.addDefaultParam(CommonParamKeys.SortOrder, defaultSortOrders);
+		def.addDefaultParam(CommonParamKeys.PARAM_SORT_ORDER, defaultSortOrders);
 
 		return def;
 	}

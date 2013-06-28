@@ -3,8 +3,6 @@ package com.markitserv.msws.filters;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.markitserv.msws.Type;
-
 /**
  * Provides pagination if the pagination is not done in the database. Assumes
  * list is already sorted (if it's expected to be sorted)
@@ -13,7 +11,7 @@ import com.markitserv.msws.Type;
  * 
  * @param <T>
  */
-public class PaginationFilter<T extends Type> extends AbstractFilter<T> {
+public class PaginationFilter<T> extends AbstractFilter<T> {
 
 	private int pageSize;
 	private int pageStartIndex;
@@ -27,7 +25,7 @@ public class PaginationFilter<T extends Type> extends AbstractFilter<T> {
 	 *           of the page to return
 	 * @return
 	 */
-	public static <T extends Type> List<T> filter(List<T> toFilter, int pageStartIndex,
+	public static <T> List<T> filter(List<T> toFilter, int pageStartIndex,
 			int pageSize) {
 
 		PaginationFilter<T> f = new PaginationFilter<T>(pageStartIndex, pageSize);

@@ -7,43 +7,42 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.markitserv.msws.AbstractWebserviceResult;
-import com.markitserv.msws.Type;
 
 public class ActionResult extends AbstractWebserviceResult {
 
-	private List<? extends Type> list;
-	private Type item;
+	private List<? extends Object> list;
+	private Object item;
 
 	/*
 	 * public ActionResult () { super(); }
 	 */
 
-	public ActionResult(Type item) {
+	public ActionResult(Object item) {
 		super();
 		this.item = item;
 	}
 
-	public ActionResult(List<? extends Type> list) {
+	public ActionResult(List<? extends Object> list) {
 		super();
 		this.list = list;
 	}
 
 	@JsonInclude(Include.NON_NULL)
 	@JsonProperty(value = "list")
-	public List<? extends Type> getList() {
+	public List<? extends Object> getList() {
 		return list;
 	}
 
-	public void setList(List<? extends Type> collection) {
+	public void setList(List<? extends Object> collection) {
 		this.list = collection;
 	}
 
 	@JsonInclude(Include.NON_NULL)
-	public Type getItem() {
+	public Object getItem() {
 		return item;
 	}
 
-	public void setItem(Type item) {
+	public void setItem(Object item) {
 		this.item = item;
 	}
 

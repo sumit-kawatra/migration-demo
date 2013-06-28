@@ -23,8 +23,7 @@ import com.markitserv.msws.web.HttpParamsToActionCommand;
 
 public class HttpParamsToActionCommandTest {
 
-	private static final String ACTION_PARAM_NAME = CommonParamKeys.Action
-			.toString();
+	private static final String ACTION_PARAM_NAME = CommonParamKeys.PARAM_ACTION;
 	private static final String ACTION_NAME = "SomeAction";
 
 	private HttpParamsToActionCommand target;

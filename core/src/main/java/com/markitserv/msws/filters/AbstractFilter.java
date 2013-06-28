@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
-import com.markitserv.msws.Type;
-
 /**
  * Abstract filter class. Subclasses should: 1) implement shouldBeFilteredOut,
  * and 2) provide static factory classes and make the constructors private.
@@ -14,7 +12,7 @@ import com.markitserv.msws.Type;
  * 
  * @param <T>
  */
-public abstract class AbstractFilter<T extends Type> {
+public abstract class AbstractFilter<T> {
 
 	public List<T> filter(List<T> toFilter) {
 

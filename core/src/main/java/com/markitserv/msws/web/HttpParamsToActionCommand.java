@@ -52,7 +52,7 @@ public class HttpParamsToActionCommand {
 
 			String value = valueArr[0];
 
-			if (key.equals(CommonParamKeys.Action.toString())) {
+			if (key.equals(CommonParamKeys.PARAM_ACTION)) {
 				action = value;
 				continue; // so that it's not added to the params
 			}
@@ -146,7 +146,7 @@ public class HttpParamsToActionCommand {
 		do {
 			nameCounter++;
 
-			String filterNameKey = CommonParamKeys.Filter.toString() + "."
+			String filterNameKey = CommonParamKeys.PARAM_FILTER + "."
 					+ nameCounter + ".Name";
 			String[] filterNameArr = params.remove(filterNameKey);
 

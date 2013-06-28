@@ -1,13 +1,12 @@
 package com.markitserv.msws.testutil;
 
-import com.markitserv.msws.Type;
 
 /**
  * Simple fake Type, used for testing
  * @author roy.truelove
  *
  */
-public class FakeType extends Type {
+public class FakeType {
 	
 	public FakeType(boolean successful) {
 		super();

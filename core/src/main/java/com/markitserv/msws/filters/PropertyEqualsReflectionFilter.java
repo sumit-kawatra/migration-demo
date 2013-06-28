@@ -6,7 +6,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.markitserv.msws.Type;
 import com.markitserv.msws.exceptions.ProgrammaticException;
 
 /**
@@ -17,13 +16,13 @@ import com.markitserv.msws.exceptions.ProgrammaticException;
  * @author roy.truelove
  * 
  */
-public class PropertyEqualsReflectionFilter<T extends Type, R> extends
+public class PropertyEqualsReflectionFilter<T,R> extends
 		AbstractFilter<T> {
 
 	private String propertyName;
 	private R value;
 
-	public static <T extends Type, R> List<T> filter(List<T> toFilter,
+	public static <T, R> List<T> filter(List<T> toFilter,
 			String propertyName, R value) {
 
 		PropertyEqualsReflectionFilter<T, R> f = new PropertyEqualsReflectionFilter<T, R>(

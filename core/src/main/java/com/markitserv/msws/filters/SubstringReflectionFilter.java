@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.markitserv.msws.Type;
 import com.markitserv.msws.exceptions.ProgrammaticException;
 
 /**
@@ -15,14 +14,14 @@ import com.markitserv.msws.exceptions.ProgrammaticException;
  * @author roy.truelove
  * 
  */
-public class SubstringReflectionFilter<T extends Type> extends
+public class SubstringReflectionFilter<T> extends
 		AbstractFilter<T> {
 
 	private String propertyName;
 	private String substr;
 	private boolean caseSentitive;
 
-	public static <T extends Type> List<T> filter(List<T> toFilter,
+	public static <T> List<T> filter(List<T> toFilter,
 			String propertyName, String substr, boolean caseSenstitive) {
 
 		SubstringReflectionFilter<T> x = new SubstringReflectionFilter<T>(
@@ -31,7 +30,7 @@ public class SubstringReflectionFilter<T extends Type> extends
 
 	}
 	
-	public static <T extends Type> List<T> filter(List<T> toFilter,
+	public static <T> List<T> filter(List<T> toFilter,
 			String propertyName, String substr) {
 
 		SubstringReflectionFilter<T> x = new SubstringReflectionFilter<T>(

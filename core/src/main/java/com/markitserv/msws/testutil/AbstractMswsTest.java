@@ -7,7 +7,6 @@ import org.junit.BeforeClass;
 import static org.mockito.Mockito.RETURNS_SMART_NULLS;
 import org.mockito.Mockito;
 
-import com.markitserv.msws.Type;
 import com.markitserv.msws.internal.UuidGenerator;
 
 /** 
