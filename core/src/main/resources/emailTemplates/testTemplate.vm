@@ -1,0 +1,19 @@
+<html>
+<body>
+My name is $name
+
+<ul>
+#foreach( $product in $allProducts )
+    <li>$product</li>
+#end
+</ul>
+
+<ul>
+#foreach( $error in $errorCommandList )
+    <li>$error.getErrorMessage()</li>
+#end
+</ul>
+
+My First Name is $firstName
+</body>
+</html>

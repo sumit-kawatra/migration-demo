@@ -11,7 +11,7 @@
 	<description>Generic project for MarkitSERV Web Services</description>
 
 	<modules>
-		<module>msws</module>
+		<module>core</module>
 	</modules>
 
 	<properties>
