@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.markitserv</groupId>
+		<groupId>com.markitserv.msws</groupId>
 		<artifactId>msws-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>msws</artifactId>
+	<artifactId>msws-core</artifactId>
 	<packaging>jar</packaging>
 	<name>MarkitSERV HTTP Web Service Library</name>
 	<description>Library for Spring-based HTTP APIs</description>
