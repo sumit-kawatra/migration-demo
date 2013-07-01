@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.markitserv.msws.validation.MutuallyExclusiveWithValidation;
-import com.markitserv.msws.validation.ValidationAndConversionResponse;
+import com.markitserv.msws.validation.ValidationResponse;
 
 /**
  * @author kiran.gogula
@@ -21,7 +21,7 @@ import com.markitserv.msws.validation.ValidationAndConversionResponse;
 public class MutuallyExclusiveWithValidationTest {
 	
 	private MutuallyExclusiveWithValidation validation;
-	private ValidationAndConversionResponse response;
+	private ValidationResponse response;
 	private Map<String, Object> map;
 	
 	@Before

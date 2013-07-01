@@ -5,13 +5,13 @@ import java.util.Map;
 public class IntegerValidationAndConversion extends AbstractConversionValidation {
 
 	@Override
-	public ValidationAndConversionResponse validateAndConvert(Object target,
+	public ValidationResponse validateAndConvert(Object target,
 			Map<String, ? extends Object> map) {
 		
 		Integer convertedInt = null;
 
 		if (target instanceof Integer) {
-			return ValidationAndConversionResponse.createValidConvertedResponse(target);
+			return ValidationResponse.createValidConvertedResponse(target);
 		} else if (!(target instanceof String)) {
 			return bad();
 		} else {
@@ -23,10 +23,10 @@ public class IntegerValidationAndConversion extends AbstractConversionValidation
 			}
 		}
 		
-		return ValidationAndConversionResponse.createValidConvertedResponse(convertedInt);
+		return ValidationResponse.createValidConvertedResponse(convertedInt);
 	}
 
-	private ValidationAndConversionResponse bad() {
-		return ValidationAndConversionResponse.createInvalidResponse("Expected Integer");
+	private ValidationResponse bad() {
+		return ValidationResponse.createInvalidResponse("Expected Integer");
 	}
 }

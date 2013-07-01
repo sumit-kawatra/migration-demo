@@ -15,13 +15,13 @@ public class ForEachValidator extends AbstractOptionalValidation {
 	}
 
 	@Override
-	public ValidationAndConversionResponse validate(Object target,
+	public ValidationResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 
 		MswsAssert.mswsAssert(!(forEachElement instanceof AbstractConversionValidation),
 				"You need to use the 'ForEachValidatorAndConverter' class for conversions");
 
-		ValidationAndConversionResponse isCollection = new CollectionValidation().validate(
+		ValidationResponse isCollection = new CollectionValidation().validate(
 				target, map);
 		if (!isCollection.isValid()) {
 			return isCollection;
@@ -30,14 +30,14 @@ public class ForEachValidator extends AbstractOptionalValidation {
 		Collection<?> col = (Collection<?>) target;
 
 		for (Object object : col) {
-			ValidationAndConversionResponse resp = forEachElement.validate(object, map);
+			ValidationResponse resp = forEachElement.validate(object, map);
 			if (!resp.isValid()) {
-				return ValidationAndConversionResponse.createInvalidResponse("Element '"
+				return ValidationResponse.createInvalidResponse("Element '"
 						+ object.toString() + "' of this collection failed validation: "
 						+ resp.getMessage());
 			}
 		}
 
-		return ValidationAndConversionResponse.createValidResponse();
+		return ValidationResponse.createValidResponse();
 	}
 }

@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.markitserv.msws.validation.CollectionSizeValidation;
-import com.markitserv.msws.validation.ValidationAndConversionResponse;
+import com.markitserv.msws.validation.ValidationResponse;
 
 /**
  * @author kiran.gogula
@@ -21,7 +21,7 @@ import com.markitserv.msws.validation.ValidationAndConversionResponse;
 public class CollectionSizeValidationTest {
 
 	private CollectionSizeValidation collectionSizeValidation;
-	private ValidationAndConversionResponse response;
+	private ValidationResponse response;
 	
 	@Before
 	public void setUp(){

@@ -20,7 +20,7 @@ public class RequiredIfAllNotProvidedValidation extends RequiredValidation{
 	}
 	
 	@Override
-	public ValidationAndConversionResponse validate(Object target,
+	public ValidationResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 		int counter = 0;
 		
@@ -30,12 +30,12 @@ public class RequiredIfAllNotProvidedValidation extends RequiredValidation{
 			}
 		}
 		if(!isProvided(target) && counter == 0){
-			return ValidationAndConversionResponse
+			return ValidationResponse
 					.createInvalidResponse("Required if any of the following are not provided:"
 									+ getStringFromArray(otherValues));
 		
 		}
-		return ValidationAndConversionResponse.createValidResponse();
+		return ValidationResponse.createValidResponse();
 	}
 
 	

@@ -19,10 +19,10 @@ public class IntegerMaxMinValidationAndConversion extends AbstractConversionVali
 	}
 
 	@Override
-	public ValidationAndConversionResponse validateAndConvert(Object target,
+	public ValidationResponse validateAndConvert(Object target,
 			Map<String, ? extends Object> map) {
 		
-		ValidationAndConversionResponse isInteger = new IntegerValidationAndConversion()
+		ValidationResponse isInteger = new IntegerValidationAndConversion()
 				.internalValidateAndConvert(target, map);
 		if (!isInteger.isValid()) {
 			return isInteger;
@@ -31,15 +31,15 @@ public class IntegerMaxMinValidationAndConversion extends AbstractConversionVali
 		Integer i = (Integer) isInteger.getConvertedObj();
 
 		if (i.compareTo(min) < 0 && min != UNLIMITED) {
-			return ValidationAndConversionResponse.createInvalidResponse(String.format(
+			return ValidationResponse.createInvalidResponse(String.format(
 					"Expected a value greater than or equal to'%d' but got '%d'.", min, i));
 		}
 
 		if (i.compareTo(max) > 0 && max != UNLIMITED) {
-			return ValidationAndConversionResponse.createInvalidResponse(String.format(
+			return ValidationResponse.createInvalidResponse(String.format(
 					"Expected a value less than or equal to '%d' but got '%d'.", max, i));
 		}
 
-		return ValidationAndConversionResponse.createValidConvertedResponse(i);
+		return ValidationResponse.createValidConvertedResponse(i);
 	}
 }

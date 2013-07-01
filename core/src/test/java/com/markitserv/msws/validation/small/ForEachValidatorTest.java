@@ -14,7 +14,7 @@ import org.junit.Test;
 import com.markitserv.msws.validation.AbstractValidation;
 import com.markitserv.msws.validation.ForEachValidator;
 import com.markitserv.msws.validation.RequiredValidation;
-import com.markitserv.msws.validation.ValidationAndConversionResponse;
+import com.markitserv.msws.validation.ValidationResponse;
 
 /**
  * @author kiran.gogula
@@ -24,7 +24,7 @@ public class ForEachValidatorTest {
 	
 	private ForEachValidator forEachValidator;
 	private AbstractValidation forEachElement ;
-	private ValidationAndConversionResponse validationResponse;
+	private ValidationResponse validationResponse;
 	private List<String> listItems;
 	
 	@Before

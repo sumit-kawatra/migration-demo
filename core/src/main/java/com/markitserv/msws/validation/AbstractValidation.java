@@ -7,18 +7,18 @@ import org.apache.commons.lang3.StringUtils;
 
 public abstract class AbstractValidation {
 
-	abstract protected ValidationAndConversionResponse validate(Object target,
+	abstract protected ValidationResponse validate(Object target,
 			Map<String, ? extends Object> otherValues);
 
 	/**
 	 * Template method. This is the method that should be called when validating,
-	 * but subclasses should override isValid
+	 * but subclasses should override validate
 	 * 
 	 * @param target
 	 * @param otherValues
 	 * @return
 	 */
-	public ValidationAndConversionResponse validateInternal(Object target,
+	public ValidationResponse validateInternal(Object target,
 			Map<String, ? extends Object> otherValues) {
 
 		return validate(target, otherValues);

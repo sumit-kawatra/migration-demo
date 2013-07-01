@@ -28,7 +28,7 @@ public class OneOfValidation extends AbstractOptionalValidation {
 	}
 
 	@Override
-	public ValidationAndConversionResponse validate(Object target,
+	public ValidationResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 
 		MswsAssert.mswsAssert(target instanceof String,
@@ -40,7 +40,7 @@ public class OneOfValidation extends AbstractOptionalValidation {
 		String targetStr = (String) target;
 		boolean found = (Arrays.binarySearch(validValues, targetStr) >= 0);
 
-		ValidationAndConversionResponse resp;
+		ValidationResponse resp;
 
 		if (!found) {
 
@@ -54,10 +54,10 @@ public class OneOfValidation extends AbstractOptionalValidation {
 			String msg = sb.toString();
 			msg = StringUtils.chop(msg); // get rid of last comma
 
-			resp = ValidationAndConversionResponse.createInvalidResponse(String.format(
+			resp = ValidationResponse.createInvalidResponse(String.format(
 					"%s].  Instead got '%s'.", msg, targetStr));
 		} else {
-			resp = ValidationAndConversionResponse.createValidResponse();
+			resp = ValidationResponse.createValidResponse();
 		}
 
 		return resp;

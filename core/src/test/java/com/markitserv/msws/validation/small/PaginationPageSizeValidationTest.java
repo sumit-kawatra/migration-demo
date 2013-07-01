@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.markitserv.msws.validation.PaginationPageSizeValidation;
-import com.markitserv.msws.validation.ValidationAndConversionResponse;
+import com.markitserv.msws.validation.ValidationResponse;
 
 /**
  * @author kiran.gogula
@@ -18,7 +18,7 @@ import com.markitserv.msws.validation.ValidationAndConversionResponse;
 public class PaginationPageSizeValidationTest {
 	
 	private PaginationPageSizeValidation sizeValidation;
-	private ValidationAndConversionResponse validationResponse;
+	private ValidationResponse validationResponse;
 	
 	@Before
 	public void setUp(){

@@ -36,7 +36,7 @@ public class ValidationExceptionBuilder {
 	}
 
 	public ValidationExceptionBuilder addInvalidValidation(FilterOrParam type,
-			ValidationAndConversionResponse resp, String name) {
+			ValidationResponse resp, String name) {
 	
 		// report only a single validation for each
 		if (alreadyProcessed.contains(name)) {

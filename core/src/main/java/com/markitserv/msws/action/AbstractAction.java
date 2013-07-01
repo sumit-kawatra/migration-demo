@@ -16,7 +16,7 @@ import com.markitserv.msws.validation.AbstractConversionValidation;
 import com.markitserv.msws.validation.AbstractValidation;
 import com.markitserv.msws.validation.RequiredValidation;
 import com.markitserv.msws.validation.ValidationExceptionBuilder;
-import com.markitserv.msws.validation.ValidationAndConversionResponse;
+import com.markitserv.msws.validation.ValidationResponse;
 import com.markitserv.msws.validation.ValidationExceptionBuilder.FilterOrParam;
 
 @Service
@@ -213,7 +213,7 @@ public abstract class AbstractAction implements InitializingBean {
 
 			// assumes that every parameter has a validation
 			if (!validations.containsKey(key)) {
-				ValidationAndConversionResponse resp = ValidationAndConversionResponse
+				ValidationResponse resp = ValidationResponse
 						.createInvalidResponse(String.format("Not applicable for action '%s'.",
 								this.getActionName()));
 				veb.addInvalidValidation(type, resp, key);
@@ -227,7 +227,7 @@ public abstract class AbstractAction implements InitializingBean {
 				for (AbstractValidation v : validationsForThisParam) {
 
 					Object value = reqParams.get(key);
-					ValidationAndConversionResponse resp;
+					ValidationResponse resp;
 
 					if (v instanceof AbstractConversionValidation) {
 						AbstractConversionValidation validatorAndConverter = (AbstractConversionValidation) v;
@@ -259,7 +259,7 @@ public abstract class AbstractAction implements InitializingBean {
 
 				if (validation instanceof RequiredValidation) {
 					// null because it was provided by in the request
-					ValidationAndConversionResponse resp = validation.validateInternal(null,
+					ValidationResponse resp = validation.validateInternal(null,
 							reqParams);
 					if (!resp.isValid()) {
 						veb.addInvalidValidation(type, resp, unprocessedValidationKey);

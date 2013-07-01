@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.markitserv.msws.validation.RequiredIfAnyProvidedValidation;
-import com.markitserv.msws.validation.ValidationAndConversionResponse;
+import com.markitserv.msws.validation.ValidationResponse;
 
 /**
  * @author kiran.gogula
@@ -21,7 +21,7 @@ import com.markitserv.msws.validation.ValidationAndConversionResponse;
  */
 public class RequiredIfAnyProvidedValidationTest {
 	
-	private ValidationAndConversionResponse validationResponse;
+	private ValidationResponse validationResponse;
 	private RequiredIfAnyProvidedValidation anyProvidedValidation;
 	private Map<String, Object> map;
 	

@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.markitserv.msws.validation.CollectionSizesMatchValidation;
-import com.markitserv.msws.validation.ValidationAndConversionResponse;
+import com.markitserv.msws.validation.ValidationResponse;
 
 /**
  * @author kiran.gogula
@@ -24,7 +24,7 @@ public class CollectionSizesMatchValidationTest {
 
 	
 	private CollectionSizesMatchValidation sizesMatchValidation;
-	private ValidationAndConversionResponse response;
+	private ValidationResponse response;
 	private Map<String, Object> map;
 	private List<String> list;
 	

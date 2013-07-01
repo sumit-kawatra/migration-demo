@@ -6,14 +6,14 @@ import java.util.Map;
 public class CollectionValidation extends AbstractOptionalValidation {
 
 	@Override
-	public ValidationAndConversionResponse validate(Object target,
+	public ValidationResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 
 		if (!(target instanceof Collection<?>)) {
-			return ValidationAndConversionResponse
+			return ValidationResponse
 					.createInvalidResponse("Expected a collection");
 		}
 
-		return ValidationAndConversionResponse.createValidResponse();
+		return ValidationResponse.createValidResponse();
 	}
 }

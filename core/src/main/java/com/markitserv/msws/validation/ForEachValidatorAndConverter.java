@@ -13,10 +13,10 @@ public class ForEachValidatorAndConverter extends AbstractConversionValidation {
 	}
 
 	@Override
-	public ValidationAndConversionResponse validateAndConvert(Object target,
+	public ValidationResponse validateAndConvert(Object target,
 			Map<String, ? extends Object> map) {
 
-		ValidationAndConversionResponse isCollection = new CollectionValidation().validate(
+		ValidationResponse isCollection = new CollectionValidation().validate(
 				target, map);
 		if (!isCollection.isValid()) {
 			return isCollection;
@@ -26,10 +26,10 @@ public class ForEachValidatorAndConverter extends AbstractConversionValidation {
 		Stack<Object> newCol = new Stack<Object>();
 
 		for (Object object : col) {
-			ValidationAndConversionResponse resp = forEachElement
+			ValidationResponse resp = forEachElement
 					.internalValidateAndConvert(object, map);
 			if (!resp.isValid()) {
-				return ValidationAndConversionResponse.createInvalidResponse("Element '"
+				return ValidationResponse.createInvalidResponse("Element '"
 						+ object.toString() + "' of this collection failed validation: "
 						+ resp.getMessage());
 			} else {
@@ -37,6 +37,6 @@ public class ForEachValidatorAndConverter extends AbstractConversionValidation {
 			}
 		}
 
-		return ValidationAndConversionResponse.createValidConvertedResponse(newCol);
+		return ValidationResponse.createValidConvertedResponse(newCol);
 	}
 }

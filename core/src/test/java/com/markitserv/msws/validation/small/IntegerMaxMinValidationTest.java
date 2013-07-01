@@ -8,7 +8,7 @@ import com.markitserv.msws.action.ActionCommand;
 import com.markitserv.msws.exceptions.ValidationException;
 import com.markitserv.msws.testutil.AbstractMswsTest;
 import com.markitserv.msws.validation.IntegerMaxMinValidationAndConversion;
-import com.markitserv.msws.validation.ValidationAndConversionResponse;
+import com.markitserv.msws.validation.ValidationResponse;
 
 public class IntegerMaxMinValidationTest extends AbstractMswsTest {
 
@@ -45,7 +45,7 @@ public class IntegerMaxMinValidationTest extends AbstractMswsTest {
 		IntegerMaxMinValidationAndConversion v = new IntegerMaxMinValidationAndConversion(
 				IntegerMaxMinValidationAndConversion.UNLIMITED, 11);
 
-		ValidationAndConversionResponse resp = v.internalValidateAndConvert(10, null);
+		ValidationResponse resp = v.internalValidateAndConvert(10, null);
 		assertNotNull(resp);
 		assertTrue(resp.isValid());
 	}

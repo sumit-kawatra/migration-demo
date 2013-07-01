@@ -20,19 +20,19 @@ public class CollectionSizesMatchValidation extends AbstractOptionalValidation {
 	}
 
 	@Override
-	public ValidationAndConversionResponse validate(Object target,
+	public ValidationResponse validate(Object target,
 			Map<String, ? extends Object> otherValues) {
 
 		Object otherTarget = otherValues.get(otherValueName);
 
-		ValidationAndConversionResponse isTargetACollection = new CollectionValidation()
+		ValidationResponse isTargetACollection = new CollectionValidation()
 				.validate(target, otherValues);
-		ValidationAndConversionResponse isOtherTargetACollection = new CollectionValidation()
+		ValidationResponse isOtherTargetACollection = new CollectionValidation()
 				.validate(otherTarget, otherValues);
 
 		if (!isTargetACollection.isValid()
 				|| !isOtherTargetACollection.isValid()) {
-			return ValidationAndConversionResponse
+			return ValidationResponse
 					.createInvalidResponse(String
 							.format("Expecting both this parameter and '%s' to be Collections", otherValueName));
 		}
@@ -41,7 +41,7 @@ public class CollectionSizesMatchValidation extends AbstractOptionalValidation {
 		Collection<?> otherCol = (Collection<?>) otherTarget;
 
 		if (targetCol.size() != otherCol.size()) {
-			return ValidationAndConversionResponse
+			return ValidationResponse
 					.createInvalidResponse(String
 							.format("Expected this collection to have the same number "
 									+ "of elements as the '%s' collection.  "
@@ -50,6 +50,6 @@ public class CollectionSizesMatchValidation extends AbstractOptionalValidation {
 									otherCol.size(), targetCol.size()));
 		}
 
-		return ValidationAndConversionResponse.createValidResponse();
+		return ValidationResponse.createValidResponse();
 	}
 }

@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import com.markitserv.msws.exceptions.AssertionException;
 import com.markitserv.msws.validation.SortByValidation;
-import com.markitserv.msws.validation.ValidationAndConversionResponse;
+import com.markitserv.msws.validation.ValidationResponse;
 
 /**
  * @author kiran.gogula
@@ -22,7 +22,7 @@ import com.markitserv.msws.validation.ValidationAndConversionResponse;
 public class SortByValidationTest {
 	
 	SortByValidation sortByValidation;
-	ValidationAndConversionResponse validationResponse;
+	ValidationResponse validationResponse;
 	List<String> itemList;
 	
 	@Before

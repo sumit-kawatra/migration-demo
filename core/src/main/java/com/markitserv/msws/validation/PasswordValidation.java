@@ -18,7 +18,7 @@ public class PasswordValidation extends AbstractOptionalValidation {
 	// "!@#$%^&*()~`-=_+[]{}|:\";',./<>?";
 
 	@Override
-	public ValidationAndConversionResponse validate(Object target,
+	public ValidationResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 		
 		String password = target.toString().trim();
@@ -29,7 +29,7 @@ public class PasswordValidation extends AbstractOptionalValidation {
 		// boolean containsAtLeastOneSpecialCharecter = false;
 		if (password.length() < MIN_PASSWORD_LENGTH
 				|| password.length() > MAX_PASSWORD_LENGTH) {
-			return ValidationAndConversionResponse
+			return ValidationResponse
 					.createInvalidResponse("Password sould have min 8 characters and max 16.");
 		}
 		
@@ -38,7 +38,7 @@ public class PasswordValidation extends AbstractOptionalValidation {
 		for (char pswChar : passwordCharecters) {
 			
 			if (Character.isWhitespace(pswChar)) {
-				return ValidationAndConversionResponse
+				return ValidationResponse
 						.createInvalidResponse("Invalid password format. Password should not contain any white spaces in between.");
 			} else if (Character.isUpperCase(pswChar)) {
 				containsAtLeastOneUpperCase = true;
@@ -55,9 +55,9 @@ public class PasswordValidation extends AbstractOptionalValidation {
 
 		if (containsAtLeastOneUpperCase && containsAtLeastOneLowerCase
 				&& containsAtLeastOneDigit) {
-			return ValidationAndConversionResponse.createValidResponse();
+			return ValidationResponse.createValidResponse();
 		} else {
-			return ValidationAndConversionResponse
+			return ValidationResponse
 					.createInvalidResponse("Invalid password format. Password must have atleast one uppercase and one lowercase alphabet and one digit.");
 		}
 	}

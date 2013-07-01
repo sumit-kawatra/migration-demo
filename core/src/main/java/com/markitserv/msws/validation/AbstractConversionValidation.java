@@ -7,15 +7,15 @@ import com.markitserv.msws.internal.MswsAssert;
 
 public abstract class AbstractConversionValidation extends AbstractOptionalValidation {
 
-	public ValidationAndConversionResponse internalValidateAndConvert(Object target,
+	public ValidationResponse internalValidateAndConvert(Object target,
 			Map<String, ? extends Object> otherValues) {
 
 		// because it's optional
 		if (!isProvided(target)) {
-			return ValidationAndConversionResponse.createValidResponse();
+			return ValidationResponse.createValidResponse();
 		}
 
-		ValidationAndConversionResponse resp = this.validateAndConvert(target, otherValues);
+		ValidationResponse resp = this.validateAndConvert(target, otherValues);
 
 		if (resp.isValid()) {
 			MswsAssert.mswsAssert(resp.getConvertedObj() != null,
@@ -25,18 +25,18 @@ public abstract class AbstractConversionValidation extends AbstractOptionalValid
 		return resp;
 	}
 
-	protected abstract ValidationAndConversionResponse validateAndConvert(Object target,
+	protected abstract ValidationResponse validateAndConvert(Object target,
 			Map<String, ? extends Object> otherValues);
 
 	@Override
-	public final ValidationAndConversionResponse validateInternal(Object target,
+	public final ValidationResponse validateInternal(Object target,
 			Map<String, ? extends Object> otherValues) {
 		throw new ProgrammaticException(
 				"Method not applicable for a conversion validator.  Use 'internalValidateAndConvert' instead.");
 	}
 
 	@Override
-	protected final ValidationAndConversionResponse validate(Object target,
+	protected final ValidationResponse validate(Object target,
 			Map<String, ? extends Object> otherValues) {
 		throw new ProgrammaticException(
 				"Method not applicable for a conversion validator.  Use 'internalValidateAndConvert' instead.");
