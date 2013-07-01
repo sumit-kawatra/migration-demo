@@ -291,11 +291,6 @@
 			<url> http://devsrca01:8083/nexus/content/repositories/snapshots </url>
 		</snapshotRepository>
 
-		<site>
-			<id>developer-docs-server</id>
-			<url>scp://devsrcp1/var/www/html/developerDocumentation/common/msws</url>
-		</site>
-
 	</distributionManagement>
 
 
