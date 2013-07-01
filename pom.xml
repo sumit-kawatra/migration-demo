@@ -245,9 +245,9 @@
 	</dependencies>
 
 	<scm>
-		<connection>scm:git:ssh://git@devsrca01.mserv.local/crossplatform/msws.git
+		<connection>scm:git:ssh://git@devsrca01.mserv.local/common/msws.git
 		</connection>
-		<developerConnection>scm:git:ssh://git@devsrca01.mserv.local/crossplatform/msws.git
+		<developerConnection>scm:git:ssh://git@devsrca01.mserv.local/common/msws.git
 		</developerConnection>
 	</scm>
 	<build>
@@ -293,7 +293,7 @@
 
 		<site>
 			<id>developer-docs-server</id>
-			<url>scp://devsrcp1/var/www/html/developerDocumentation/crossplatform/msws</url>
+			<url>scp://devsrcp1/var/www/html/developerDocumentation/common/msws</url>
 		</site>
 
 	</distributionManagement>
