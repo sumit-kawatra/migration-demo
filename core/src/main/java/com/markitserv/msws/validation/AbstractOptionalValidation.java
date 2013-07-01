@@ -12,7 +12,7 @@ import java.util.Map;
 public abstract class AbstractOptionalValidation extends AbstractValidation {
 
 	@Override
-	public ValidationResponse validateInternal(Object target,
+	public final ValidationResponse validateInternal(Object target,
 			Map<String, ? extends Object> map) {
 
 		ValidationResponse resp;
