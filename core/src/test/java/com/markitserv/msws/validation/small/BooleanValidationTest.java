@@ -8,7 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.markitserv.msws.validation.BooleanValidationAndConversion;
+import com.markitserv.msws.validation.BooleanValidation;
 import com.markitserv.msws.validation.ValidationResponse;
 
 /**
@@ -17,11 +17,11 @@ import com.markitserv.msws.validation.ValidationResponse;
  */
 public class BooleanValidationTest {
 	
-	private BooleanValidationAndConversion booleanValidation;
+	private BooleanValidation booleanValidation;
 	
 	@Before
 	public void setUp(){
-		booleanValidation = new BooleanValidationAndConversion();
+		booleanValidation = new BooleanValidation();
 	}
 	
 	@After
@@ -31,55 +31,55 @@ public class BooleanValidationTest {
 
 	@Test
 	public void testIsValidatedWhenInputIsTrue(){
-		Assert.assertTrue(booleanValidation.validateAndConvert(true, null).isValid());
+		Assert.assertTrue(booleanValidation.validate(true, null).isValid());
 	}
 	
 	@Test
 	public void testIsValidatedWhenInputIsFalse(){
-		Assert.assertTrue(booleanValidation.validateAndConvert(false, null).isValid());
+		Assert.assertTrue(booleanValidation.validate(false, null).isValid());
 	}
 	
 	@Test
 	public void testIsValidatedWhenInputIsInValidString(){
-		ValidationResponse res  = booleanValidation.validateAndConvert("yes", null);
+		ValidationResponse res  = booleanValidation.validate("yes", null);
 		Assert.assertFalse(res.isValid());
 		Assert.assertEquals("Expected Boolean", res.getMessage());
 	}
 	
 	@Test
 	public void testIsValidatedWhenInputIsaValidString(){
-		ValidationResponse res  = booleanValidation.validateAndConvert("3", null);
+		ValidationResponse res  = booleanValidation.validate("3", null);
 		Assert.assertFalse(res.isValid());
 	}
 	
 	@Test
 	public void testIsValidatedWhenInputIsaIntegerValue(){
-		ValidationResponse res  = booleanValidation.validateAndConvert(1, null);
+		ValidationResponse res  = booleanValidation.validate(1, null);
 		Assert.assertFalse(res.isValid());
 		Assert.assertEquals("Expected Boolean", res.getMessage());
 	}
 	
 	@Test
 	public void testIsValidatedWhenInputIsaNullValue() { 
-		ValidationResponse res = booleanValidation.validateAndConvert(null, null);
+		ValidationResponse res = booleanValidation.validate(null, null);
 		Assert.assertEquals("Expected Boolean", res.getMessage());
 	}
 	
 	@Test
 	public void canConvertTrueStringToBoolean() { 
-		ValidationResponse res = booleanValidation.validateAndConvert("true", null);
+		ValidationResponse res = booleanValidation.validate("true", null);
 		Assert.assertTrue((Boolean)res.getConvertedObj());
 	}
 	
 	@Test
 	public void canConvertFalseStringToBoolean() { 
-		ValidationResponse res = booleanValidation.validateAndConvert("false", null);
+		ValidationResponse res = booleanValidation.validate("false", null);
 		Assert.assertFalse((Boolean)res.getConvertedObj());
 	}
 	
 	@Test
 	public void canNotConvertNotBooleanStringToBoolean() { 
-		ValidationResponse res = booleanValidation.validateAndConvert("foo", null);
+		ValidationResponse res = booleanValidation.validate("foo", null);
 		Boolean convertedObj = (Boolean)res.getConvertedObj();
 		Assert.assertNull(convertedObj);
 		Assert.assertFalse(res.isValid());

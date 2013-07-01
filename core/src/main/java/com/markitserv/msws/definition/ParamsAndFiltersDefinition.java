@@ -9,7 +9,7 @@ import java.util.Stack;
 
 import com.markitserv.msws.action.CommonParamKeys;
 import com.markitserv.msws.internal.MswsAssert;
-import com.markitserv.msws.validation.AbstractConversionValidation;
+import com.markitserv.msws.validation.AbstractOptionalValidation;
 import com.markitserv.msws.validation.AbstractValidation;
 
 public class ParamsAndFiltersDefinition {
@@ -39,12 +39,12 @@ public class ParamsAndFiltersDefinition {
 		validations.put(key, v);
 	}
 
-	public void addValidationAndConversion(CommonParamKeys key,
-			AbstractConversionValidation value) {
+	public void addValidation(CommonParamKeys key,
+			AbstractOptionalValidation value) {
 		this.addValidation(key.toString(), value);
 	}
 
-	public void addValidationAndConversion(String key, AbstractConversionValidation value) {
+	public void addValidationAndConversion(String key, AbstractOptionalValidation value) {
 
 		this.addValidation(key, value);
 	}

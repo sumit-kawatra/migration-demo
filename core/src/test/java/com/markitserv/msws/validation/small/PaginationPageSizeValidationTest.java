@@ -33,25 +33,25 @@ public class PaginationPageSizeValidationTest {
 	
 	@Test
 	public void testIsValidMethodWithInputParamInteger(){
-		validationResponse = sizeValidation.internalValidateAndConvert(5, null);
+		validationResponse = sizeValidation.validateInternal(5, null);
 		Assert.assertEquals(true, validationResponse.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodWithInputParamString(){
-		validationResponse = sizeValidation.internalValidateAndConvert("1", null);
+		validationResponse = sizeValidation.validateInternal("1", null);
 		Assert.assertEquals(true, validationResponse.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodWithInputParamBoolanExpectedException(){
-		validationResponse = sizeValidation.internalValidateAndConvert(true, null);
+		validationResponse = sizeValidation.validateInternal(true, null);
 		Assert.assertEquals(false, validationResponse.isValid());
 	}
 	
 	@Test
 	public void testIsValidMethodWithInputParamStringWhichIsNotIntExpectedException(){
-		validationResponse = sizeValidation.internalValidateAndConvert("true", null);
+		validationResponse = sizeValidation.validateInternal("true", null);
 		Assert.assertEquals(false, validationResponse.isValid());
 	}
 }

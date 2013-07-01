@@ -2,10 +2,10 @@ package com.markitserv.msws.validation;
 
 import java.util.Map;
 
-public class IntegerValidationAndConversion extends AbstractConversionValidation {
+public class IntegerValidation extends AbstractOptionalValidation {
 
 	@Override
-	public ValidationResponse validateAndConvert(Object target,
+	public ValidationResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 		
 		Integer convertedInt = null;

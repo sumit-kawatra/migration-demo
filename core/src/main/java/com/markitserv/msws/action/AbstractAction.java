@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.exceptions.ProgrammaticException;
 import com.markitserv.msws.internal.UuidGenerator;
-import com.markitserv.msws.validation.AbstractConversionValidation;
 import com.markitserv.msws.validation.AbstractValidation;
 import com.markitserv.msws.validation.RequiredValidation;
 import com.markitserv.msws.validation.ValidationExceptionBuilder;
@@ -228,21 +227,17 @@ public abstract class AbstractAction implements InitializingBean {
 
 					Object value = reqParams.get(key);
 					ValidationResponse resp;
-
-					if (v instanceof AbstractConversionValidation) {
-						AbstractConversionValidation validatorAndConverter = (AbstractConversionValidation) v;
-						resp = validatorAndConverter
-								.internalValidateAndConvert(value, reqParams);
-						
-						// override the original value with the converted value
-						reqParams.put(key, resp.getConvertedObj());
-						
-					} else {
-						resp = v.validateInternal(value, reqParams);
-					}
-
+					
+					resp = v.validateInternal(value, reqParams);
+					
 					if (!resp.isValid()) {
 						veb.addInvalidValidation(type, resp, key);
+					} else {
+						// it's valid, see if there's a conversion
+						if (resp.getConvertedObj() != null) {
+							// override the original value with the converted value
+							reqParams.put(key, resp.getConvertedObj());
+						}
 					}
 				}
 			}

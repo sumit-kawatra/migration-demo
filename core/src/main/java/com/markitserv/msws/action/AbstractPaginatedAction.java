@@ -2,10 +2,9 @@ package com.markitserv.msws.action;
 
 import static com.markitserv.msws.internal.MswsAssert.mswsAssert;
 
-import com.markitserv.msws.ResponseMetadata;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.internal.Constants;
-import com.markitserv.msws.validation.IntegerMaxMinValidationAndConversion;
+import com.markitserv.msws.validation.IntegerMaxMinValidation;
 import com.markitserv.msws.validation.PaginationPageSizeValidation;
 import com.markitserv.msws.validation.RequiredValidation;
 
@@ -37,12 +36,12 @@ public abstract class AbstractPaginatedAction extends AbstractAction {
 			ParamsAndFiltersDefinition def) {
 
 		def.addValidation(CommonParamKeys.PARAM_PAGE_START_INDEX, new RequiredValidation());
-		def.addValidationAndConversion(CommonParamKeys.PARAM_PAGE_START_INDEX,
-				new IntegerMaxMinValidationAndConversion(1,
-						IntegerMaxMinValidationAndConversion.UNLIMITED));
+		def.addValidation(CommonParamKeys.PARAM_PAGE_START_INDEX,
+				new IntegerMaxMinValidation(1,
+						IntegerMaxMinValidation.UNLIMITED));
 
 		def.addValidation(CommonParamKeys.PARAM_PAGE_SIZE, new RequiredValidation());
-		def.addValidationAndConversion(CommonParamKeys.PARAM_PAGE_SIZE,
+		def.addValidation(CommonParamKeys.PARAM_PAGE_SIZE,
 				new PaginationPageSizeValidation(this.getMaxPageSize()));
 
 		def.addDefaultParam(CommonParamKeys.PARAM_PAGE_START_INDEX, "1");

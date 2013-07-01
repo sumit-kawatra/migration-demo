@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.markitserv.msws.internal.Constants;
 
-public class PaginationPageSizeValidation extends IntegerMaxMinValidationAndConversion {
+public class PaginationPageSizeValidation extends IntegerMaxMinValidation {
 
 	private int maxPageSize = Constants.INTEGER_NOT_SET;
 
@@ -14,10 +14,10 @@ public class PaginationPageSizeValidation extends IntegerMaxMinValidationAndConv
 	}
 
 	@Override
-	public ValidationResponse validateAndConvert(Object target,
+	public ValidationResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 
-		ValidationResponse resp = super.validateAndConvert(target, map);
+		ValidationResponse resp = super.validate(target, map);
 		
 		if (!resp.isValid()) {
 			return ValidationResponse.createInvalidResponse(String.format(

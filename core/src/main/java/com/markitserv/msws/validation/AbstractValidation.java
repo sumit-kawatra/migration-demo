@@ -25,7 +25,7 @@ public abstract class AbstractValidation {
 	}
 
 	/**
-	 * Sees if an object is null or empty.  Mostly used by 'Required' validatoins
+	 * Convience method.  Sees if an object is null or empty.  Mostly used by 'Required' validations 
 	 * 
 	 * @param target
 	 * @return

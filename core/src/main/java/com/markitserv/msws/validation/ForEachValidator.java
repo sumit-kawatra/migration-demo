@@ -1,10 +1,8 @@
 package com.markitserv.msws.validation;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
-
-import com.markitserv.msws.internal.MswsAssert;
+import java.util.Stack;
 
 public class ForEachValidator extends AbstractOptionalValidation {
 
@@ -18,9 +16,6 @@ public class ForEachValidator extends AbstractOptionalValidation {
 	public ValidationResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 
-		MswsAssert.mswsAssert(!(forEachElement instanceof AbstractConversionValidation),
-				"You need to use the 'ForEachValidatorAndConverter' class for conversions");
-
 		ValidationResponse isCollection = new CollectionValidation().validate(
 				target, map);
 		if (!isCollection.isValid()) {
@@ -28,16 +23,20 @@ public class ForEachValidator extends AbstractOptionalValidation {
 		}
 
 		Collection<?> col = (Collection<?>) target;
+		Stack<Object> newCol = new Stack<Object>();
 
 		for (Object object : col) {
-			ValidationResponse resp = forEachElement.validate(object, map);
+			ValidationResponse resp = forEachElement
+					.validateInternal(object, map);
 			if (!resp.isValid()) {
 				return ValidationResponse.createInvalidResponse("Element '"
 						+ object.toString() + "' of this collection failed validation: "
 						+ resp.getMessage());
+			} else {
+				newCol.push(resp.getConvertedObj());
 			}
 		}
 
-		return ValidationResponse.createValidResponse();
+		return ValidationResponse.createValidConvertedResponse(newCol);
 	}
 }

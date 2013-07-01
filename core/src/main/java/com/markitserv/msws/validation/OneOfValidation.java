@@ -21,6 +21,10 @@ public class OneOfValidation extends AbstractOptionalValidation {
 		String[] values = validValues.toArray(new String[validValues.size()]);
 		init(values);
 	}
+	
+	public OneOfValidation() {
+		
+	}
 
 	private void init(String[] validValues) {
 		Arrays.sort(validValues); // prereq to doing binary search later.

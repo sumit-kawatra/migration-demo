@@ -11,7 +11,7 @@ import com.markitserv.msws.action.PaginatedActionResponseMetaData;
 import com.markitserv.msws.action.PaginatedActionResult;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.validation.AbstractValidation;
-import com.markitserv.msws.validation.IntegerValidationAndConversion;
+import com.markitserv.msws.validation.IntegerValidation;
 import com.markitserv.msws.validation.RequiredValidation;
 
 /**
@@ -64,7 +64,7 @@ public class FakePaginatedAction extends AbstractPaginatedAction {
 			
 			paramDef = super.createParameterDefinition();
 			
-			paramDef.addValidation("Size", new IntegerValidationAndConversion());
+			paramDef.addValidation("Size", new IntegerValidation());
 			paramDef.addValidation("Size", new RequiredValidation());
 		}
 		return paramDef;

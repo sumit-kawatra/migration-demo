@@ -2,10 +2,10 @@ package com.markitserv.msws.validation;
 
 import java.util.Map;
 
-public class BooleanValidationAndConversion extends AbstractConversionValidation {
+public class BooleanValidation extends AbstractOptionalValidation {
 
 	@Override
-	public ValidationResponse validateAndConvert(Object target,
+	public ValidationResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 
 		if (target instanceof Boolean) {
