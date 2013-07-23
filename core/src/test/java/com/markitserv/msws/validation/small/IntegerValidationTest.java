@@ -32,27 +32,27 @@ public class IntegerValidationTest {
 	}
 	
 	@Test
-	public void testIsValidMethodWithIntergerValue(){
+	public void intergerValueIsValid(){
 		validationResponse = integerValidation.validateInternal(1, null);
-		Assert.assertEquals(true, validationResponse.isValid());
+		Assert.assertTrue(validationResponse.isValid());
 	}
 	
 	@Test
-	public void testIsValidMethodWithIntergerValueInStringFormat(){
+	public void intergerValueInStringFormatIsValid(){
 		validationResponse = integerValidation.validateInternal("1", null);
-		Assert.assertEquals(true, validationResponse.isValid());
+		Assert.assertTrue(validationResponse.isValid());
 	}
 	
 	@Test
-	public void testIsValidMethodWithIntergerValueInStringFormatButWhichIsNotInt(){
+	public void intergerValueInStringFormatButWhichIsNotIntIsNotValid(){
 		validationResponse = integerValidation.validateInternal("true", null);
-		Assert.assertEquals(false, validationResponse.isValid());
+		Assert.assertFalse(validationResponse.isValid());
 	}
 	
 	@Test
-	public void testIsValidMethodWithBooleanValueExpectedExcetpion(){
+	public void booleanValueIsNotValid(){
 		validationResponse = integerValidation.validateInternal(true, null);
-		Assert.assertEquals(false, validationResponse.isValid());
+		Assert.assertFalse(validationResponse.isValid());
 	}
 	
 	@Test

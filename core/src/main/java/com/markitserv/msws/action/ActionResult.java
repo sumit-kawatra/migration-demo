@@ -10,7 +10,7 @@ import com.markitserv.msws.AbstractWebserviceResult;
 
 public class ActionResult extends AbstractWebserviceResult {
 
-	private List<? extends Object> list;
+	private List<? extends Object> items;
 	private Object item;
 
 	/*
@@ -24,17 +24,17 @@ public class ActionResult extends AbstractWebserviceResult {
 
 	public ActionResult(List<? extends Object> list) {
 		super();
-		this.list = list;
+		this.items = list;
 	}
 
 	@JsonInclude(Include.NON_NULL)
-	@JsonProperty(value = "list")
-	public List<? extends Object> getList() {
-		return list;
+	@JsonProperty(value = "items")
+	public List<? extends Object> getItems() {
+		return items;
 	}
 
-	public void setList(List<? extends Object> collection) {
-		this.list = collection;
+	public void setItems(List<? extends Object> collection) {
+		this.items = collection;
 	}
 
 	@JsonInclude(Include.NON_NULL)
@@ -48,12 +48,11 @@ public class ActionResult extends AbstractWebserviceResult {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(list, item);
+		return Objects.hashCode(items, item);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		return Objects.equal(this, obj);
 	}
-
 }

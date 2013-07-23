@@ -80,13 +80,13 @@ public abstract class AbstractAction implements InitializingBean {
 		String failureMsg = "Failed to validate ActionResult.";
 
 		// either collection OR item needs to be set.
-		if (result.getList() == null && result.getItem() == null) {
+		if (result.getItems() == null && result.getItem() == null) {
 			throw new ProgrammaticException(failureMsg
 					+ "Either the collection or the item must be set.");
 		}
 
 		// cannot have both collection and item set at the same time.
-		if (result.getList() != null && result.getItem() != null) {
+		if (result.getItems() != null && result.getItem() != null) {
 			throw new ProgrammaticException(failureMsg
 					+ "Cannot set both the collection and the item.");
 		}

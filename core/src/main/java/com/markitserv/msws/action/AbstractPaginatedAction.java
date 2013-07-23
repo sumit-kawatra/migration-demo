@@ -67,9 +67,9 @@ public abstract class AbstractPaginatedAction extends AbstractAction {
 		mswsAssert(metaData.getTotalRecords() != Constants.INTEGER_NOT_SET, "Total Records is requried.");
 		
 		mswsAssert(
-				result.getList().size() <= this.getMaxPageSize(),
+				result.getItems().size() <= this.getMaxPageSize(),
 				"List size (%d) cannot be greater than the max page size of %d",
-				result.getList().size(), this.getMaxPageSize());
+				result.getItems().size(), this.getMaxPageSize());
 	}
 	
 	/**
@@ -80,7 +80,7 @@ public abstract class AbstractPaginatedAction extends AbstractAction {
 		
 		PaginatedActionResult pRes = (PaginatedActionResult) result;
 		PaginatedActionResponseMetaData metaData = pRes.getPaginatedMetaData();
-		metaData.setRequestRecords(pRes.getList().size());
+		metaData.setRequestRecords(pRes.getItems().size());
 		result.setMetaData(metaData);
 		return result;
 		
