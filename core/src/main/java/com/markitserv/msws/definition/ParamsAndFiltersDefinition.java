@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.markitserv.msws.action.CommonParamKeys;
 import com.markitserv.msws.internal.MswsAssert;
 import com.markitserv.msws.validation.AbstractOptionalValidation;
@@ -18,7 +20,7 @@ public class ParamsAndFiltersDefinition {
 	private Map<String, Object> defaults = new HashMap<String, Object>();
 
 	public void addValidation(String key, AbstractValidation value) {
-
+		
 		/*
 		MswsAssert
 				.mswsAssert(
@@ -28,7 +30,7 @@ public class ParamsAndFiltersDefinition {
 								"' requires that when you register with the Param / Filter definition, "
 								+ "you use 'addValidationAndConvertion' instead of 'addValidation'");
 		*/
-
+		
 		if (!validations.containsKey(key)) {
 			List<AbstractValidation> v = new Stack<AbstractValidation>();
 			validations.put(key, v);
