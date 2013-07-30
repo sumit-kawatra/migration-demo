@@ -20,12 +20,6 @@ public class DateValidation extends AbstractOptionalValidation {
 			return ValidationResponse.createValidConvertedResponse(target);
 		else if (!(target instanceof String)) {
 			return bad();
-		}
-		
-		if (target instanceof Integer) {
-			return ValidationResponse.createValidConvertedResponse(target);
-		} else if (!(target instanceof String)) {
-			return bad();
 		} else {
 			String targetStr = (String) target;
 			try {
