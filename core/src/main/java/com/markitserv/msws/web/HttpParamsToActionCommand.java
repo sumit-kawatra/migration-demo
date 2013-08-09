@@ -41,7 +41,7 @@ public class HttpParamsToActionCommand {
 		Map<String, Object> processedParamsMap = new HashMap<String, Object>();
 		for (String key : params.keySet()) {
 			
-			if (isJsonpParam(key))
+			if (isIgnoreableParam(key))
 				continue;
 			
 			String[] valueArr = params.get(key);
@@ -78,12 +78,13 @@ public class HttpParamsToActionCommand {
 
 	/**
 	 * jsonp parameters should be removed.  Hate doing this here, would rather do it in the filter, but we need Servlet 3 api
-	 * These are the params set by jquery
+	 * These are the params set by jquery.  Also ignores anything with an _, which because of IE bullshit, are used to make AJAX
+	 * Calls unique.
 	 * @param key
 	 * @return
 	 */
-	private boolean isJsonpParam(String key) {
-		return (key.equalsIgnoreCase("callback") || key.equalsIgnoreCase("_"));
+	private boolean isIgnoreableParam(String key) {
+		return (key.equalsIgnoreCase("callback") || key.startsWith("_"));
 	}
 
 	private boolean isMultiValue(String key) {

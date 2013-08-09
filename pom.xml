@@ -19,8 +19,8 @@
 		<cglib.version>2.2.2</cglib.version>
 		<spring.version>3.2.0.RELEASE</spring.version>
 		<spring.security.version>3.1.3.RELEASE</spring.security.version>
-		<slf4j.version>1.6.1</slf4j.version>
-		<logback.version>0.9.26</logback.version>
+		<slf4j.version>1.7.5</slf4j.version>
+		<logback.version>1.0.13</logback.version>
 		<validation.version>1.0.0.GA</validation.version>
 		<jackson.version>2.1.2</jackson.version>
 		<hibernate-validation.version>4.3.0.Final</hibernate-validation.version>
@@ -77,25 +77,6 @@
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-config</artifactId>
 				<version>${spring.security.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>jcl-over-slf4j</artifactId>
-				<version>${jcl-over-slf4.version}</version>
-			</dependency>
-
-			<!-- Logging. TODO do we need all of these? -->
-
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-core</artifactId>
-				<version>${logback.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-access</artifactId>
-				<version>${logback.version}</version>
 			</dependency>
 
 			<!-- Validation -->
@@ -214,6 +195,19 @@
 			<artifactId>logback-classic</artifactId>
 			<version>${logback.version}</version>
 		</dependency>
+			
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		<!-- needed to log spring logs over slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${jcl-over-slf4.version}</version>
+		</dependency>
+			
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -282,12 +276,12 @@
 		<repository>
 			<id>markitserv-nexus-releases</id>
 			<name>MarkitSERV Nexus Repository - Releases</name>
-			<url> http://devsrca01:8083/nexus/content/repositories/releases </url>
+			<url> http://devsrca01:8083/nexus/content/repositories/releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>markitserv-nexus-snapshots</id>
 			<name>MarkitSERV Nexus Repository - Snapshots</name>
-			<url> http://devsrca01:8083/nexus/content/repositories/snapshots </url>
+			<url> http://devsrca01:8083/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 
 	</distributionManagement>
