@@ -43,6 +43,10 @@ public class ActionParameters {
 	public void addParameter(String key, Object value) {
 		params.put(key, value);
 	}
+	
+	public void addParameters(Map<String, Object> newParams) {
+		params.putAll(newParams);
+	}
 
 	public Map<String, Object> getAllParameters() {
 		return params;

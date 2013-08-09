@@ -1,5 +1,7 @@
 package com.markitserv.msws.action;
 
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -64,6 +66,14 @@ public class ActionCommand implements ReqRespCommand {
 	public void setFilters(ActionFilters filters) {
 		this.filters = filters;
 	}
+	
+	public void addParameter(String key, Object value) {
+		params.addParameter(key, value);
+	}
+	
+	public void addParameters(Map<String, Object> newParams) {
+		params.addParameters(newParams);
+	}
 
 	@Override
 	public int hashCode() {
@@ -88,5 +98,6 @@ public class ActionCommand implements ReqRespCommand {
 		return ReflectionToStringBuilder.toString(this,
 		ToStringStyle.MULTI_LINE_STYLE);
 	}
+
 	
 } 
