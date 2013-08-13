@@ -31,7 +31,11 @@ public class JsonpFilter implements Filter {
 
 		@SuppressWarnings("unchecked")
 		Map<String, String[]> parms = httpRequest.getParameterMap();
-
+		
+		// TODO make this DEBUG
+		log.info("Query String: " + httpRequest.getQueryString());
+		System.out.println("Query String: " + httpRequest.getQueryString());
+		
 		if(parms.containsKey("callback")) {
 			if(log.isDebugEnabled())
 				log.debug("Wrapping response with JSONP callback '" + parms.get("callback")[0] + "'");
@@ -51,7 +55,7 @@ public class JsonpFilter implements Filter {
 			String output = sb.toString();
 			out.write(output.getBytes());
 			
-			log.debug("Server resp : " + output);
+			log.info("Server resp : " + output);
 
 			wrapper.setContentType("text/javascript;charset=UTF-8");
 			
