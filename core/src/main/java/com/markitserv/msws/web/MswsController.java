@@ -130,14 +130,15 @@ public class MswsController implements ServletContextAware {
 
 		while (i.hasNext()) {
 			FileItem item = i.next();
-
+			
 			if (!item.isFormField()) {
 
 				UploadedFile f = new UploadedFile();
 
 				f.setContentType(item.getContentType());
 				f.setInputStream(item.getInputStream());
-
+				f.setFileName(item.getName());
+				
 				postFields.put(item.getFieldName(), f);
 
 			} else {
