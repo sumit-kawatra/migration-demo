@@ -27,7 +27,8 @@ public class JsonpFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 		
-		log.debug("jsonp filter");
+		log.info("jsonp filter");
+		System.out.println("JSPON");
 
 		@SuppressWarnings("unchecked")
 		Map<String, String[]> parms = httpRequest.getParameterMap();
@@ -61,7 +62,8 @@ public class JsonpFilter implements Filter {
 			
 			out.close();
 		} else {
-			log.debug("No 'callback' param so not wrapping in jsonp");
+			log.info("No 'callback' param so not wrapping in jsonp");
+			//response.setContentType("text/plain;charset=UTF-8");
 			chain.doFilter(request, response);
 		}
 	}
