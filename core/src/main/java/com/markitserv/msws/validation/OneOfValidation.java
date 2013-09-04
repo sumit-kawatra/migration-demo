@@ -48,11 +48,11 @@ public class OneOfValidation extends AbstractOptionalValidation {
 					"Expected value to be one of the following : [");
 			for (String validValue : validValues) {
 				sb.append(validValue);
-				sb.append(",");
+				sb.append(", ");
 			}
 
 			String msg = sb.toString();
-			msg = StringUtils.chop(msg); // get rid of last comma
+			StringUtils.removeEnd(msg, ", ");
 
 			resp = ValidationResponse.createInvalidResponse(String.format(
 					"%s].  Instead got '%s'.", msg, targetStr));
