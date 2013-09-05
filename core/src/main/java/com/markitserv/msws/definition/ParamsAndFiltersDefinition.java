@@ -75,8 +75,13 @@ public class ParamsAndFiltersDefinition {
 	public boolean isDefaultParamSet(String key) {
 		return this.defaults.containsKey(key);
 	}
-
+	
+	@Deprecated
 	public void mergeWith(ParamsAndFiltersDefinition otherDefinition) {
+		this.addAll(otherDefinition);
+	}
+	
+	public void addAll(ParamsAndFiltersDefinition otherDefinition) {
 
 		// Merge other validations
 		Map<String, List<AbstractValidation>> otherValidations = otherDefinition
