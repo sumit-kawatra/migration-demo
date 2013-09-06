@@ -1,6 +1,7 @@
 package com.markitserv.msws.actions;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.markitserv.msws.HealthChecker;
 import com.markitserv.msws.action.AbstractAction;
@@ -15,6 +16,7 @@ import com.markitserv.msws.action.ActionResult;
  * @author roy.truelove
  * 
  */
+@Service
 public class CheckHealth extends AbstractAction {
 
 	@Autowired
