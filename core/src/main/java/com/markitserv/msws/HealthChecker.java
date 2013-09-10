@@ -1,7 +1,7 @@
 package com.markitserv.msws;
 
-import com.markitserv.msws.types.SuccessFailure;
+import com.markitserv.msws.types.HealthCheckResponse;
 
 public interface HealthChecker {
-	public SuccessFailure checkHealth();
+	public HealthCheckResponse checkHealth();
 }

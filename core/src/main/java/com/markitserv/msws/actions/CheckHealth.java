@@ -8,6 +8,7 @@ import com.markitserv.msws.action.AbstractAction;
 import com.markitserv.msws.action.ActionFilters;
 import com.markitserv.msws.action.ActionParameters;
 import com.markitserv.msws.action.ActionResult;
+import com.markitserv.msws.types.HealthCheckResponse;
 
 /**
  * Checks the health of the system. Requires an instance of HealthChecker in the
@@ -25,6 +26,10 @@ public class CheckHealth extends AbstractAction {
 	@Override
 	protected ActionResult performAction(ActionParameters params,
 			ActionFilters filters) {
+		
+		
+		HealthCheckResponse resp = healthChecker.checkHealth();
+		
 		return new ActionResult(healthChecker.checkHealth());
 	}
 }
