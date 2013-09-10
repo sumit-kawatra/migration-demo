@@ -4,3 +4,4 @@ target
 .project
 .settings
 *sublime*
+core/bin

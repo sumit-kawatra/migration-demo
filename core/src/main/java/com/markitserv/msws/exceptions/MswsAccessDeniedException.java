@@ -27,8 +27,10 @@ public class MswsAccessDeniedException extends MswsException {
 		super(cause);
 	}
 
-	public static MswsAccessDeniedException standardException(String user, String action) {
+	public static MswsAccessDeniedException standardException(String user,
+			String action) {
 		return new MswsAccessDeniedException(
-				"User '%s' cannot perform action '%s'");
+				"User '%s' does not have the permissions to perform action '%s'",
+				user, action);
 	}
 }
