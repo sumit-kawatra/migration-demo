@@ -92,7 +92,7 @@ public abstract class AbstractAction implements InitializingBean {
 					+ "Cannot set both the collection and the item.");
 		}
 	}
-
+	
 	/**
 	 * Where all the fun happens
 	 * 
