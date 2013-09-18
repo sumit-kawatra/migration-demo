@@ -13,6 +13,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,53 +21,75 @@ import org.springframework.stereotype.Service;
 public class JsonpFilter implements Filter {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
-	
-	public void init(FilterConfig fConfig) throws ServletException {}
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void init(FilterConfig fConfig) throws ServletException {
+	}
+
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response,
+			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
-		
+
 		log.info("jsonp filter");
 		System.out.println("JSPON");
 
 		@SuppressWarnings("unchecked")
 		Map<String, String[]> parms = httpRequest.getParameterMap();
-		
+
 		// TODO make this DEBUG
 		log.info("Query String: " + httpRequest.getQueryString());
 		System.out.println("Query String: " + httpRequest.getQueryString());
-		
-		if(parms.containsKey("callback")) {
-			if(log.isDebugEnabled())
-				log.debug("Wrapping response with JSONP callback '" + parms.get("callback")[0] + "'");
 
-			OutputStream out = httpResponse.getOutputStream();
+		OutputStream respOutputStream = httpResponse.getOutputStream();
 
-			GenericResponseWrapper wrapper = new GenericResponseWrapper(httpResponse);
+		GenericResponseWrapper respWrapper = new GenericResponseWrapper(
+				httpResponse);
 
-			chain.doFilter(request, wrapper);
-			
+		if (parms.containsKey("callback")) {
+			String callbackParam = parms.get("callback")[0];
+
+			if (log.isDebugEnabled())
+				log.debug("Wrapping response with JSONP callback '"
+						+ callbackParam + "'");
+
+			// User can override the type of the response. Only really used for
+			// zenoss, which
+			// doesn't like JSON.
+
+			chain.doFilter(request, respWrapper);
+			respWrapper.setContentType(determineContentType(httpRequest));
+
 			StringBuffer sb = new StringBuffer();
 
-			sb.append(new String(parms.get("callback")[0] + "("));
-			sb.append(new String(wrapper.getData()));
+			sb.append(new String(callbackParam + "("));
+			sb.append(new String(respWrapper.getData()));
 			sb.append(new String(");"));
-			
-			String output = sb.toString();
-			out.write(output.getBytes());
-			
-			log.info("Server resp : " + output);
 
-			wrapper.setContentType("text/javascript;charset=UTF-8");
-			
-			out.close();
+			String output = sb.toString();
+			respOutputStream.write(output.getBytes());
+
+			respOutputStream.close();
 		} else {
+			
 			log.info("No 'callback' param so not wrapping in jsonp");
-			//response.setContentType("text/plain;charset=UTF-8");
-			chain.doFilter(request, response);
+			respWrapper.setContentType(determineContentType(httpRequest));
+			chain.doFilter(request, respWrapper);
+			respOutputStream.write(respWrapper.getData());
+			respWrapper.setContentType(determineContentType(httpRequest));
+
 		}
 	}
 
-	public void destroy() {}
+	private String determineContentType(HttpServletRequest httpRequest) {
+
+		String respContentType = httpRequest.getHeader("responseContentType");
+		respContentType = respContentType == null ? "text/javascript"
+				: respContentType;
+		return respContentType + ";charset=UTF-8";
+
+	}
+
+	public void destroy() {
+	}
 }
