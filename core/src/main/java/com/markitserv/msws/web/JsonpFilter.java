@@ -41,12 +41,13 @@ public class JsonpFilter implements Filter {
 		log.info("Query String: " + httpRequest.getQueryString());
 		System.out.println("Query String: " + httpRequest.getQueryString());
 
-		OutputStream respOutputStream = httpResponse.getOutputStream();
-
-		GenericResponseWrapper respWrapper = new GenericResponseWrapper(
-				httpResponse);
-
 		if (parms.containsKey("callback")) {
+			
+			OutputStream respOutputStream = httpResponse.getOutputStream();
+
+			GenericResponseWrapper respWrapper = new GenericResponseWrapper(
+					httpResponse);
+
 			String callbackParam = parms.get("callback")[0];
 
 			if (log.isDebugEnabled())
@@ -58,7 +59,6 @@ public class JsonpFilter implements Filter {
 			// doesn't like JSON.
 
 			chain.doFilter(request, respWrapper);
-			respWrapper.setContentType(determineContentType(httpRequest));
 
 			StringBuffer sb = new StringBuffer();
 
@@ -71,23 +71,9 @@ public class JsonpFilter implements Filter {
 
 			respOutputStream.close();
 		} else {
-			
 			log.info("No 'callback' param so not wrapping in jsonp");
-			respWrapper.setContentType(determineContentType(httpRequest));
-			chain.doFilter(request, respWrapper);
-			respOutputStream.write(respWrapper.getData());
-			respWrapper.setContentType(determineContentType(httpRequest));
-
+			chain.doFilter(request, response);
 		}
-	}
-
-	private String determineContentType(HttpServletRequest httpRequest) {
-
-		String respContentType = httpRequest.getHeader("responseContentType");
-		respContentType = respContentType == null ? "text/javascript"
-				: respContentType;
-		return respContentType + ";charset=UTF-8";
-
 	}
 
 	public void destroy() {
