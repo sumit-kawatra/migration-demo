@@ -33,6 +33,8 @@ public class JsonpFilter implements Filter {
 
 		log.info("jsonp filter");
 		System.out.println("JSPON");
+		
+		// Since this filter always returns json P..
 
 		@SuppressWarnings("unchecked")
 		Map<String, String[]> parms = httpRequest.getParameterMap();
@@ -40,14 +42,16 @@ public class JsonpFilter implements Filter {
 		// TODO make this DEBUG
 		log.info("Query String: " + httpRequest.getQueryString());
 		System.out.println("Query String: " + httpRequest.getQueryString());
+		
+		OutputStream respOutputStream = httpResponse.getOutputStream();
 
+		GenericResponseWrapper respWrapper = new GenericResponseWrapper(
+				httpResponse);
+		
+		byte[] respData; 
+		
 		if (parms.containsKey("callback")) {
 			
-			OutputStream respOutputStream = httpResponse.getOutputStream();
-
-			GenericResponseWrapper respWrapper = new GenericResponseWrapper(
-					httpResponse);
-
 			String callbackParam = parms.get("callback")[0];
 
 			if (log.isDebugEnabled())
@@ -59,7 +63,7 @@ public class JsonpFilter implements Filter {
 			// doesn't like JSON.
 
 			chain.doFilter(request, respWrapper);
-
+			
 			StringBuffer sb = new StringBuffer();
 
 			sb.append(new String(callbackParam + "("));
@@ -67,13 +71,41 @@ public class JsonpFilter implements Filter {
 			sb.append(new String(");"));
 
 			String output = sb.toString();
-			respOutputStream.write(output.getBytes());
+			respData = output.getBytes();
+			
+			respWrapper.setContentType("application/javascript; charset=UTF-8");
 
-			respOutputStream.close();
 		} else {
 			log.info("No 'callback' param so not wrapping in jsonp");
-			chain.doFilter(request, response);
+			chain.doFilter(request, respWrapper);
+			respData = respWrapper.getData();
+			// if there's no wrapper, it's plain ol JSON
+			respWrapper.setContentType("application/json; charset=UTF-8");
 		}
+		
+		respWrapper.setContentType(mungeContentType(httpRequest, respWrapper));
+		
+		respOutputStream.write(respData);
+		respOutputStream.close();
+	}
+
+	// Overrides content type as needed
+	private String mungeContentType(HttpServletRequest req, HttpServletResponse resp) {
+		
+		String userAgent = req.getHeader("User-Agent");
+		String method = req.getMethod();
+		
+		String contentType = resp.getContentType();
+
+		boolean isIe = StringUtils.contains(userAgent, "MSIE");
+		boolean isPost = method.equalsIgnoreCase("POST");
+		
+		if (isIe && isPost) {
+			// Posts for IE require HTML type.
+			contentType = ("text/html; charset=UTF-8");
+		}
+		
+		return contentType;
 	}
 
 	public void destroy() {
