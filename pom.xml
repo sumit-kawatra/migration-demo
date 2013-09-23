@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.markitserv.msws</groupId>
 	<artifactId>msws-parent</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>MarkitSERV Web Service Library - Parent</name>
@@ -285,12 +285,12 @@
 		<repository>
 			<id>markitserv-nexus-releases</id>
 			<name>MarkitSERV Nexus Repository - Releases</name>
-			<url> http://devsrca01:8083/nexus/content/repositories/releases</url>
+			<url> http://devsrca01.mserv.local:8083/nexus/content/repositories/releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>markitserv-nexus-snapshots</id>
 			<name>MarkitSERV Nexus Repository - Snapshots</name>
-			<url> http://devsrca01:8083/nexus/content/repositories/snapshots</url>
+			<url> http://devsrca01.mserv.local:8083/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 
 	</distributionManagement>
