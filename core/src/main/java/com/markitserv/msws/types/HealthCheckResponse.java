@@ -2,6 +2,9 @@ package com.markitserv.msws.types;
 
 import java.util.HashMap;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class HealthCheckResponse {
 	
 	public enum Status {
@@ -12,15 +15,16 @@ public class HealthCheckResponse {
 	private HashMap<String, Status> statuses = new HashMap<String, Status>();
 	private HashMap<String, Number> metrics = new HashMap<String, Number>();
 	
-	public void addStatus(String name, Status status) {
-		statuses.put(name, status);
+	public void addModuleStatus(String moduleName, Status status) {
+		statuses.put(moduleName, status);
 	}
 	
 	public void addMetric(String name, Number status) {
 		metrics.put(name, status);
 	}
 	
-	public HashMap<String, Status> getStatuses() {
+	@JsonProperty("modules")
+	public HashMap<String, Status> getModuleStatuses() {
 		return statuses;
 	}
 
@@ -28,6 +32,7 @@ public class HealthCheckResponse {
 		return metrics;
 	}
 	
+	@JsonProperty("system")
 	public Status getOverallHealth() {
 		return overallHealth;
 	}

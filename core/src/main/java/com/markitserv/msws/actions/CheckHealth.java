@@ -34,7 +34,7 @@ public class CheckHealth extends AbstractAction {
 		HealthCheckResponse resp = healthChecker.checkHealth();
 		
 		// Ensure that overall health is popualted correctly 
-		HashMap<String, Status> allStatuses = resp.getStatuses();
+		HashMap<String, Status> allStatuses = resp.getModuleStatuses();
 		Set<String> statuses = allStatuses.keySet();
 		Status overallStatus = Status.GOOD;
 		
