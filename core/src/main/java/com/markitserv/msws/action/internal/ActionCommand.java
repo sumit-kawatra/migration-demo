@@ -1,4 +1,4 @@
-package com.markitserv.msws.action;
+package com.markitserv.msws.action.internal;
 
 import java.util.Map;
 
@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.markitserv.msws.action.ActionFilters;
+import com.markitserv.msws.action.ActionParameters;
 import com.markitserv.msws.command.ReqRespCommand;
 import com.markitserv.msws.internal.MswsAssert;
 

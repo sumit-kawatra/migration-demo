@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.markitserv.msws.action.ActionCommand;
 import com.markitserv.msws.action.ActionFilters;
 import com.markitserv.msws.action.ActionParameters;
+import com.markitserv.msws.action.internal.ActionCommand;
 
 /**
  * Used to create an 'ActionCommand' for testing Actions

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.markitserv.msws.action.ActionCommand;
+import com.markitserv.msws.action.internal.ActionCommand;
 import com.markitserv.msws.exceptions.ValidationException;
 import com.markitserv.msws.testutil.AbstractMswsTest;
 import com.markitserv.msws.validation.CollectionValidation;

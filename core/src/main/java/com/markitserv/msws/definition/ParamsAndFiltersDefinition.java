@@ -41,6 +41,7 @@ public class ParamsAndFiltersDefinition {
 		validations.put(key, v);
 	}
 
+	@Deprecated
 	public void addValidation(CommonParamKeys key,
 			AbstractOptionalValidation value) {
 		this.addValidation(key.toString(), value);
@@ -51,6 +52,7 @@ public class ParamsAndFiltersDefinition {
 		this.addValidation(key, value);
 	}
 
+	@Deprecated
 	public void addValidation(CommonParamKeys key, AbstractValidation value) {
 
 		this.addValidation(key.toString(), value);
@@ -64,10 +66,26 @@ public class ParamsAndFiltersDefinition {
 		return defaults;
 	}
 
+	/**
+	 * Use addDefaultParamValue
+	 * @param key
+	 * @param value
+	 */
+	@Deprecated
 	public void addDefaultParam(String key, Object value) {
 		defaults.put(key, value);
 	}
+	
+	public void addDefaultParamValue(String key, Object value) {
+		defaults.put(key, value);
+	}
 
+	/**
+	 * Use addDefaultParamValue with string
+	 * @param key
+	 * @param value
+	 */
+	@Deprecated
 	public void addDefaultParam(CommonParamKeys key, Object value) {
 		this.addDefaultParam(key.toString(), value);
 	}
@@ -76,6 +94,10 @@ public class ParamsAndFiltersDefinition {
 		return this.defaults.containsKey(key);
 	}
 	
+	/**
+	 * Use 'addAll' instead
+	 * @param otherDefinition
+	 */
 	@Deprecated
 	public void mergeWith(ParamsAndFiltersDefinition otherDefinition) {
 		this.addAll(otherDefinition);

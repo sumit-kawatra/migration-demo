@@ -1,8 +1,9 @@
-package com.markitserv.msws.command;
+package com.markitserv.msws.command.internal;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.markitserv.msws.command.Command;
 import com.markitserv.msws.exceptions.MswsException;
 
 
@@ -22,7 +23,7 @@ public abstract class AbstractCommandRunner implements InitializingBean {
 	 * @param cmd The command to run
 	 * @return The result of the command.  Should return null if async
 	 */
-	protected abstract Object run(Command cmd);
+	public abstract Object run(Command cmd);
 	
 	/**
 	 * Returns the type of Command that this runner handles

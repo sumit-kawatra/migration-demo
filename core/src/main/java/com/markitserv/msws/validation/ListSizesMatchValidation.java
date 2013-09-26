@@ -10,13 +10,11 @@ import java.util.Map;
  * @author roy.truelove
  * 
  */
-@Deprecated
-public class CollectionSizesMatchValidation extends AbstractOptionalValidation {
+public class ListSizesMatchValidation extends AbstractOptionalValidation {
 
 	private String otherValueName;
 
-	@Deprecated
-	public CollectionSizesMatchValidation(String otherValueName) {
+	public ListSizesMatchValidation(String otherValueName) {
 		super();
 		this.otherValueName = otherValueName;
 	}

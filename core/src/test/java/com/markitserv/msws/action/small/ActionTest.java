@@ -7,7 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.markitserv.msws.action.ActionCommand;
+import com.markitserv.msws.action.internal.ActionCommand;
 import com.markitserv.msws.internal.UuidGenerator;
 import com.markitserv.msws.testutil.FakeAction;
 import com.markitserv.msws.testutil.TestActionCommandBuilder;

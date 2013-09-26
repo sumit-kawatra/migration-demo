@@ -1,7 +1,9 @@
 /**
  * 
  */
-package com.markitserv.msws.command;
+package com.markitserv.msws.commands;
+
+import com.markitserv.msws.command.AsyncCommand;
 
 /**
  * @author kiran.gogula

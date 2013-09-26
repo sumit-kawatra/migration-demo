@@ -3,11 +3,9 @@ package com.markitserv.msws.validation;
 import java.util.Collection;
 import java.util.Map;
 
-@Deprecated
-public class CollectionValidation extends AbstractOptionalValidation {
+public class ListValidation extends AbstractOptionalValidation {
 
 	@Override
-	@Deprecated
 	public ValidationResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 

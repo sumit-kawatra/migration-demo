@@ -18,7 +18,7 @@
 
 		<aspectj.version>1.6.10</aspectj.version>
 		<cglib.version>2.2.2</cglib.version>
-		<spring.version>3.2.0.RELEASE</spring.version>
+		<spring.version>3.2.4.RELEASE</spring.version>
 		<spring.security.version>3.1.3.RELEASE</spring.security.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.0.13</logback.version>
@@ -54,10 +54,21 @@
 				<artifactId>spring-webmvc</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-context</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-jms</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 
@@ -185,6 +196,13 @@
 				<version>1.9.5</version>
 			</dependency>
 
+			<!-- Servlet API -->
+			<dependency>
+				<groupId>org.jboss.spec.javax.servlet</groupId>
+				<artifactId>jboss-servlet-api_3.0_spec</artifactId>
+				<version>1.0.2.Final</version>
+			</dependency>
+
 			<!-- START TEST DEPENDENCIES -->
 
 		</dependencies>
@@ -228,10 +246,8 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!--
-			Does a deep diff of objects. Should be test scope at some point,
-			since it will not be used in production
-		-->
+		<!-- Does a deep diff of objects. Should be test scope at some point, since 
+			it will not be used in production -->
 		<dependency>
 			<groupId>de.danielbechler</groupId>
 			<artifactId>java-object-diff</artifactId>

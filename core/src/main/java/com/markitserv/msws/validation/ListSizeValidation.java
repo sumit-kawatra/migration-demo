@@ -5,16 +5,14 @@ import java.util.Map;
 
 import com.markitserv.msws.exceptions.ProgrammaticException;
 
-@Deprecated
-public class CollectionSizeValidation extends AbstractOptionalValidation {
+public class ListSizeValidation extends AbstractOptionalValidation {
 
 	public static final int UNLIMITED = -1;
 
 	private int max = UNLIMITED;
 	private int min = UNLIMITED;
 
-	@Deprecated
-	public CollectionSizeValidation(int min, int max) {
+	public ListSizeValidation(int min, int max) {
 		super();
 		this.max = max;
 		this.min = min;

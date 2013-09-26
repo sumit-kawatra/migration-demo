@@ -11,10 +11,10 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.markitserv.msws.action.ActionCommand;
 import com.markitserv.msws.action.ActionFilters;
 import com.markitserv.msws.action.ActionParameters;
 import com.markitserv.msws.action.CommonParamKeys;
+import com.markitserv.msws.action.internal.ActionCommand;
 import com.markitserv.msws.exceptions.ActionParamMissingException;
 import com.markitserv.msws.exceptions.MalformedFiltersException;
 import com.markitserv.msws.exceptions.MultipleParameterValuesException;

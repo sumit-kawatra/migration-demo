@@ -24,10 +24,10 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 import com.markitserv.msws.AbstractWebserviceResult;
 import com.markitserv.msws.ExceptionResult;
-import com.markitserv.msws.action.ActionCommand;
 import com.markitserv.msws.action.ActionResult;
-import com.markitserv.msws.command.CommandDispatcher;
-import com.markitserv.msws.command.ErrorCommand;
+import com.markitserv.msws.action.internal.ActionCommand;
+import com.markitserv.msws.command.internal.CommandDispatcher;
+import com.markitserv.msws.commands.ErrorCommand;
 import com.markitserv.msws.exceptions.MswsException;
 import com.markitserv.msws.exceptions.ProgrammaticException;
 import com.markitserv.msws.internal.Constants;
@@ -62,8 +62,6 @@ public class MswsController implements ServletContextAware {
 		
 		MswsAssert.mswsAssert(uuid != null && !StringUtils.isBlank(uuid), "UUID not found on the request.");
 		
-		log.info("Uuid is " + uuid);
-
 		try {
 			
 			ActionCommand actionCmd = actionCmdBuilder
@@ -104,6 +102,7 @@ public class MswsController implements ServletContextAware {
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public @ResponseBody
 	AbstractWebserviceResult performActionReq(NativeWebRequest req) {
+		
 		return handleRequest(RequestMethod.GET, req);
 	}
 	

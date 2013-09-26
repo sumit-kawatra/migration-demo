@@ -5,7 +5,7 @@ import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
-import com.markitserv.msws.action.ActionCommand;
+import com.markitserv.msws.action.internal.ActionCommand;
 import com.markitserv.msws.testutil.AbstractMswsTest;
 import com.markitserv.msws.validation.OneOfValidation;
 

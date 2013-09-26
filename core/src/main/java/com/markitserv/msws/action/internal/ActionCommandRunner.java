@@ -1,11 +1,13 @@
-package com.markitserv.msws.action;
+package com.markitserv.msws.action.internal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.markitserv.msws.command.AbstractCommandRunner;
+import com.markitserv.msws.action.AbstractAction;
+import com.markitserv.msws.action.ActionRegistry;
 import com.markitserv.msws.command.Command;
-import com.markitserv.msws.command.ErrorCommand;
+import com.markitserv.msws.command.internal.AbstractCommandRunner;
+import com.markitserv.msws.commands.ErrorCommand;
 import com.markitserv.msws.exceptions.MswsException;
 import com.markitserv.msws.internal.MswsAssert;
 

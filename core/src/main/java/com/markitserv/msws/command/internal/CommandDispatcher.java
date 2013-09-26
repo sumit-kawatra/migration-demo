@@ -1,4 +1,4 @@
-package com.markitserv.msws.command;
+package com.markitserv.msws.command.internal;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -7,8 +7,12 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.markitserv.msws.action.ActionCommand;
-import com.markitserv.msws.action.ActionCommandRunner;
+import com.markitserv.msws.action.internal.ActionCommand;
+import com.markitserv.msws.action.internal.ActionCommandRunner;
+import com.markitserv.msws.command.AsyncCommand;
+import com.markitserv.msws.command.Command;
+import com.markitserv.msws.command.ReqRespCommand;
+import com.markitserv.msws.commands.ErrorCommand;
 import com.markitserv.msws.exceptions.MswsException;
 import com.markitserv.msws.exceptions.ProgrammaticException;
 import com.markitserv.msws.internal.MswsAssert;

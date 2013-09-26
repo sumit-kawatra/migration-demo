@@ -2,7 +2,8 @@ package com.markitserv.msws.action.small;
 
 import org.junit.Before;
 import org.junit.Test;
-import com.markitserv.msws.action.ActionCommand;
+
+import com.markitserv.msws.action.internal.ActionCommand;
 import com.markitserv.msws.testutil.AbstractMswsTest;
 import com.markitserv.msws.testutil.FakePaginatedAction;
 import com.markitserv.msws.exceptions.AssertionException;

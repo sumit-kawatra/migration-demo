@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.markitserv.msws.action.ActionCommand;
+import com.markitserv.msws.action.internal.ActionCommand;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.testutil.AbstractMswsTest;
 import com.markitserv.msws.testutil.FakeAction;

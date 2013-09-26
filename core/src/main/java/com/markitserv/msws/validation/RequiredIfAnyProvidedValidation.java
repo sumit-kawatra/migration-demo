@@ -10,6 +10,13 @@ public class RequiredIfAnyProvidedValidation extends RequiredValidation {
 		super();
 		this.otherParams = otherParams;
 	}
+	
+	public RequiredIfAnyProvidedValidation(String otherParams) {
+		super();
+		
+		
+		this.otherParams = new String[]{otherParams};
+	}
 
 	@Override
 	public ValidationResponse validate(Object target,
@@ -26,8 +33,7 @@ public class RequiredIfAnyProvidedValidation extends RequiredValidation {
 								+ "'is provided.");
 			}
 		}
-
-		return null;
+		return ValidationResponse.createValidResponse();
 	}
 
 }

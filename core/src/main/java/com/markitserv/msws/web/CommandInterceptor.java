@@ -36,7 +36,6 @@ public class CommandInterceptor  extends HandlerInterceptorAdapter {
 	    throws Exception {		
 		String uuid = uuidGenerator.generateUuid();
 		request.setAttribute(Constants.UUID, uuid);
-		log.info("Uuid is " + uuid);
 		return true;
 	}
 	

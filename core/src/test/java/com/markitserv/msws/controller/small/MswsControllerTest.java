@@ -19,14 +19,12 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartHttpServletRequest;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.context.request.ServletWebRequest;
-import org.springframework.web.context.request.WebRequest;
 
 import com.markitserv.msws.ExceptionResult;
 import com.markitserv.msws.AbstractWebserviceResult;
 import com.markitserv.msws.action.ActionResult;
-import com.markitserv.msws.command.CommandDispatcher;
 import com.markitserv.msws.command.ReqRespCommand;
+import com.markitserv.msws.command.internal.CommandDispatcher;
 import com.markitserv.msws.exceptions.MswsException;
 import com.markitserv.msws.exceptions.UnknownActionException;
 import com.markitserv.msws.exceptions.ValidationException;

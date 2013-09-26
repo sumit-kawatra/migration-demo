@@ -1,9 +1,11 @@
 /**
  * 
  */
-package com.markitserv.msws.command;
+package com.markitserv.msws.commands;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import com.markitserv.msws.command.AsyncCommand;
 
 /**
  * @author kiran.gogula

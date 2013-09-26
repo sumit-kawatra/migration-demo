@@ -9,10 +9,10 @@ import java.util.Stack;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import com.markitserv.msws.action.ActionCommand;
 import com.markitserv.msws.action.ActionFilters;
 import com.markitserv.msws.action.ActionParameters;
 import com.markitserv.msws.action.CommonParamKeys;
+import com.markitserv.msws.action.internal.ActionCommand;
 import com.markitserv.msws.exceptions.ActionParamMissingException;
 import com.markitserv.msws.exceptions.MalformedFiltersException;
 import com.markitserv.msws.exceptions.MultipleParameterValuesException;

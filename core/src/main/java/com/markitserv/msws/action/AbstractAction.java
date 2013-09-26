@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import com.markitserv.msws.action.internal.ActionCommand;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.exceptions.ProgrammaticException;
+import com.markitserv.msws.internal.MswsAssert;
 import com.markitserv.msws.internal.UuidGenerator;
 import com.markitserv.msws.validation.AbstractValidation;
 import com.markitserv.msws.validation.RequiredValidation;
@@ -50,6 +52,7 @@ public abstract class AbstractAction implements InitializingBean {
 
 	/**
 	 * Gives subclasses a place to process a result after it's been performed.
+	 * 
 	 * @param result
 	 * @return
 	 */
@@ -57,7 +60,8 @@ public abstract class AbstractAction implements InitializingBean {
 		return result;
 	}
 
-	private void applyDefaults(ActionParameters parameters, ActionFilters filters) {
+	private void applyDefaults(ActionParameters parameters,
+			ActionFilters filters) {
 
 		Map<String, Object> paramDefaults = this.getParameterDefinition()
 				.getDefaultParams();
@@ -66,7 +70,8 @@ public abstract class AbstractAction implements InitializingBean {
 
 		for (String defaultKey : paramDefaults.keySet()) {
 			if (!params.containsKey(defaultKey)) {
-				parameters.addParameter(defaultKey, paramDefaults.get(defaultKey));
+				parameters.addParameter(defaultKey,
+						paramDefaults.get(defaultKey));
 			}
 		}
 	}
@@ -92,7 +97,7 @@ public abstract class AbstractAction implements InitializingBean {
 					+ "Cannot set both the collection and the item.");
 		}
 	}
-	
+
 	/**
 	 * Where all the fun happens
 	 * 
@@ -112,8 +117,8 @@ public abstract class AbstractAction implements InitializingBean {
 
 	/*
 	 * By default the name of the action that's put into the registry is the
-	 * simple name of the class. Can be overriden if necessary (but when would it
-	 * be necessary?)
+	 * simple name of the class. Can be overriden if necessary (but when would
+	 * it be necessary?)
 	 */
 	protected String getActionName() {
 		return this.getClass().getSimpleName();
@@ -146,16 +151,17 @@ public abstract class AbstractAction implements InitializingBean {
 	 * @param p
 	 * @param f
 	 */
-	private void validateAndConvertParametersAndFilters(ActionParameters p, ActionFilters f) {
+	private void validateAndConvertParametersAndFilters(ActionParameters p,
+			ActionFilters f) {
 
 		ValidationExceptionBuilder veb = new ValidationExceptionBuilder();
-		
+
 		Map<String, List<Object>> allFilters = f.getAllFilters();
 
 		veb = validateInputs(FilterOrParam.param, p.getAllParameters(),
 				getParameterDefinition().getValidations(), veb);
-		veb = validateInputs(FilterOrParam.filter, allFilters, getFilterDefinition()
-				.getValidations(), veb);
+		veb = validateInputs(FilterOrParam.filter, allFilters,
+				getFilterDefinition().getValidations(), veb);
 
 		veb.buildAndThrowIfInvalid();
 	}
@@ -187,7 +193,7 @@ public abstract class AbstractAction implements InitializingBean {
 			ParamsAndFiltersDefinition def) {
 		return def;
 	}
-	
+
 	/**
 	 * Validates and converts inputs for this action. Side effect - will change
 	 * reqParams from strings to objects if they're being converted
@@ -200,43 +206,47 @@ public abstract class AbstractAction implements InitializingBean {
 	 */
 	@SuppressWarnings("unchecked")
 	private ValidationExceptionBuilder validateInputs(FilterOrParam type,
-			Map reqParams,
-			Map<String, List<AbstractValidation>> validations, ValidationExceptionBuilder veb) {
+			Map reqParams, Map<String, List<AbstractValidation>> validations,
+			ValidationExceptionBuilder veb) {
 
 		// Tracks what validations have not been done. If anything is left over
 		// in this set, it means that the user didn't provide it on the request.
-		Set<String> unprocessedValidationKeys = new HashSet<String>(validations.keySet());
+		Set<String> unprocessedValidationKeys = new HashSet<String>(
+				validations.keySet());
 
 		// for each parameter that was provided on the request..
 		for (Object keyObj : reqParams.keySet()) {
-			String key = (String)keyObj;
+			String key = (String) keyObj;
 
 			// assumes that every parameter has a validation
 			if (!validations.containsKey(key)) {
 				ValidationResponse resp = ValidationResponse
-						.createInvalidResponse(String.format("Not applicable for action '%s'.",
+						.createInvalidResponse(String.format(
+								"Not applicable for action '%s'.",
 								this.getActionName()));
 				veb.addInvalidValidation(type, resp, key);
 			} else {
 
 				unprocessedValidationKeys.remove(key);
 
-				List<AbstractValidation> validationsForThisParam = validations.get(key);
+				List<AbstractValidation> validationsForThisParam = validations
+						.get(key);
 
 				// validate this param with all validations. Track failures
 				for (AbstractValidation v : validationsForThisParam) {
 
 					Object value = reqParams.get(key);
 					ValidationResponse resp;
-					
+
 					resp = v.validateInternal(value, reqParams);
-					
+
 					if (!resp.isValid()) {
 						veb.addInvalidValidation(type, resp, key);
 					} else {
 						// it's valid, see if there's a conversion
 						if (resp.getConvertedObj() != null) {
-							// override the original value with the converted value
+							// override the original value with the converted
+							// value
 							reqParams.put(key, resp.getConvertedObj());
 						}
 					}
@@ -247,7 +257,8 @@ public abstract class AbstractAction implements InitializingBean {
 		// see if any of the unprocessed keys are required. These are keys that
 		// are in the validation rules but were not on the request.
 		for (String unprocessedValidationKey : unprocessedValidationKeys) {
-			List<AbstractValidation> vals = validations.get(unprocessedValidationKey);
+			List<AbstractValidation> vals = validations
+					.get(unprocessedValidationKey);
 
 			for (AbstractValidation validation : vals) {
 				// note - if a field is required, even optionally, it MUST
@@ -257,8 +268,12 @@ public abstract class AbstractAction implements InitializingBean {
 					// null because it was provided by in the request
 					ValidationResponse resp = validation.validateInternal(null,
 							reqParams);
+					MswsAssert.mswsAssert(resp != null,
+							"Response from validation cannot be null: %s",
+							validation.getClass().getName());
 					if (!resp.isValid()) {
-						veb.addInvalidValidation(type, resp, unprocessedValidationKey);
+						veb.addInvalidValidation(type, resp,
+								unprocessedValidationKey);
 					}
 				}
 			}
@@ -269,8 +284,8 @@ public abstract class AbstractAction implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		this.registerWithActionRegistry();
-		
-		// populates the definitions at startup instead of at runtime.  Will
+
+		// populates the definitions at startup instead of at runtime. Will
 		// help to determine errors upfront instead of waiting for when the
 		// action is run.
 		this.getFilterDefinition();

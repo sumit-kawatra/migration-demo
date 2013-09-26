@@ -1,7 +1,6 @@
 package com.markitserv.msws.web;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Map;
 
 import javax.servlet.Filter;
@@ -10,13 +9,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 /**
  * This is a TEMPORARY CLASS until we're sure that the client no longer is using
@@ -39,6 +33,7 @@ public class JsonpFilter implements Filter {
 		Map<String, String[]> parms = request.getParameterMap();
 
 		if (parms.containsKey("callback")) {
+			//return;
 			throw new ServletException("JSONP is no longer supported.");
 		}
 		
