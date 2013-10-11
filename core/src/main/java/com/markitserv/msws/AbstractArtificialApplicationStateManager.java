@@ -42,14 +42,16 @@ public abstract class AbstractArtificialApplicationStateManager implements
 		
 		states.put(key, value);
 	}
+	
+	public void clearAll() {
+		states = new HashMap<String, Boolean>();
+	}
 
 	protected abstract Set<String> getValidStateNames();
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		stateNames = this.getValidStateNames();
-		states = new HashMap<String, Boolean>();
-
+		clearAll();
 	}
-
 }

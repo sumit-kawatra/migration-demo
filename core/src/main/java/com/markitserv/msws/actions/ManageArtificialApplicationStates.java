@@ -13,6 +13,7 @@ import com.markitserv.msws.action.ActionResult;
 import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.types.SuccessFailure;
 import com.markitserv.msws.validation.BooleanValidation;
+import com.markitserv.msws.validation.OptionalValidation;
 import com.markitserv.msws.validation.RequiredValidation;
 
 @Service
@@ -20,6 +21,7 @@ public class ManageArtificialApplicationStates extends AbstractAction {
 
 	private static final String PARAM_STATE_NAME = "StateName";
 	private static final String PARAM_STATE_VALUE = "StateValue";
+	private static final String PARAM_CLEAR_ALL = "ClearAll";
 
 	private Logger log = LoggerFactory
 			.getLogger(ManageArtificialApplicationStates.class);
@@ -30,6 +32,12 @@ public class ManageArtificialApplicationStates extends AbstractAction {
 	@Override
 	protected ActionResult performAction(ActionParameters params,
 			ActionFilters filters) {
+		
+		if (params.isParameterSet(PARAM_CLEAR_ALL)) {
+			if (params.getParameter(PARAM_CLEAR_ALL, Boolean.class)) {
+				stateMgr.clearAll();
+			}
+		}
 		
 		String stateName = params.getParameter(PARAM_STATE_NAME, String.class);
 		Boolean stateValue = params.getParameter(PARAM_STATE_VALUE, Boolean.class);
@@ -48,6 +56,9 @@ public class ManageArtificialApplicationStates extends AbstractAction {
 		
 		def.addValidation(PARAM_STATE_VALUE, new RequiredValidation());
 		def.addValidation(PARAM_STATE_VALUE, new BooleanValidation());
+		
+		def.addValidation(PARAM_CLEAR_ALL, new OptionalValidation());
+		def.addValidation(PARAM_CLEAR_ALL, new BooleanValidation());
 
 		return def;
 	}
