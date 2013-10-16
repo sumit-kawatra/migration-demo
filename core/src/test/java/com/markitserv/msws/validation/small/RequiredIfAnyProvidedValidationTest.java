@@ -43,7 +43,7 @@ public class RequiredIfAnyProvidedValidationTest {
 	@Test
 	public void testIsValidMethodwithInputParmsMapAndTarget(){
 		validationResponse = anyProvidedValidation.validate("string", map);
-		Assert.assertEquals(null, validationResponse);
+		Assert.assertTrue(validationResponse.isValid());
 	}
 	
 	@Test
