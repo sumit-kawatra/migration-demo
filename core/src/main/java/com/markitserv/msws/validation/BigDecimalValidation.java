@@ -1,32 +1,33 @@
 package com.markitserv.msws.validation;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
-public class FloatValidation extends AbstractOptionalValidation {
+public class BigDecimalValidation extends AbstractOptionalValidation {
 
 	@Override
 	public ValidationResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 		
-		Float convertedFloat = null;
+		BigDecimal converted = null;
 
-		if (target instanceof Float) {
+		if (target instanceof BigDecimal) {
 			return ValidationResponse.createValidConvertedResponse(target);
 		} else if (!(target instanceof String)) {
 			return bad();
 		} else {
 			String targetStr = (String) target;
 			try {
-				convertedFloat = Float.parseFloat(targetStr);
+				converted = new BigDecimal(targetStr);
 			} catch (Exception e) {
 				return bad();
 			}
 		}
 		
-		return ValidationResponse.createValidConvertedResponse(convertedFloat);
+		return ValidationResponse.createValidConvertedResponse(converted);
 	}
 
 	private ValidationResponse bad() {
-		return ValidationResponse.createInvalidResponse("Expected Float");
+		return ValidationResponse.createInvalidResponse("Expected BigDecimal");
 	}
 }
