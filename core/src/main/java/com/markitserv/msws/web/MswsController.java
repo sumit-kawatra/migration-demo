@@ -81,12 +81,14 @@ public class MswsController implements ServletContextAware {
 			result = errorHander(e);
 		}
 
+		/*
 		HttpSession session = reqContextHolder.getCurrentSession();
 
 		DateTime expires = new DateTime(DateTimeZone.UTC);
 		expires = expires.plusSeconds(session.getMaxInactiveInterval());
 
 		result.getMetaData().setSessionExpires(expires);
+		*/
 		result.getMetaData().setRequestId(uuid);
 
 		return result;
