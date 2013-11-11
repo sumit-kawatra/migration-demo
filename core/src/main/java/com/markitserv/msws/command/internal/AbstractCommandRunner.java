@@ -3,8 +3,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.markitserv.msws.command.Command;
 import com.markitserv.msws.exceptions.MswsException;
+import com.markitserv.msws.messaging.Command;
 
 
 /**

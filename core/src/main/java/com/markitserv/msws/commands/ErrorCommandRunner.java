@@ -10,10 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.markitserv.msws.command.Command;
 import com.markitserv.msws.command.internal.AbstractCommandRunner;
 import com.markitserv.msws.command.internal.CommandDispatcher;
 import com.markitserv.msws.exceptions.MswsException;
+import com.markitserv.msws.messaging.Command;
 
 /**
  * @author kiran.gogula

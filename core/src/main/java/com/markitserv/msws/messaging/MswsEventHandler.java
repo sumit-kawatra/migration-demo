@@ -1,4 +1,4 @@
-package com.markitserv.msws.pubsub;
+package com.markitserv.msws.messaging;
 
 public interface MswsEventHandler {
 	

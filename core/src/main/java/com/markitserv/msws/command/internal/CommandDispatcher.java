@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 import com.markitserv.msws.action.internal.ActionCommand;
 import com.markitserv.msws.action.internal.ActionCommandRunner;
 import com.markitserv.msws.command.AsyncCommand;
-import com.markitserv.msws.command.Command;
 import com.markitserv.msws.command.ReqRespCommand;
 import com.markitserv.msws.commands.ErrorCommand;
 import com.markitserv.msws.exceptions.MswsException;
 import com.markitserv.msws.exceptions.ProgrammaticException;
 import com.markitserv.msws.internal.MswsAssert;
+import com.markitserv.msws.messaging.Command;
 
 @Service
 public class CommandDispatcher implements InitializingBean {

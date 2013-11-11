@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,6 +27,8 @@ import com.markitserv.msws.validation.ValidationExceptionBuilder.FilterOrParam;
 @Service
 public abstract class AbstractAction implements InitializingBean {
 
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private ActionRegistry actionRegistry;
 
@@ -34,20 +39,40 @@ public abstract class AbstractAction implements InitializingBean {
 
 	private ParamsAndFiltersDefinition filterDefinition;
 
-	public ActionResult performAction(ActionCommand command) {
+	public ActionResult internalPerformAction(ActionCommand command) {
 
 		ActionParameters parameters = command.getParameters();
 		ActionFilters filters = command.getFilters();
 
+		// has side effects - parameters and filters are changed.
 		applyDefaults(parameters, filters);
+
+		// has side effects - parameters and filters are changed.
 		validateAndConvertParametersAndFilters(parameters, filters);
 
+		command.setParameters(parameters);
+		command.setFilters(filters);
+
 		ActionResult result = this.performAction(parameters, filters);
+
+		// This is for backwards compatibility for the deprecated performAction 
+		// method.  Once that method is removed / made final, this can be fixed
+		if (result == null) {
+			result = this.performAction(command);
+		} else {
+			log.warn("You are overriding a deprectated method in the "
+					+ "AbstractAction class.  Instead use performAction(ActionCommand cmd");
+		}
 
 		validateResult(result);
 		result = postProcessResult(result);
 
 		return result;
+	}
+
+	// Ideally would be abstract but that would break backwards compatibility
+	protected ActionResult performAction(ActionCommand command) {
+		return null;
 	}
 
 	/**
@@ -99,14 +124,18 @@ public abstract class AbstractAction implements InitializingBean {
 	}
 
 	/**
-	 * Where all the fun happens
+	 * Subclass should override performAction(ActionCommand cmd), not this. In a
+	 * future release this will be removed / made final
 	 * 
 	 * @param params
 	 * @param filters
 	 * @return
 	 */
-	protected abstract ActionResult performAction(ActionParameters params,
-			ActionFilters filters);
+	@Deprecated
+	protected ActionResult performAction(ActionParameters params,
+			ActionFilters filters) {
+		return null;
+	}
 
 	/**
 	 * Registers this action w/ the Registry upon startup

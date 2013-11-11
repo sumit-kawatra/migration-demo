@@ -12,6 +12,7 @@ import com.markitserv.msws.action.ActionFilters;
 import com.markitserv.msws.action.ActionParameters;
 import com.markitserv.msws.command.ReqRespCommand;
 import com.markitserv.msws.internal.MswsAssert;
+import com.markitserv.msws.types.SessionInfo;
 
 public class ActionCommand implements ReqRespCommand {
 	
@@ -19,6 +20,7 @@ public class ActionCommand implements ReqRespCommand {
 	private String action;
 	private ActionParameters params;
 	private ActionFilters filters;
+	private SessionInfo sessionInfo;
 	
 	public ActionCommand() {
 		super();
@@ -76,6 +78,15 @@ public class ActionCommand implements ReqRespCommand {
 	public void addParameters(Map<String, Object> newParams) {
 		params.addParameters(newParams);
 	}
+	
+	public SessionInfo getSessionInfo() {
+		return sessionInfo;
+	}
+
+	public void setSessionInfo(SessionInfo sessionInfo) {
+		this.sessionInfo = sessionInfo;
+	}
+
 
 	@Override
 	public int hashCode() {

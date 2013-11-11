@@ -16,10 +16,10 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.markitserv.msws.command.Command;
 import com.markitserv.msws.command.internal.AbstractCommandRunner;
 import com.markitserv.msws.exceptions.MswsException;
 import com.markitserv.msws.exceptions.ProgrammaticException;
+import com.markitserv.msws.messaging.Command;
 
 /**
  * @author kiran.gogula

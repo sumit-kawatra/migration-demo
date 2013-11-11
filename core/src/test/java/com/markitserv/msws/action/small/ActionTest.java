@@ -52,7 +52,7 @@ public class ActionTest {
 		// cmd.
 		action.addParameterValdiation("Defaulted", new RequiredValidation());
 
-		action.performAction(cmd);
+		action.internalPerformAction(cmd);
 	}
 	
 	@Test
@@ -65,6 +65,6 @@ public class ActionTest {
 		action.addParameterValdiation("Defaulted", new RequiredValidation());
 		action.addParameterValdiation("Defaulted", new OneOfValidation(validValue));
 
-		action.performAction(cmd);
+		action.internalPerformAction(cmd);
 	}
 } 

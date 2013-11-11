@@ -8,8 +8,8 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.stereotype.Service;
 
-import com.markitserv.msws.pubsub.AbstractMswsPubSubService;
-import com.markitserv.msws.pubsub.MswsEvent;
+import com.markitserv.msws.messaging.AbstractMswsPubSubService;
+import com.markitserv.msws.messaging.MswsEvent;
 
 @Service
 public class JmsMswsPubSubService extends AbstractMswsPubSubService {

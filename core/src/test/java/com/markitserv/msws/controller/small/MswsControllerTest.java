@@ -44,7 +44,6 @@ public class MswsControllerTest extends AbstractMswsTest {
 	private MswsController controller;
 	private HttpParamsToActionCommand actionCmdBuilder;
 	private CommandDispatcher dispatcher;
-	private RequestContextHolderWrapper reqContextHolder;
 	private NativeWebRequest req;
 	
 	private class FakeType {
@@ -59,17 +58,14 @@ public class MswsControllerTest extends AbstractMswsTest {
 		dispatcher = mock(CommandDispatcher.class, RETURNS_SMART_NULLS);
 		actionCmdBuilder = mock(HttpParamsToActionCommand.class,
 				RETURNS_SMART_NULLS);
-		reqContextHolder = mock(RequestContextHolderWrapper.class, RETURNS_SMART_NULLS);
 		req = mock(NativeWebRequest.class, RETURNS_SMART_NULLS);
 		
 		HttpSession session = mock(HttpSession.class, RETURNS_SMART_NULLS);
 		
 		when(session.getMaxInactiveInterval()).thenReturn(30);
-		when(reqContextHolder.getCurrentSession()).thenReturn(session);
 		
 		controller.setDispatcher(dispatcher);
 		controller.setActionCmdBuilder(actionCmdBuilder);
-		controller.setReqContextHolder(reqContextHolder);
 	}
 
 	@Test

@@ -1,5 +1,8 @@
 package com.markitserv.msws.types;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * SuccessFailure Type
  * 
@@ -11,6 +14,7 @@ public class SuccessFailure {
 	private boolean success = true;
 	private String msg;
 	
+	@JsonInclude(Include.NON_NULL)
 	public String getMessage() {
 		return msg;
 	}

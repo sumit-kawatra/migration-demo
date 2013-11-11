@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 
 import com.markitserv.msws.action.AbstractAction;
 import com.markitserv.msws.action.ActionRegistry;
-import com.markitserv.msws.command.Command;
 import com.markitserv.msws.command.internal.AbstractCommandRunner;
 import com.markitserv.msws.commands.ErrorCommand;
 import com.markitserv.msws.exceptions.MswsException;
 import com.markitserv.msws.internal.MswsAssert;
+import com.markitserv.msws.messaging.Command;
 
 @Service
 public class ActionCommandRunner extends AbstractCommandRunner {
@@ -26,7 +26,7 @@ public class ActionCommandRunner extends AbstractCommandRunner {
 		// will throw an exception if action is not found
 		AbstractAction action = registry.getActionWithName(actionName);
 		
-		return action.performAction(aCmd);
+		return action.internalPerformAction(aCmd);
 		
 	}
 	

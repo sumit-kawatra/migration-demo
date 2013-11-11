@@ -1,4 +1,4 @@
-package com.markitserv.msws.pubsub;
+package com.markitserv.msws.messaging;
 
 import java.util.HashMap;
 import java.util.Map;

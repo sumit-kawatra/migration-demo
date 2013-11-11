@@ -7,10 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.markitserv.msws.command.Command;
 import com.markitserv.msws.exceptions.MswsException;
 import com.markitserv.msws.exceptions.UnknownActionException;
 import com.markitserv.msws.exceptions.UnknownCommandException;
+import com.markitserv.msws.messaging.Command;
 
 /** 
  * Registry of all actions.  When an action is loaded from Spring it is expected

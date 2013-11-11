@@ -20,13 +20,13 @@ public class PaginatedActionTest extends AbstractMswsTest {
 	@Test
 	public void canRunHappyPath() {
 		ActionCommand cmd = actionCommandBuilder.addParam("Size", 10).build();
-		target.performAction(cmd);
+		target.internalPerformAction(cmd);
 	}
 	
 	@Test(expected=AssertionException.class)
 	public void failsIfTotalSizeNotSet() {
 		ActionCommand cmd = actionCommandBuilder.addParam("Size", 10).build();
 		target.dontSetTotalSize(true);
-		target.performAction(cmd);
+		target.internalPerformAction(cmd);
 	}
 }

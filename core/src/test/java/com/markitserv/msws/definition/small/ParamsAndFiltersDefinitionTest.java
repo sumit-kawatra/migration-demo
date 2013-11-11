@@ -43,7 +43,7 @@ public class ParamsAndFiltersDefinitionTest extends AbstractMswsTest {
 		
 		// build command with no params
 		ActionCommand cmd = this.actionCommandBuilder.build();
-		fakeTestAction.performAction(cmd);
+		fakeTestAction.internalPerformAction(cmd);
 
 	}
 	
@@ -69,6 +69,6 @@ public class ParamsAndFiltersDefinitionTest extends AbstractMswsTest {
 		
 		// build command with no params
 		ActionCommand cmd = this.actionCommandBuilder.build();
-		fakeTestAction.performAction(cmd);
+		fakeTestAction.internalPerformAction(cmd);
 	}
 }

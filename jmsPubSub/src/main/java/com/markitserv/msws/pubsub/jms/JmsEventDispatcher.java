@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 
 import com.markitserv.msws.exceptions.ProgrammaticException;
 import com.markitserv.msws.internal.MswsAssert;
-import com.markitserv.msws.pubsub.AbstractMswsPubSubService;
-import com.markitserv.msws.pubsub.MswsEvent;
-import com.markitserv.msws.pubsub.MswsPubSubService;
+import com.markitserv.msws.messaging.AbstractMswsPubSubService;
+import com.markitserv.msws.messaging.MswsEvent;
+import com.markitserv.msws.messaging.MswsPubSubService;
 
 @Service(value = "eventDispatcher")
 public class JmsEventDispatcher implements MessageListener {

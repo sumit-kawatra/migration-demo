@@ -1,6 +1,6 @@
 package com.markitserv.msws.exceptions;
 
-import com.markitserv.msws.command.Command;
+import com.markitserv.msws.messaging.Command;
 
 public class UnknownCommandException extends ProgrammaticException {
 
