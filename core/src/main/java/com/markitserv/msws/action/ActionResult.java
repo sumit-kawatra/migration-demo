@@ -2,17 +2,19 @@ package com.markitserv.msws.action;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.markitserv.msws.AbstractWebserviceResult;
+import com.markitserv.msws.types.SuccessFailure;
 
 public class ActionResult extends AbstractWebserviceResult {
 
 	private List<? extends Object> items;
 	private Object item;
-
+	
 	/*
 	 * public ActionResult () { super(); }
 	 */
@@ -25,6 +27,15 @@ public class ActionResult extends AbstractWebserviceResult {
 	public ActionResult(List<? extends Object> list) {
 		super();
 		this.items = list;
+	}
+	
+	/**
+	 * Convenience method to return a success
+	 * @return
+	 */
+	@JsonIgnore
+	public static ActionResult success() {
+		return new ActionResult(new SuccessFailure(true));
 	}
 
 	@JsonInclude(Include.NON_NULL)

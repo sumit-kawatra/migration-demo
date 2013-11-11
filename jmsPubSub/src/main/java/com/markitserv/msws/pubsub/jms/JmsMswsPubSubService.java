@@ -9,7 +9,7 @@ import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.stereotype.Service;
 
 import com.markitserv.msws.messaging.AbstractMswsPubSubService;
-import com.markitserv.msws.messaging.MswsEvent;
+import com.markitserv.msws.messaging.Event;
 
 @Service
 public class JmsMswsPubSubService extends AbstractMswsPubSubService {
@@ -34,11 +34,10 @@ public class JmsMswsPubSubService extends AbstractMswsPubSubService {
 	@Autowired
 	private JmsTemplate template;
 	
-	@Override
-	public void send(MswsEvent event) {
-		
-		JmsMessagePostProcessor postProcessor = new JmsMessagePostProcessor(event.getEventName());
-		template.convertAndSend("msws.messageBus", event.getPayload(), postProcessor);
-		
-	}
+//	public void send(Event event) {
+//		
+//		JmsMessagePostProcessor postProcessor = new JmsMessagePostProcessor(event.getEventName());
+//		template.convertAndSend("msws.messageBus", event.getPayload(), postProcessor);
+//		
+//	}
 } 

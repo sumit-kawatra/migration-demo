@@ -10,7 +10,7 @@ public abstract class AbstractMswsEventHandler implements MswsEventHandler, Init
 	@Autowired
 	AbstractMswsPubSubService svc;
 
-	public abstract void handleEvent(MswsEvent event);
+	public abstract void handleEvent(Event event);
 	
 	public abstract String getHandledEventName();
 

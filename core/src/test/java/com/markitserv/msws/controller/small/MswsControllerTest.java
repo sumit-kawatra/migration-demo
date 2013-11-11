@@ -23,7 +23,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import com.markitserv.msws.ExceptionResult;
 import com.markitserv.msws.AbstractWebserviceResult;
 import com.markitserv.msws.action.ActionResult;
-import com.markitserv.msws.command.ReqRespCommand;
+import com.markitserv.msws.command.BlockingCommand;
 import com.markitserv.msws.command.internal.CommandDispatcher;
 import com.markitserv.msws.exceptions.MswsException;
 import com.markitserv.msws.exceptions.UnknownActionException;
@@ -81,7 +81,7 @@ public class MswsControllerTest extends AbstractMswsTest {
 	@Test
 	public void returnsActionResultIfNoErrorIsThrown() throws Exception {
 		
-		when(dispatcher.dispatchReqRespCommand(any(ReqRespCommand.class)))
+		when(dispatcher.dispatchReqRespCommand(any(BlockingCommand.class)))
 				.thenReturn(new ActionResult(new FakeType()));
 
 		AbstractWebserviceResult result = controller.performActionReq(req);
@@ -96,7 +96,7 @@ public class MswsControllerTest extends AbstractMswsTest {
 	public void returnUAEExceptionResultIfDispatcherThrowException()
 			throws Exception {
 
-		when(dispatcher.dispatchReqRespCommand(any(ReqRespCommand.class)))
+		when(dispatcher.dispatchReqRespCommand(any(BlockingCommand.class)))
 				.thenThrow(UnknownActionException.standardException("Foo"));
 
 		AbstractWebserviceResult result = controller.performActionReq(req);
@@ -119,7 +119,7 @@ public class MswsControllerTest extends AbstractMswsTest {
 	public void returnNPEExceptionResultIfDispatcherThrowException()
 			throws Exception {
 
-		when(dispatcher.dispatchReqRespCommand(any(ReqRespCommand.class)))
+		when(dispatcher.dispatchReqRespCommand(any(BlockingCommand.class)))
 				.thenThrow(new NullPointerException("NPE thrown"));
 
 		AbstractWebserviceResult result = controller.performActionReq(req);
@@ -146,7 +146,7 @@ public class MswsControllerTest extends AbstractMswsTest {
 		MswsException validationException = new ValidationException(
 				"ValidationException", errorMessages);
 
-		when(dispatcher.dispatchReqRespCommand(any(ReqRespCommand.class)))
+		when(dispatcher.dispatchReqRespCommand(any(BlockingCommand.class)))
 				.thenThrow(validationException);
 
 		AbstractWebserviceResult result = controller.performActionReq(req);

@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 import com.markitserv.msws.exceptions.ProgrammaticException;
 import com.markitserv.msws.internal.MswsAssert;
 import com.markitserv.msws.messaging.AbstractMswsPubSubService;
-import com.markitserv.msws.messaging.MswsEvent;
-import com.markitserv.msws.messaging.MswsPubSubService;
+import com.markitserv.msws.messaging.Event;
 
 @Service(value = "eventDispatcher")
 public class JmsEventDispatcher implements MessageListener {
@@ -41,9 +40,9 @@ public class JmsEventDispatcher implements MessageListener {
 				"eventName property not found in JMS message: %s",
 				message.toString());
 		
-		MswsEvent event = new MswsEvent(eventName);
-		event.setPayload(((ObjectMessage) message).getObject());
+//		Event event = new Event(eventName);
+//		event.setPayload(((ObjectMessage) message).getObject());
 		
-		svc.dispatchEvent(event);
+//		svc.dispatchEvent(event);
 	}
 }

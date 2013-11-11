@@ -12,7 +12,7 @@ import com.markitserv.msws.command.AsyncCommand;
  *
  */
 
-public class EmailCommand implements AsyncCommand{
+public class EmailCommand extends AsyncCommand{
 	
     	private static final long serialVersionUID = 1L;
 

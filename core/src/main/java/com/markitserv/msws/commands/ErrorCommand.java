@@ -9,7 +9,7 @@ import com.markitserv.msws.command.AsyncCommand;
  * @author kiran.gogula
  *
  */
-public class ErrorCommand implements AsyncCommand {
+public class ErrorCommand extends AsyncCommand {
 	
 	/**
 	 * 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.markitserv.msws.action.internal.ActionCommand;
 import com.markitserv.msws.action.internal.ActionCommandRunner;
 import com.markitserv.msws.command.AsyncCommand;
-import com.markitserv.msws.command.ReqRespCommand;
+import com.markitserv.msws.command.BlockingCommand;
 import com.markitserv.msws.commands.ErrorCommand;
 import com.markitserv.msws.exceptions.MswsException;
 import com.markitserv.msws.exceptions.ProgrammaticException;
@@ -57,7 +57,7 @@ public class CommandDispatcher implements InitializingBean {
 	private CommandRunnerRegistry registry;
 	private ExecutorService executor;
 
-	public Object dispatchReqRespCommand(ReqRespCommand cmd) throws MswsException {
+	public Object dispatchReqRespCommand(BlockingCommand cmd) throws MswsException {
 		AbstractCommandRunner runner = registry.getCommandRunnerForCommand(cmd);
 		return runner.run(cmd);
 	}

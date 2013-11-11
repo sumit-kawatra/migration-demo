@@ -10,11 +10,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.markitserv.msws.action.ActionFilters;
 import com.markitserv.msws.action.ActionParameters;
-import com.markitserv.msws.command.ReqRespCommand;
+import com.markitserv.msws.command.BlockingCommand;
 import com.markitserv.msws.internal.MswsAssert;
 import com.markitserv.msws.types.SessionInfo;
 
-public class ActionCommand implements ReqRespCommand {
+public class ActionCommand extends BlockingCommand {
 	
 	private static final long serialVersionUID = 1L;
 	private String action;

@@ -7,13 +7,14 @@ import java.util.Set;
 
 import com.markitserv.msws.internal.MswsAssert;
 
-public abstract class AbstractMswsPubSubService implements MswsPubSubService {
+public abstract class AbstractMswsPubSubService {
 
 	Map<String, Set<MswsEventHandler>> eventHandlerRegistry = new HashMap<String, Set<MswsEventHandler>>();
 
-	public void dispatchEvent(MswsEvent event) {
+	public void dispatchEvent(Event event) {
 
-		String eventName = event.getEventName();
+//		String eventName = event.getEventName();
+		String eventName = "TODO";
 
 		@SuppressWarnings("unchecked")
 		Set<MswsEventHandler> handlers = eventHandlerRegistry.get(eventName);
