@@ -18,6 +18,7 @@ import com.markitserv.msws.messaging.Command;
  * @author roy.truelove
  */
 @Service
+@Deprecated
 public class CommandRunnerRegistry {
 	
 	Logger log = LoggerFactory.getLogger(this.getClass());

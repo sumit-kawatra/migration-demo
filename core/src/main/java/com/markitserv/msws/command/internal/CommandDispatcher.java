@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.markitserv.msws.action.internal.ActionCommand;
-import com.markitserv.msws.action.internal.ActionCommandRunner;
+import com.markitserv.msws.action.internal.ActionDispatcher;
 import com.markitserv.msws.command.AsyncCommand;
 import com.markitserv.msws.command.BlockingCommand;
 import com.markitserv.msws.commands.ErrorCommand;
@@ -18,6 +18,7 @@ import com.markitserv.msws.internal.MswsAssert;
 import com.markitserv.msws.messaging.Command;
 
 @Service
+@Deprecated
 public class CommandDispatcher implements InitializingBean {
 
 	/** 

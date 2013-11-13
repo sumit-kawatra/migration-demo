@@ -1,8 +1,8 @@
 package com.markitserv.msws.messaging.test;
 
-import com.markitserv.msws.messaging.Event;
+import com.markitserv.msws.messaging.EventDep;
 
-public class TestEvent extends Event {
+public class TestEvent extends EventDep {
 	
 	private String foo;
 

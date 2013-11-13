@@ -32,6 +32,7 @@ import com.markitserv.msws.AbstractWebserviceResult;
 import com.markitserv.msws.ExceptionResult;
 import com.markitserv.msws.action.ActionResult;
 import com.markitserv.msws.action.internal.ActionCommand;
+import com.markitserv.msws.action.internal.ActionDispatcher;
 import com.markitserv.msws.command.internal.CommandDispatcher;
 import com.markitserv.msws.commands.ErrorCommand;
 import com.markitserv.msws.exceptions.MswsException;
@@ -53,7 +54,7 @@ public class MswsController implements ServletContextAware {
 	@Autowired
 	private HttpParamsToActionCommand actionCmdBuilder;
 	@Autowired
-	private CommandDispatcher dispatcher;
+	private ActionDispatcher dispatcher;
 	@Autowired
 	private SecurityAndSessionUtil securitySessionUtil;
 
@@ -77,8 +78,11 @@ public class MswsController implements ServletContextAware {
 
 			// Internal errors should be logged / notified
 			if (e instanceof ProgrammaticException) {
+				
+				log.error("Server Sider Error", e);
 
-				this.dispatcher.dispatchAsyncCommand(new ErrorCommand(e));
+				// TODO we're ignoreing errors!
+				//this.dispatcher.dispatchAsyncCommand(new ErrorCommand(e));
 			}
 			
 			AbstractWebserviceResult errorResult = new ExceptionResult(
@@ -115,8 +119,8 @@ public class MswsController implements ServletContextAware {
 
 		SessionInfo sInfo = buildSessionInfo();
 		actionCmd.setSessionInfo(sInfo);
-
-		result = (ActionResult) dispatcher.dispatchReqRespCommand(actionCmd);
+		
+		result = (ActionResult) dispatcher.dispatch(actionCmd);
 		result.getMetaData().setRequestId(uuid);
 
 		return result;
@@ -209,7 +213,7 @@ public class MswsController implements ServletContextAware {
 
 	// @RequestMapping(value = "", method = RequestMethod.GET)
 
-	public void setDispatcher(CommandDispatcher dispatcher) {
+	public void setDispatcher(ActionDispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 	}
 

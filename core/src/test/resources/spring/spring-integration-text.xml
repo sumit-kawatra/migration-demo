@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd	
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/security
+	    http://www.springframework.org/schema/security/spring-security-3.1.xsd
+	    http://www.springframework.org/schema/util
+	    http://www.springframework.org/schema/util/spring-util-3.2.xsd
+	    http://www.springframework.org/schema/jms
+	    http://www.springframework.org/schema/jms/spring-jms-3.0.xsd
+	    http://www.springframework.org/schema/cache 
+	    http://www.springframework.org/schema/cache/spring-cache.xsd
+	    http://www.springframework.org/schema/integration
+   		http://www.springframework.org/schema/integration/spring-integration-2.2.xsd
+	    http://activemq.apache.org/schema/core
+	    http://activemq.apache.org/schema/core/activemq-core-5.8.0.xsd">
+
+	<!-- ********************************************************************* 
+		EVENTS *** -->
+
+	<publish-subscribe-channel id="events"></publish-subscribe-channel>
+
+	<service-activator input-channel="events" ref="eventHandlerA1"
+		method="onEventA"></service-activator>
+
+	<service-activator input-channel="events" ref="eventHandlerA2"
+		method="onEventA"></service-activator>
+
+	<beans:bean id="eventHandlerA1"
+		class="com.markitserv.msws.oneoffs.etc.integration.EventHandlerA1"></beans:bean>
+
+	<beans:bean id="eventHandlerA2"
+		class="com.markitserv.msws.oneoffs.etc.integration.EventHandlerA2"></beans:bean>
+
+	<!-- ******************************************************************** 
+		COMMANDS *** -->
+
+	<channel id="commands"></channel>
+	<channel id="commandsReqResp"></channel>
+
+	<service-activator input-channel="commands" ref="commandHandlerA2"
+		method="onCommandA"></service-activator>
+
+	<service-activator input-channel="commands" ref="commandHandlerA1"
+		method="onCommandA"></service-activator>
+
+	<service-activator input-channel="commandsReqResp"
+		ref="commandHandlerB1" method="onCommandB"></service-activator>
+
+	<beans:bean id="commandHandlerA1"
+		class="com.markitserv.msws.oneoffs.etc.integration.CommandHandlerA1"></beans:bean>
+
+	<beans:bean id="commandHandlerA2"
+		class="com.markitserv.msws.oneoffs.etc.integration.CommandHandlerA2"></beans:bean>
+
+	<beans:bean id="commandHandlerB1"
+		class="com.markitserv.msws.oneoffs.etc.integration.CommandHandlerB1"></beans:bean>
+
+	<channel id='customRouterTest'></channel>
+	<router ref='commandHandlerB1' input-channel="customRouterTest"></router>
+	
+	<!--  Full round trip -->
+
+	<gateway service-interface="com.markitserv.msws.oneoffs.etc.integration.StringProcessor"
+		id="stringProcGateway" default-request-channel="gateway-in" default-reply-channel="gateway-out"/>
+		
+	<poller id="defaultPoller" fixed-rate="500" default="true"/>
+	
+	<publish-subscribe-channel id="gateway-in"></publish-subscribe-channel>
+		
+	<channel id="gateway-out">
+		<queue/>
+	</channel>
+	
+	<service-activator input-channel="gateway-in" output-channel="gateway-out"
+		ref="stringProcessor" method="processInt"></service-activator>
+
+	<beans:bean id="stringProcessor"
+		class="com.markitserv.msws.oneoffs.etc.integration.StringProcessorImpl"></beans:bean>
+
+	<!-- <gateway service-interface="com.markitserv.msws.messaging.test.SpringIntService" 
+		id="testGateway" /> <service-activator input-channel="names" ref="helloService" 
+		method="sayHello"></service-activator> <beans:bean id="helloService" class="com.markitserv.msws.messaging.test.SpringIntServiceImpl"></beans:bean> -->
+
+	<!-- Setup the broker. In a distributed app this will not be necessary -->
+	<!-- <amq:broker xmlns="http://activemq.apache.org/schema/core" useJmx="false" 
+		persistent="false"> <transportConnectors> <transportConnector uri="vm://localhost" 
+		/> </transportConnectors> </amq:broker> -->
+
+	<!-- factor to connect to the broker -->
+	<!-- <bean id="jmsFactory" class="org.apache.activemq.pool.PooledConnectionFactory" 
+		destroy-method="stop"> <property name="connectionFactory"> <bean class="org.apache.activemq.ActiveMQConnectionFactory"> 
+		<property name="brokerURL" value="vm://localhost" /> </bean> </property> 
+		</bean> -->
+
+
+</beans:beans> 

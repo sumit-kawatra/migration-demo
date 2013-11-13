@@ -12,6 +12,7 @@ import com.markitserv.msws.messaging.Command;
  * @author roy.truelove
  *
  */
+@Deprecated
 @Service
 public abstract class AbstractCommandRunner implements InitializingBean {
 	

@@ -18,6 +18,7 @@ import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
 import com.markitserv.msws.exceptions.ProgrammaticException;
 import com.markitserv.msws.internal.MswsAssert;
 import com.markitserv.msws.internal.UuidGenerator;
+import com.markitserv.msws.types.SessionInfo;
 import com.markitserv.msws.validation.AbstractValidation;
 import com.markitserv.msws.validation.RequiredValidation;
 import com.markitserv.msws.validation.ValidationExceptionBuilder;
@@ -39,8 +40,8 @@ public abstract class AbstractAction implements InitializingBean {
 
 	private ParamsAndFiltersDefinition filterDefinition;
 
-	public ActionResult internalPerformAction(ActionCommand command) {
-
+	public final ActionResult internalPerformAction(ActionCommand command) {
+		
 		ActionParameters parameters = command.getParameters();
 		ActionFilters filters = command.getFilters();
 
