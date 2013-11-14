@@ -12,8 +12,6 @@
 
 	<modules>
 		<module>core</module>
-		<module>redisPubSub</module>
-		<module>jmsPubSub</module>
 	</modules>
 
 	<properties>
