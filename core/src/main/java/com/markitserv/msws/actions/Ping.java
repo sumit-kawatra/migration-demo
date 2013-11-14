@@ -9,6 +9,7 @@ import com.markitserv.msws.action.AbstractAction;
 import com.markitserv.msws.action.ActionFilters;
 import com.markitserv.msws.action.ActionParameters;
 import com.markitserv.msws.action.ActionResult;
+import com.markitserv.msws.action.internal.ActionCommand;
 import com.markitserv.msws.types.PingResponse;
 
 @Service
@@ -17,8 +18,7 @@ public class Ping extends AbstractAction {
 	Logger log = LoggerFactory.getLogger(Ping.class);
 
 	@Override
-	protected ActionResult performAction(ActionParameters params,
-			ActionFilters filters) {
+	protected ActionResult performAction(ActionCommand cmd) {
 		
 		// PingResponse should return a Current TimeStamp with SuccessFailure status as success
 		PingResponse response = new PingResponse(true);

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:sec="http://www.springframework.org/schema/security" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.1.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<!-- a good amount of the configuration here comes from http://stackoverflow.com/a/14735345/295797 -->
+
+	<bean id="springSecurityFilterChain" class="org.springframework.security.web.FilterChainProxy">
+		<sec:filter-chain-map path-type="ant">
+			<sec:filter-chain pattern="/login"
+				filters="secPersistence, loginFilter" />
+			<sec:filter-chain pattern="/logout"
+				filters="secPersistence, logoutFilter" />
+			<sec:filter-chain pattern="/svc/**"
+				filters="secPersistence, checkIsAuthenticated" />
+		</sec:filter-chain-map>
+	</bean>
+	
+	<!--  Note that we've made a custom filter to check for authentication, but the commented
+	out code should work.  Need to revisit -->
+
+	<!-- 
+	<bean id="checkIsAuthenticated"
+		class="com.markitserv.msws.security.web.MswsFilterSecurityInterceptor">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="accessDecisionManager">
+			<bean class="org.springframework.security.access.vote.AffirmativeBased">
+				<property name="decisionVoters">
+					<list>
+						<bean class="com.markitserv.msws.security.web.MswsAuthenticatedVoter" />
+					</list>
+				</property>
+			</bean>
+		</property>
+		<property name="securityMetadataSource">
+			<sec:filter-invocation-definition-source>
+				<sec:intercept-url pattern="/svc/**" />
+			</sec:filter-invocation-definition-source>
+		</property>
+	</bean>
+	-->
+	
+	<bean id="checkIsAuthenticated" class="com.markitserv.msws.security.web.EnsureAuthenticatedFilter"/>
+
+	<bean id="logoutFilter" class="com.markitserv.msws.security.web.MswsLogoutFilter">
+		<constructor-arg index="0">
+			<bean
+				class="com.markitserv.msws.security.web.NoRedirectLogoutSuccessHandler" />
+		</constructor-arg>
+		<constructor-arg index="1">
+			<bean
+				class="com.markitserv.msws.security.web.MswsSecurityContextLogoutHandler" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="secPersistence"
+		class="org.springframework.security.web.context.SecurityContextPersistenceFilter" />
+
+	<bean id="loginFilter"
+		class="com.markitserv.msws.security.web.MswsUsernamePasswordAuthenticationFilter">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="authenticationSuccessHandler">
+			<bean
+				class="com.markitserv.msws.security.web.NoRedirectAuthenticationSuccessHandler" />
+		</property>
+		<property name="passwordParameter" value="password" />
+		<property name="usernameParameter" value="username" />
+		<property name="postOnly" value="false" />
+
+	</bean>
+
+</beans>

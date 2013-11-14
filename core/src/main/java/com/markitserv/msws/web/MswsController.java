@@ -46,8 +46,10 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang3.StringUtils;
 
 @Controller
-@RequestMapping(value = "/")
+@RequestMapping(value = "/svc")
 public class MswsController implements ServletContextAware {
+	
+	Logger log = LoggerFactory.getLogger(MswsController.class);
 
 	@Autowired
 	private HttpParamsToActionCommand actionCmdBuilder;
@@ -57,8 +59,18 @@ public class MswsController implements ServletContextAware {
 	private SecurityAndSessionUtil securitySessionUtil;
 
 	private ServletContext servletContext;
+	
+	@RequestMapping(value = "", method = RequestMethod.POST)
+	public @ResponseBody
+	AbstractWebserviceResult performActionReqPost(NativeWebRequest req) {
+		return safeHandleRequest(RequestMethod.POST, req);
+	}
 
-	Logger log = LoggerFactory.getLogger(MswsController.class);
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public @ResponseBody
+	AbstractWebserviceResult performActionReq(NativeWebRequest req) {
+		return safeHandleRequest(RequestMethod.GET, req);
+	}
 
 	private AbstractWebserviceResult safeHandleRequest(RequestMethod m,
 			NativeWebRequest req) {
@@ -125,6 +137,11 @@ public class MswsController implements ServletContextAware {
 
 	}
 
+	/**
+	 * Abstracts away session info since SecurityContextHolder doesn't work in 
+	 * a separate thread.
+	 * @return
+	 */
 	private SessionInfo buildSessionInfo() {
 		SessionInfo sInfo = new SessionInfo();
 
@@ -152,19 +169,6 @@ public class MswsController implements ServletContextAware {
 		sInfo.setRoles(roles);
 		sInfo.setUsername(userName);
 		return sInfo;
-	}
-
-	@RequestMapping(value = "", method = RequestMethod.POST)
-	public @ResponseBody
-	AbstractWebserviceResult performActionReqPost(NativeWebRequest req) {
-		return safeHandleRequest(RequestMethod.POST, req);
-	}
-
-	@RequestMapping(value = "", method = RequestMethod.GET)
-	public @ResponseBody
-	AbstractWebserviceResult performActionReq(NativeWebRequest req) {
-
-		return safeHandleRequest(RequestMethod.GET, req);
 	}
 
 	private Map<String, Object> pullPostParametersFromRequest(
