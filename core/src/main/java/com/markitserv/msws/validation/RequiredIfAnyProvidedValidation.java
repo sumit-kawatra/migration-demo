@@ -33,7 +33,7 @@ public class RequiredIfAnyProvidedValidation extends RequiredValidation {
 								+ "'is provided.");
 			}
 		}
-		return ValidationResponse.createValidResponse();
+		return ValidationResponse.createValidConvertedResponse(target);
 	}
 
 }

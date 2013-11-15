@@ -16,8 +16,8 @@ public class ForEachValidator extends AbstractOptionalValidation {
 	public ValidationResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 
-		ValidationResponse isCollection = new CollectionValidation().validate(
-				target, map);
+		ValidationResponse isCollection = new ListValidation().validate(target,
+				map);
 		if (!isCollection.isValid()) {
 			return isCollection;
 		}
@@ -26,11 +26,12 @@ public class ForEachValidator extends AbstractOptionalValidation {
 		Stack<Object> newCol = new Stack<Object>();
 
 		for (Object object : col) {
-			ValidationResponse resp = forEachElement
-					.validateInternal(object, map);
+			ValidationResponse resp = forEachElement.validateInternal(object,
+					map);
 			if (!resp.isValid()) {
 				return ValidationResponse.createInvalidResponse("Element '"
-						+ object.toString() + "' of this collection failed validation: "
+						+ object.toString()
+						+ "' of this collection failed validation: "
 						+ resp.getMessage());
 			} else {
 				newCol.push(resp.getConvertedObj());

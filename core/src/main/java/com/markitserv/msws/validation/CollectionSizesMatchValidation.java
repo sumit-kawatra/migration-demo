@@ -52,6 +52,6 @@ public class CollectionSizesMatchValidation extends AbstractOptionalValidation {
 									otherCol.size(), targetCol.size()));
 		}
 
-		return ValidationResponse.createValidResponse();
+		return ValidationResponse.createValidConvertedResponse(target);
 	}
 }

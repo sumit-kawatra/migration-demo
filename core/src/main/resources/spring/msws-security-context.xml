@@ -28,13 +28,13 @@
 
 	<!-- 
 	<bean id="checkIsAuthenticated"
-		class="com.markitserv.msws.security.web.MswsFilterSecurityInterceptor">
+		class="com.markitserv.msws.internal.security.web.MswsFilterSecurityInterceptor">
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="accessDecisionManager">
 			<bean class="org.springframework.security.access.vote.AffirmativeBased">
 				<property name="decisionVoters">
 					<list>
-						<bean class="com.markitserv.msws.security.web.MswsAuthenticatedVoter" />
+						<bean class="com.markitserv.msws.internal.security.web.MswsAuthenticatedVoter" />
 					</list>
 				</property>
 			</bean>
@@ -47,16 +47,16 @@
 	</bean>
 	-->
 	
-	<bean id="checkIsAuthenticated" class="com.markitserv.msws.security.web.EnsureAuthenticatedFilter"/>
+	<bean id="checkIsAuthenticated" class="com.markitserv.msws.internal.security.web.EnsureAuthenticatedFilter"/>
 
-	<bean id="logoutFilter" class="com.markitserv.msws.security.web.MswsLogoutFilter">
+	<bean id="logoutFilter" class="com.markitserv.msws.internal.security.web.MswsLogoutFilter">
 		<constructor-arg index="0">
 			<bean
-				class="com.markitserv.msws.security.web.NoRedirectLogoutSuccessHandler" />
+				class="com.markitserv.msws.internal.security.web.NoRedirectLogoutSuccessHandler" />
 		</constructor-arg>
 		<constructor-arg index="1">
 			<bean
-				class="com.markitserv.msws.security.web.MswsSecurityContextLogoutHandler" />
+				class="com.markitserv.msws.internal.security.web.MswsSecurityContextLogoutHandler" />
 		</constructor-arg>
 	</bean>
 
@@ -64,11 +64,11 @@
 		class="org.springframework.security.web.context.SecurityContextPersistenceFilter" />
 
 	<bean id="loginFilter"
-		class="com.markitserv.msws.security.web.MswsUsernamePasswordAuthenticationFilter">
+		class="com.markitserv.msws.internal.security.web.MswsUsernamePasswordAuthenticationFilter">
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="authenticationSuccessHandler">
 			<bean
-				class="com.markitserv.msws.security.web.NoRedirectAuthenticationSuccessHandler" />
+				class="com.markitserv.msws.internal.security.web.NoRedirectAuthenticationSuccessHandler" />
 		</property>
 		<property name="passwordParameter" value="password" />
 		<property name="usernameParameter" value="username" />

@@ -55,7 +55,7 @@ public class PasswordValidation extends AbstractOptionalValidation {
 
 		if (containsAtLeastOneUpperCase && containsAtLeastOneLowerCase
 				&& containsAtLeastOneDigit) {
-			return ValidationResponse.createValidResponse();
+			return ValidationResponse.createValidConvertedResponse(target);
 		} else {
 			return ValidationResponse
 					.createInvalidResponse("Invalid password format. Password must have atleast one uppercase and one lowercase alphabet and one digit.");

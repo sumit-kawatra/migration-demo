@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 
-import com.markitserv.msws.web.UploadedFile;
+import com.markitserv.msws.beans.UploadedFile;
 
 public class UploadFileValidation extends AbstractOptionalValidation {
 

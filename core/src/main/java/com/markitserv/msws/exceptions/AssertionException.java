@@ -1,5 +1,7 @@
 package com.markitserv.msws.exceptions;
 
+import com.markitserv.msws.internal.exceptions.ProgrammaticException;
+
 /**
  * Thrown when an assertion is not met.  Should only be used by the MwwsAssert class.
  * @author roy.truelove

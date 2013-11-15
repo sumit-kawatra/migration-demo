@@ -6,7 +6,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.markitserv.msws.exceptions.ProgrammaticException;
+import com.markitserv.msws.internal.exceptions.ProgrammaticException;
 
 /**
  * Uses reflection to filter when a given property equals the provided value. If

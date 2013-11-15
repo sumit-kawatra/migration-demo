@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import com.google.common.base.Objects;
-import com.markitserv.msws.internal.MswsAssert;
+import com.markitserv.msws.util.MswsAssert;
 
 /**
  * Encapsulates filters for an action. Delegates some of the Map functions

@@ -8,6 +8,6 @@ public class OptionalValidation extends AbstractOptionalValidation {
 	public ValidationResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 		// always valid.
-		return ValidationResponse.createValidResponse();
+		return ValidationResponse.createValidConvertedResponse(target);
 	}
 }

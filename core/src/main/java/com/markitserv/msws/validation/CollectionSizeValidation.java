@@ -3,7 +3,7 @@ package com.markitserv.msws.validation;
 import java.util.Collection;
 import java.util.Map;
 
-import com.markitserv.msws.exceptions.ProgrammaticException;
+import com.markitserv.msws.internal.exceptions.ProgrammaticException;
 
 @Deprecated
 public class CollectionSizeValidation extends AbstractOptionalValidation {
@@ -45,6 +45,6 @@ public class CollectionSizeValidation extends AbstractOptionalValidation {
 							+ "collection with %d elements.", max, col.size()));
 		}
 
-		return ValidationResponse.createValidResponse();
+		return ValidationResponse.createValidConvertedResponse(target);
 	}
 }

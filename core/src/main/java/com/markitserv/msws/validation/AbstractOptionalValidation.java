@@ -18,7 +18,7 @@ public abstract class AbstractOptionalValidation extends AbstractValidation {
 		ValidationResponse resp;
 
 		if (!isProvided(target)) {
-			resp = ValidationResponse.createValidResponse();
+			resp = ValidationResponse.createValidConvertedResponse(target);
 		} else {
 			resp = super.validateInternal(target, map);
 		}

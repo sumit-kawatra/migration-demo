@@ -11,13 +11,20 @@
 	    http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
 	<context:component-scan base-package="com.markitserv.msws" />
+	
+	<!--  START BEANS -->
+	
+	<!--  Note that any of these can be overridden by the client app -->
+	<bean id="uuidGenerator" class="com.markitserv.msws.internal.svc.DefaultUuidGenerator"></bean>
 
 	<!-- START MVC -->
 
 	<mvc:interceptors>
-		<bean class="com.markitserv.msws.web.CommandInterceptor" />
+		<!--  adds a UUID to every request -->
+		<bean class="com.markitserv.msws.internal.web.AddRequestUuidInterceptor" />
 	</mvc:interceptors>
 
 	<mvc:annotation-driven />
+	
 
 </beans>

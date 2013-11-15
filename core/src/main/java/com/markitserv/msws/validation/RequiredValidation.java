@@ -13,7 +13,7 @@ public class RequiredValidation extends AbstractValidation {
 			resp = ValidationResponse
 					.createInvalidResponse("Required but not provided.");
 		} else {
-			resp = ValidationResponse.createValidResponse();
+			resp = ValidationResponse.createValidConvertedResponse(target);
 		}
 		return resp;
 	}

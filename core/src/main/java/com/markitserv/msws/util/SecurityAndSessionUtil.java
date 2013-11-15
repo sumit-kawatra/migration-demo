@@ -12,12 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.markitserv.msws.internal.MswsAssert;
 
 /**
  * Wraps Security and Session information. Since spring exposes a lot of this
  * information with static methods, this classes allows that information to be
- * mocked.
+ * mocked.  Can only be used w/in a web request thread.
  * 
  * @author roy.truelove
  * 

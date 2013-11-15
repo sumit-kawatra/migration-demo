@@ -1,5 +1,7 @@
 package com.markitserv.msws.exceptions;
 
+import com.markitserv.msws.internal.exceptions.MswsException;
+
 /**
  * Use when the client provides a value that's invalid but is not appropriate to 
  * check by a Validation.

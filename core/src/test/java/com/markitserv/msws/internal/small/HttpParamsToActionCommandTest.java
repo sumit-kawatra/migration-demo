@@ -11,15 +11,15 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.markitserv.msws.action.ActionCommand;
 import com.markitserv.msws.action.ActionFilters;
 import com.markitserv.msws.action.ActionParameters;
 import com.markitserv.msws.action.CommonParamKeys;
-import com.markitserv.msws.action.internal.ActionCommand;
-import com.markitserv.msws.exceptions.ActionParamMissingException;
-import com.markitserv.msws.exceptions.MalformedFiltersException;
-import com.markitserv.msws.exceptions.MultipleParameterValuesException;
 import com.markitserv.msws.internal.DebugUtils;
-import com.markitserv.msws.web.HttpParamsToActionCommand;
+import com.markitserv.msws.internal.exceptions.ActionParamMissingException;
+import com.markitserv.msws.internal.exceptions.MalformedFiltersException;
+import com.markitserv.msws.internal.exceptions.MultipleParameterValuesException;
+import com.markitserv.msws.internal.web.HttpParamsToActionCommand;
 
 public class HttpParamsToActionCommandTest {
 

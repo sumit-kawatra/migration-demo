@@ -14,7 +14,7 @@ public class SortByValidation extends OneOfValidation {
 					.createInvalidResponse("Could not sort by value '"
 							+ target.toString() + "'.  " + resp.getMessage());
 		} else {
-			return ValidationResponse.createValidResponse();
+			return ValidationResponse.createValidConvertedResponse(target);
 		}
 	}
 

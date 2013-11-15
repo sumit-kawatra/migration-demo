@@ -35,7 +35,7 @@ public class RequiredIfAllNotProvidedValidation extends RequiredValidation{
 									+ getStringFromArray(otherValues));
 		
 		}
-		return ValidationResponse.createValidResponse();
+		return ValidationResponse.createValidConvertedResponse(target);
 	}
 
 	

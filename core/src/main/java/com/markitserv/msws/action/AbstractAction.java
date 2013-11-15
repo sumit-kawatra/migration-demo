@@ -1,6 +1,5 @@
 package com.markitserv.msws.action;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -10,20 +9,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.markitserv.msws.action.internal.ActionCommand;
-import com.markitserv.msws.definition.ParamsAndFiltersDefinition;
-import com.markitserv.msws.exceptions.ProgrammaticException;
-import com.markitserv.msws.internal.MswsAssert;
-import com.markitserv.msws.internal.UuidGenerator;
-import com.markitserv.msws.types.SessionInfo;
+import com.markitserv.msws.action.resp.ActionResult;
+import com.markitserv.msws.internal.action.ActionRegistry;
+import com.markitserv.msws.internal.action.ValidationExceptionBuilder;
+import com.markitserv.msws.internal.action.ValidationExceptionBuilder.FilterOrParam;
+import com.markitserv.msws.internal.exceptions.ProgrammaticException;
+import com.markitserv.msws.svc.UuidGenerator;
+import com.markitserv.msws.util.MswsAssert;
 import com.markitserv.msws.validation.AbstractValidation;
 import com.markitserv.msws.validation.RequiredValidation;
-import com.markitserv.msws.validation.ValidationExceptionBuilder;
 import com.markitserv.msws.validation.ValidationResponse;
-import com.markitserv.msws.validation.ValidationExceptionBuilder.FilterOrParam;
 
 @Service
 public abstract class AbstractAction implements InitializingBean {
@@ -37,11 +34,25 @@ public abstract class AbstractAction implements InitializingBean {
 	private UuidGenerator uuidGenerator;
 
 	private ParamsAndFiltersDefinition parameterDefinition;
-
 	private ParamsAndFiltersDefinition filterDefinition;
 
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		this.registerWithActionRegistry();
+
+		// populates the definitions at startup instead of at runtime. Will
+		// help to determine errors upfront instead of waiting for when the
+		// action is run.
+		this.getFilterDefinition();
+		this.getParameterDefinition();
+	}
+
+	public UuidGenerator getUuidGenerator() {
+		return uuidGenerator;
+	}
+
 	public final ActionResult internalPerformAction(ActionCommand command) {
-		
+
 		ActionParameters parameters = command.getParameters();
 		ActionFilters filters = command.getFilters();
 
@@ -54,16 +65,7 @@ public abstract class AbstractAction implements InitializingBean {
 		command.setParameters(parameters);
 		command.setFilters(filters);
 
-		ActionResult result = this.performAction(parameters, filters);
-
-		// This is for backwards compatibility for the deprecated performAction 
-		// method.  Once that method is removed / made final, this can be fixed
-		if (result == null) {
-			result = this.performAction(command);
-		} else {
-			log.warn("You are overriding a deprectated method in the "
-					+ "AbstractAction class.  Instead use performAction(ActionCommand cmd");
-		}
+		ActionResult result = this.performAction(command);
 
 		validateResult(result);
 		result = postProcessResult(result);
@@ -71,19 +73,21 @@ public abstract class AbstractAction implements InitializingBean {
 		return result;
 	}
 
-	// Ideally would be abstract but that would break backwards compatibility
-	protected ActionResult performAction(ActionCommand command) {
-		return null;
+	public void setUuidGenerator(UuidGenerator uuidGenerator) {
+		this.uuidGenerator = uuidGenerator;
 	}
 
-	/**
-	 * Gives subclasses a place to process a result after it's been performed.
-	 * 
-	 * @param result
-	 * @return
-	 */
-	protected ActionResult postProcessResult(ActionResult result) {
-		return result;
+	private ParamsAndFiltersDefinition addSortingParams(
+			ParamsAndFiltersDefinition params) {
+
+		SortingParamsDefinition spd = this.createSortingParamsDefinition();
+
+		if (spd != null) {
+			params.addAll(spd.build());
+		}
+
+		return params;
+
 	}
 
 	private void applyDefaults(ActionParameters parameters,
@@ -102,40 +106,23 @@ public abstract class AbstractAction implements InitializingBean {
 		}
 	}
 
-	/**
-	 * Ensures that the result is valid before sending back to the client
-	 * 
-	 * @param result
-	 */
-	protected void validateResult(ActionResult result) {
+	private ParamsAndFiltersDefinition getFilterDefinition() {
 
-		String failureMsg = "Failed to validate ActionResult.";
-
-		// either collection OR item needs to be set.
-		if (result.getItems() == null && result.getItem() == null) {
-			throw new ProgrammaticException(failureMsg
-					+ "Either the collection or the item must be set.");
+		if (this.filterDefinition == null) {
+			filterDefinition = this.createFilterDefinition();
 		}
-
-		// cannot have both collection and item set at the same time.
-		if (result.getItems() != null && result.getItem() != null) {
-			throw new ProgrammaticException(failureMsg
-					+ "Cannot set both the collection and the item.");
-		}
+		return filterDefinition;
 	}
 
-	/**
-	 * Subclass should override performAction(ActionCommand cmd), not this. In a
-	 * future release this will be removed / made final
-	 * 
-	 * @param params
-	 * @param filters
-	 * @return
-	 */
-	@Deprecated
-	protected ActionResult performAction(ActionParameters params,
-			ActionFilters filters) {
-		return null;
+	private ParamsAndFiltersDefinition getParameterDefinition() {
+		if (this.parameterDefinition == null) {
+			parameterDefinition = this.createParameterDefinition();
+			parameterDefinition = this
+					.addAdditionalParameterDefinitions(parameterDefinition);
+			parameterDefinition = this.addSortingParams(parameterDefinition);
+
+		}
+		return parameterDefinition;
 	}
 
 	/**
@@ -143,35 +130,6 @@ public abstract class AbstractAction implements InitializingBean {
 	 */
 	private void registerWithActionRegistry() {
 		actionRegistry.registerAction(this.getActionName(), this);
-	}
-
-	/*
-	 * By default the name of the action that's put into the registry is the
-	 * simple name of the class. Can be overriden if necessary (but when would
-	 * it be necessary?)
-	 */
-	protected String getActionName() {
-		return this.getClass().getSimpleName();
-	}
-
-	/**
-	 * Returns the parameter definition. By default there is no parameter
-	 * definition. Expected to be overridden by the subclass
-	 * 
-	 * @return
-	 */
-	protected ParamsAndFiltersDefinition createParameterDefinition() {
-		return new ParamsAndFiltersDefinition();
-	}
-
-	/**
-	 * Returns the filter definition. By default there is no filter definition.
-	 * Expected to be overridden by the subclass
-	 * 
-	 * @return
-	 */
-	protected ParamsAndFiltersDefinition createFilterDefinition() {
-		return new ParamsAndFiltersDefinition();
 	}
 
 	/**
@@ -194,34 +152,6 @@ public abstract class AbstractAction implements InitializingBean {
 				getFilterDefinition().getValidations(), veb);
 
 		veb.buildAndThrowIfInvalid();
-	}
-
-	private ParamsAndFiltersDefinition getFilterDefinition() {
-
-		if (this.filterDefinition == null) {
-			filterDefinition = this.createFilterDefinition();
-		}
-		return filterDefinition;
-	}
-
-	private ParamsAndFiltersDefinition getParameterDefinition() {
-		if (this.parameterDefinition == null) {
-			parameterDefinition = this.createParameterDefinition();
-			parameterDefinition = this
-					.addAdditionalParameterDefinitions(parameterDefinition);
-		}
-		return parameterDefinition;
-	}
-
-	/**
-	 * Allows subclasses to modify the parameter def upon creation
-	 * 
-	 * @param def
-	 * @return
-	 */
-	protected ParamsAndFiltersDefinition addAdditionalParameterDefinitions(
-			ParamsAndFiltersDefinition def) {
-		return def;
 	}
 
 	/**
@@ -311,23 +241,89 @@ public abstract class AbstractAction implements InitializingBean {
 		return veb;
 	}
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		this.registerWithActionRegistry();
-
-		// populates the definitions at startup instead of at runtime. Will
-		// help to determine errors upfront instead of waiting for when the
-		// action is run.
-		this.getFilterDefinition();
-		this.getParameterDefinition();
+	/**
+	 * Allows subclasses to modify the parameter def upon creation.  This is
+	 * not generally used by concrete classes, but by Abstract subclasses
+	 * 
+	 * @param def
+	 * @return
+	 */
+	protected ParamsAndFiltersDefinition addAdditionalParameterDefinitions(
+			ParamsAndFiltersDefinition def) {
+		return def;
 	}
 
-	public UuidGenerator getUuidGenerator() {
-		return uuidGenerator;
+	/**
+	 * Returns the filter definition. By default there is no filter definition.
+	 * Expected to be overridden by the subclass
+	 * 
+	 * @return
+	 */
+	protected ParamsAndFiltersDefinition createFilterDefinition() {
+		return new ParamsAndFiltersDefinition();
 	}
 
-	public void setUuidGenerator(UuidGenerator uuidGenerator) {
-		this.uuidGenerator = uuidGenerator;
+	/**
+	 * Returns the parameter definition. By default there is no parameter
+	 * definition. Expected to be overridden by the subclass
+	 * 
+	 * @return
+	 */
+	protected ParamsAndFiltersDefinition createParameterDefinition() {
+		return new ParamsAndFiltersDefinition();
+	}
+
+	/**
+	 * Can be overriden by the action if sorting is needed
+	 * 
+	 * @return
+	 */
+	protected SortingParamsDefinition createSortingParamsDefinition() {
+		return null;
+	}
+
+	/*
+	 * By default the name of the action that's put into the registry is the
+	 * simple name of the class. Can be overriden if necessary (but when would
+	 * it be necessary?)
+	 */
+	protected String getActionName() {
+		return this.getClass().getSimpleName();
+	}
+
+	protected abstract ActionResult performAction(ActionCommand command);
+
+	/**
+	 * Gives subclasses a place to process a result after it's been performed.
+	 * Generally not used by concrete classes
+	 * 
+	 * @param result
+	 * @return
+	 */
+	protected ActionResult postProcessResult(ActionResult result) {
+		return result;
+	}
+
+	/**
+	 * Ensures that the result is valid before sending back to the client
+	 * 
+	 * @param result
+	 */
+	protected void validateResult(ActionResult result) {
+
+		String failureMsg = "Failed to validate ActionResult.";
+
+		// either collection OR item needs to be set.
+		if (result.getItems() == null && result.getItem() == null) {
+			throw new ProgrammaticException(failureMsg
+					+ "Either the collection or the item must be set.");
+		}
+
+		// cannot have both collection and item set at the same time.
+		if (result.getItems() != null && result.getItem() != null) {
+			throw new ProgrammaticException(failureMsg
+					+ "Cannot set both the collection and the item.");
+		}
 	}
 
 }

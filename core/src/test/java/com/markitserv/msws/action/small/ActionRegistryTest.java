@@ -7,8 +7,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.markitserv.msws.action.AbstractAction;
-import com.markitserv.msws.action.ActionRegistry;
-import com.markitserv.msws.exceptions.UnknownActionException;
+import com.markitserv.msws.internal.action.ActionRegistry;
+import com.markitserv.msws.internal.exceptions.UnknownActionException;
 
 public class ActionRegistryTest {
 

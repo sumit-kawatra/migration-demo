@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.markitserv.msws.internal.MswsAssert;
+import com.markitserv.msws.util.MswsAssert;
 
 public class OneOfValidation extends AbstractOptionalValidation {
 
@@ -57,7 +57,7 @@ public class OneOfValidation extends AbstractOptionalValidation {
 			resp = ValidationResponse.createInvalidResponse(String.format(
 					"%s].  Instead got '%s'.", msg, targetStr));
 		} else {
-			resp = ValidationResponse.createValidResponse();
+			resp = ValidationResponse.createValidConvertedResponse(target);
 		}
 
 		return resp;

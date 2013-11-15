@@ -14,6 +14,6 @@ public class ListValidation extends AbstractOptionalValidation {
 					.createInvalidResponse("Expected a collection");
 		}
 
-		return ValidationResponse.createValidResponse();
+		return ValidationResponse.createValidConvertedResponse(target);
 	}
 }

@@ -35,7 +35,7 @@ public class MutuallyExclusiveWithValidation extends RequiredValidation {
 							.format("If this field is provided, the following fields are not applicable: "
 									+ getStringFromArray(otherValues)));
 		}else {
-			return ValidationResponse.createValidResponse();
+			return ValidationResponse.createValidConvertedResponse(target);
 		}
 	}
 

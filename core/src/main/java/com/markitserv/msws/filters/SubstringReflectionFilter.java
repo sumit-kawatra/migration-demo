@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.markitserv.msws.exceptions.ProgrammaticException;
+import com.markitserv.msws.internal.exceptions.ProgrammaticException;
 
 /**
  * Uses reflection to do a substring filter. Note that if this is not 'fast
