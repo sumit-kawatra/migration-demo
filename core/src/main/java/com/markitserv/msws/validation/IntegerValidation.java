@@ -27,6 +27,11 @@ public class IntegerValidation extends AbstractOptionalValidation {
 	}
 
 	private ValidationResponse bad() {
-		return ValidationResponse.createInvalidResponse("Expected Integer");
+		return createInvalidResponse();
+	}
+
+	@Override
+	public String getDescription() {
+		return "Is convertable to integer value";
 	}
 }

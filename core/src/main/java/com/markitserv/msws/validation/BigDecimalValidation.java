@@ -30,4 +30,11 @@ public class BigDecimalValidation extends AbstractOptionalValidation {
 	private ValidationResponse bad() {
 		return ValidationResponse.createInvalidResponse("Expected BigDecimal");
 	}
+
+	@Override
+	public String getDescription() {
+		return "Is convertible to decimal value";
+	}
+	
+	
 }

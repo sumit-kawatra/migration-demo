@@ -17,4 +17,9 @@ public class RequiredValidation extends AbstractValidation {
 		}
 		return resp;
 	}
+
+	@Override
+	public String getDescription() {
+		return "Is required";
+	}
 }

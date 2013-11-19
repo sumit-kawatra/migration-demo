@@ -27,4 +27,8 @@ public class Ping extends AbstractAction {
 		return new ActionResult(response);
 	}
 
+	@Override
+	public String getDescription() {
+		return "Pings the server";
+	}
 }

@@ -65,4 +65,10 @@ public class ManageArtificialApplicationStates extends AbstractAction {
 
 		return def;
 	}
+
+	@Override
+	public String getDescription() {
+		return "Used to force the server application into artifical states.  For testing only";
+	}
+
 }

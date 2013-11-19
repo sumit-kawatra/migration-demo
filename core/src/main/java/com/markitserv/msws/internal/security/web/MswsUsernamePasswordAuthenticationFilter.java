@@ -50,7 +50,7 @@ public class MswsUsernamePasswordAuthenticationFilter extends
 		
 		User user = (User) authResult.getPrincipal();
 		
-		log.error("User " + user.getUsername() + " logged in successfully");
+		log.debug("User " + user.getUsername() + " logged in successfully");
 		
 		super.successfulAuthentication(request, response, chain, authResult);
 		chain.doFilter(request, response);

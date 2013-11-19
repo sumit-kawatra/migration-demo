@@ -16,4 +16,9 @@ public class ListValidation extends AbstractOptionalValidation {
 
 		return ValidationResponse.createValidConvertedResponse(target);
 	}
+
+	@Override
+	public String getDescription() {
+		return "Is a list";
+	}
 }

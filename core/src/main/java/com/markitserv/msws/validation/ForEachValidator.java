@@ -40,4 +40,10 @@ public class ForEachValidator extends AbstractOptionalValidation {
 
 		return ValidationResponse.createValidConvertedResponse(newCol);
 	}
+
+	@Override
+	public String getDescription() {
+		return "List where every element meets the following criteria: "
+				+ forEachElement.getDescription();
+	}
 }

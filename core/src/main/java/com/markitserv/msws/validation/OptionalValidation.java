@@ -10,4 +10,9 @@ public class OptionalValidation extends AbstractOptionalValidation {
 		// always valid.
 		return ValidationResponse.createValidConvertedResponse(target);
 	}
+
+	@Override
+	public String getDescription() {
+		return "Is Optional";
+	}
 }

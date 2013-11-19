@@ -29,7 +29,7 @@ public class NoRedirectLogoutSuccessHandler extends
 			HttpServletResponse response, Authentication authentication)
 			throws IOException, ServletException {
 		
-		//log.error("Successfully logged out.");
+		log.debug("Successfully logged out.");
 
 		super.onLogoutSuccess(request, response, authentication);
 	}

@@ -15,15 +15,15 @@ public class StringValidation extends AbstractOptionalValidation {
 	public ValidationResponse validate(Object target,
 			Map<String, ? extends Object> map) {
 
-		if (target instanceof Integer) {
+		if (target instanceof String) {
 			return ValidationResponse.createValidConvertedResponse(target);
 		} else {
-			return bad();
+			return this.createInvalidResponse();
 		}
 	}
 
-	private ValidationResponse bad() {
-		return ValidationResponse.createInvalidResponse("Expected String");
+	@Override
+	public String getDescription() {
+		return "Is string";
 	}
-
 }

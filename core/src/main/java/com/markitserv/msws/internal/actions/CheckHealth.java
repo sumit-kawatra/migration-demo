@@ -49,4 +49,10 @@ public class CheckHealth extends AbstractAction {
 				
 		return new ActionResult(resp);
 	}
+
+	@Override
+	public String getDescription() {
+		return "Returns health report for the application.";
+	}
+	
 }

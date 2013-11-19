@@ -76,6 +76,12 @@ public class MswsController implements ServletContextAware {
 	private AbstractWebserviceResult safeHandleRequest(RequestMethod m,
 			NativeWebRequest req) {
 		
+		String uuid = (String) req.getAttribute(Constants.UUID,
+				RequestAttributes.SCOPE_REQUEST);
+
+		MswsAssert.mswsAssert(uuid != null && !StringUtils.isBlank(uuid),
+				"UUID not found on the request.");
+		
 		AbstractWebserviceResult res = null;
 		
 		try {
@@ -102,6 +108,7 @@ public class MswsController implements ServletContextAware {
 			res = errorResult;
 		}
 		
+		res.getMetaData().setRequestId(uuid);
 		return res;
 
 	}
@@ -111,11 +118,6 @@ public class MswsController implements ServletContextAware {
 
 		AbstractWebserviceResult result = null;
 
-		String uuid = (String) req.getAttribute(Constants.UUID,
-				RequestAttributes.SCOPE_REQUEST);
-
-		MswsAssert.mswsAssert(uuid != null && !StringUtils.isBlank(uuid),
-				"UUID not found on the request.");
 
 		ActionCommand actionCmd = actionCmdBuilder
 				.buildActionCommandFromHttpParams(req.getParameterMap());
@@ -132,7 +134,7 @@ public class MswsController implements ServletContextAware {
 		actionCmd.setSessionInfo(sInfo);
 		
 		result = (ActionResult) dispatcher.dispatch(actionCmd);
-		result.getMetaData().setRequestId(uuid);
+
 
 		return result;
 

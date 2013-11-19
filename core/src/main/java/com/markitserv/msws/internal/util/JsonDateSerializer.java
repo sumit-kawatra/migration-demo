@@ -33,6 +33,7 @@ public class JsonDateSerializer extends JsonSerializer<DateTime> {
 			jgen.writeString(formatter.print(value));
 
 		} catch (Exception exception) {
+			// need to log the error here because this throws a 500 error
 			log.error("Exception from CustomDateSerializer class", exception);
 			throw new ProgrammaticException("Exception from CustomDateSerializer class",
 					exception);

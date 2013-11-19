@@ -15,4 +15,9 @@ public class DescribeSession extends AbstractAction {
 		return new ActionResult(command.getSessionInfo());
 	}
 
+	@Override
+	public String getDescription() {
+		return "Describes the session of the currently logged in user.";
+	}
+
 }

@@ -26,10 +26,10 @@ public class MswsSecurityContextLogoutHandler extends
 			HttpServletResponse response, Authentication authentication) {
 		
 		if (authentication == null) {
-			log.error("Logout called but user is not currently logged in");
+			//log.info("Logout called but user is not currently logged in");
 		} else {
 			User user = (User) authentication.getPrincipal();
-			log.error("User " + user.getUsername() + " is logging out.");
+			log.debug("User " + user.getUsername() + " is logging out.");
 		}
 		
 		super.logout(request, response, authentication);

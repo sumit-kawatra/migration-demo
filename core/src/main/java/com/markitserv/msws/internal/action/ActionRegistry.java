@@ -31,4 +31,9 @@ public class ActionRegistry {
 	public void registerAction(String name, AbstractAction action) {
 		registry.put(name, action);
 	}
+	
+	public Map<String, AbstractAction> getAllActions() {
+		return registry;
+	}
+	
 }

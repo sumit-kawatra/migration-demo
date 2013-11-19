@@ -23,6 +23,13 @@ public class BooleanValidation extends AbstractOptionalValidation {
 	}
 
 	private ValidationResponse bad() {
-		return ValidationResponse.createInvalidResponse("Expected Boolean");
+		return this.createInvalidResponse();
 	}
+
+	@Override
+	public String getDescription() {
+		return "Is convertible to boolean value.  Expecting 'true' or 'false'";
+	}
+	
+	
 }

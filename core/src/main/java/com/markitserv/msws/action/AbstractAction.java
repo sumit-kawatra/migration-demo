@@ -15,6 +15,7 @@ import com.markitserv.msws.action.resp.ActionResult;
 import com.markitserv.msws.internal.action.ActionRegistry;
 import com.markitserv.msws.internal.action.ValidationExceptionBuilder;
 import com.markitserv.msws.internal.action.ValidationExceptionBuilder.FilterOrParam;
+import com.markitserv.msws.internal.exceptions.IncompleteActionDefinitionException;
 import com.markitserv.msws.internal.exceptions.ProgrammaticException;
 import com.markitserv.msws.svc.UuidGenerator;
 import com.markitserv.msws.util.MswsAssert;
@@ -45,6 +46,9 @@ public abstract class AbstractAction implements InitializingBean {
 		// action is run.
 		this.getFilterDefinition();
 		this.getParameterDefinition();
+		
+		// ensures that description is set if necessary
+		this.getDescription();
 	}
 
 	public UuidGenerator getUuidGenerator() {
@@ -80,7 +84,7 @@ public abstract class AbstractAction implements InitializingBean {
 	private ParamsAndFiltersDefinition addSortingParams(
 			ParamsAndFiltersDefinition params) {
 
-		SortingParamsDefinition spd = this.createSortingParamsDefinition();
+		SortingParamsDefinition spd = this.createSortingParametersDefinition();
 
 		if (spd != null) {
 			params.addAll(spd.build());
@@ -106,7 +110,7 @@ public abstract class AbstractAction implements InitializingBean {
 		}
 	}
 
-	private ParamsAndFiltersDefinition getFilterDefinition() {
+	public ParamsAndFiltersDefinition getFilterDefinition() {
 
 		if (this.filterDefinition == null) {
 			filterDefinition = this.createFilterDefinition();
@@ -114,7 +118,7 @@ public abstract class AbstractAction implements InitializingBean {
 		return filterDefinition;
 	}
 
-	private ParamsAndFiltersDefinition getParameterDefinition() {
+	public ParamsAndFiltersDefinition getParameterDefinition() {
 		if (this.parameterDefinition == null) {
 			parameterDefinition = this.createParameterDefinition();
 			parameterDefinition = this
@@ -242,8 +246,8 @@ public abstract class AbstractAction implements InitializingBean {
 	}
 
 	/**
-	 * Allows subclasses to modify the parameter def upon creation.  This is
-	 * not generally used by concrete classes, but by Abstract subclasses
+	 * Allows subclasses to modify the parameter def upon creation. This is not
+	 * generally used by concrete classes, but by Abstract subclasses
 	 * 
 	 * @param def
 	 * @return
@@ -278,8 +282,14 @@ public abstract class AbstractAction implements InitializingBean {
 	 * 
 	 * @return
 	 */
-	protected SortingParamsDefinition createSortingParamsDefinition() {
+	protected SortingParamsDefinition createSortingParametersDefinition() {
 		return null;
+	}
+
+	@Deprecated
+	// use getName()
+	protected String getActionName() {
+		return this.getClass().getSimpleName();
 	}
 
 	/*
@@ -287,7 +297,7 @@ public abstract class AbstractAction implements InitializingBean {
 	 * simple name of the class. Can be overriden if necessary (but when would
 	 * it be necessary?)
 	 */
-	protected String getActionName() {
+	public String getName() {
 		return this.getClass().getSimpleName();
 	}
 
@@ -324,6 +334,42 @@ public abstract class AbstractAction implements InitializingBean {
 			throw new ProgrammaticException(failureMsg
 					+ "Cannot set both the collection and the item.");
 		}
+	}
+
+	/**
+	 * Description of what the action does. At some point should be make
+	 * abstract.
+	 * 
+	 * @return
+	 */
+	public String getDescription() {
+
+		String msg = ("No description provided for action class: " + this
+				.getClass().getCanonicalName());
+
+		if (this.shouldEnforceStrictActionDefinition()) {
+			throw new IncompleteActionDefinitionException(msg);
+		} else {
+			log.warn("No description provided for action class: "
+					+ this.getClass().getCanonicalName());
+		}
+		return "No description provided";
+	}
+
+	/**
+	 * Forces subclasses to fully define their actions with documentation. In
+	 * theory should always be true, but allows the implementing class to make
+	 * that decision.
+	 */
+	protected boolean shouldEnforceStrictActionDefinition() {
+		return false;
+	}
+
+	/**
+	 * a Private Action is not listed in any descriptions of actions
+	 */
+	public boolean isPrivate() {
+		return false;
 	}
 
 }

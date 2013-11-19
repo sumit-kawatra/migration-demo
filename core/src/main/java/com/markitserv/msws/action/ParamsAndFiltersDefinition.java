@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.markitserv.msws.util.MswsAssert;
 import com.markitserv.msws.validation.AbstractOptionalValidation;
 import com.markitserv.msws.validation.AbstractValidation;
+import com.markitserv.msws.validation.ForEachValidator;
 
 public class ParamsAndFiltersDefinition {
 
@@ -19,25 +20,32 @@ public class ParamsAndFiltersDefinition {
 	private Map<String, Object> defaults = new HashMap<String, Object>();
 
 	public void addValidation(String key, AbstractValidation value) {
-		
+
+		String firstLetter = StringUtils.left(key, 1);
+		MswsAssert.mswsAssert(firstLetter.equals(firstLetter.toUpperCase()),
+				"Parameter names must be capitalized");
+
 		/*
-		MswsAssert
-				.mswsAssert(
-						!(value instanceof AbstractConversionValidation),
-						"Cannot perform validation for key '" + key + "'.  " +
-								"Class '" + value.getClass().getSimpleName() + 
-								"' requires that when you register with the Param / Filter definition, "
-								+ "you use 'addValidationAndConvertion' instead of 'addValidation'");
-		*/
-		
+		 * MswsAssert .mswsAssert( !(value instanceof
+		 * AbstractConversionValidation), "Cannot perform validation for key '"
+		 * + key + "'.  " + "Class '" + value.getClass().getSimpleName() +
+		 * "' requires that when you register with the Param / Filter definition, "
+		 * + "you use 'addValidationAndConvertion' instead of 'addValidation'");
+		 */
+
 		if (!validations.containsKey(key)) {
 			List<AbstractValidation> v = new Stack<AbstractValidation>();
 			validations.put(key, v);
 		}
 
-		Stack<AbstractValidation> v = (Stack<AbstractValidation>) validations.get(key);
+		Stack<AbstractValidation> v = (Stack<AbstractValidation>) validations
+				.get(key);
 		v.push(value);
 		validations.put(key, v);
+	}
+	
+	public void addValidationForEachListElement(String key, AbstractValidation validation) {
+		this.addValidation(key, new ForEachValidator(validation));
 	}
 
 	@Deprecated
@@ -46,7 +54,8 @@ public class ParamsAndFiltersDefinition {
 		this.addValidation(key.toString(), value);
 	}
 
-	public void addValidationAndConversion(String key, AbstractOptionalValidation value) {
+	public void addValidationAndConversion(String key,
+			AbstractOptionalValidation value) {
 
 		this.addValidation(key, value);
 	}
@@ -67,6 +76,7 @@ public class ParamsAndFiltersDefinition {
 
 	/**
 	 * Use addDefaultParamValue
+	 * 
 	 * @param key
 	 * @param value
 	 */
@@ -74,13 +84,14 @@ public class ParamsAndFiltersDefinition {
 	public void addDefaultParam(String key, Object value) {
 		defaults.put(key, value);
 	}
-	
+
 	public void addDefaultParamValue(String key, Object value) {
 		defaults.put(key, value);
 	}
 
 	/**
 	 * Use addDefaultParamValue with string
+	 * 
 	 * @param key
 	 * @param value
 	 */
@@ -92,16 +103,17 @@ public class ParamsAndFiltersDefinition {
 	public boolean isDefaultParamSet(String key) {
 		return this.defaults.containsKey(key);
 	}
-	
+
 	/**
 	 * Use 'addAll' instead
+	 * 
 	 * @param otherDefinition
 	 */
 	@Deprecated
 	public void mergeWith(ParamsAndFiltersDefinition otherDefinition) {
 		this.addAll(otherDefinition);
 	}
-	
+
 	public void addAll(ParamsAndFiltersDefinition otherDefinition) {
 
 		// Merge other validations
@@ -125,7 +137,8 @@ public class ParamsAndFiltersDefinition {
 		Set<String> otherDefaultKeys = otherDefaults.keySet();
 		for (String otherDefaultKey : otherDefaultKeys) {
 			if (!this.isDefaultParamSet(otherDefaultKey)) {
-				this.addDefaultParam(otherDefaultKey, otherDefaults.get(otherDefaultKey));
+				this.addDefaultParam(otherDefaultKey,
+						otherDefaults.get(otherDefaultKey));
 			}
 		}
 	}

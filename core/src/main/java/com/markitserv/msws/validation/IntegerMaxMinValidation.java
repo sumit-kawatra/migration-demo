@@ -47,4 +47,13 @@ public class IntegerMaxMinValidation extends
 
 		return ValidationResponse.createValidConvertedResponse(i);
 	}
+
+	@Override
+	public String getDescription() {
+		
+		String top = (this.max == UNLIMITED) ? "(unlimited)" : ""+this.max;
+		String bottom = (this.min == UNLIMITED) ? "(unlimited)" : ""+this.min;
+		
+		return "Is integer between " + bottom + " and " + top + ", inclusive";
+	}
 }
