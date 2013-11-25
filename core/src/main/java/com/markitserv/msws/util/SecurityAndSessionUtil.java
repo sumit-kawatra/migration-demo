@@ -12,11 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-
 /**
  * Wraps Security and Session information. Since spring exposes a lot of this
  * information with static methods, this classes allows that information to be
- * mocked.  Can only be used w/in a web request thread.
+ * mocked. Can only be used w/in a web request thread.
  * 
  * @author roy.truelove
  * 
@@ -24,6 +23,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Service
 public class SecurityAndSessionUtil {
+	
+	public static final String SESSION_ATTRIB_SESSION_INFO = "SESSION_INFO";
 
 	public Authentication getAuthentication() {
 		return SecurityContextHolder.getContext().getAuthentication();

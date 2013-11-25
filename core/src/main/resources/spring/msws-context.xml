@@ -16,6 +16,8 @@
 	
 	<!--  Note that any of these can be overridden by the client app -->
 	<bean id="uuidGenerator" class="com.markitserv.msws.internal.svc.DefaultUuidGenerator"></bean>
+	
+	<bean id="sessionInfoBuilder" class="com.markitserv.msws.internal.web.DefaultSessionInfoBuilder"/>
 
 	<!-- START MVC -->
 

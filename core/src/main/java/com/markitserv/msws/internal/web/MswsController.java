@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -47,6 +48,7 @@ import com.markitserv.msws.internal.exceptions.MswsException;
 import com.markitserv.msws.internal.exceptions.ProgrammaticException;
 import com.markitserv.msws.util.MswsAssert;
 import com.markitserv.msws.util.SecurityAndSessionUtil;
+import com.markitserv.msws.web.AbstractSessionInfoBuilder;
 
 @Controller
 @RequestMapping(value = "/svc")
@@ -60,6 +62,8 @@ public class MswsController implements ServletContextAware {
 	private ActionDispatcher dispatcher;
 	@Autowired
 	private SecurityAndSessionUtil securitySessionUtil;
+	@Resource(name = "sessionInfoBuilder")
+	private AbstractSessionInfoBuilder sessionBuilder;
 
 	private ServletContext servletContext;
 
@@ -115,8 +119,8 @@ public class MswsController implements ServletContextAware {
 
 	}
 
-	private AbstractWebserviceResult handleRequest(String reqId, RequestMethod reqMethod,
-			NativeWebRequest req) throws Exception {
+	private AbstractWebserviceResult handleRequest(String reqId,
+			RequestMethod reqMethod, NativeWebRequest req) throws Exception {
 
 		AbstractWebserviceResult result = null;
 
@@ -139,51 +143,17 @@ public class MswsController implements ServletContextAware {
 		RequestInfo reqInfo = new RequestInfo();
 		reqInfo.setRequestId(reqId);
 		reqInfo.setTimestamp(reqTimestamp);
-		
+
 		RequestContext reqCtx = new RequestContext();
-		reqCtx.setSession(buildSessionInfo());
-		
+		SessionInfo sessionInfo = this.sessionBuilder.buildSessionInfo();
+		reqCtx.setSession(sessionInfo);
+
 		actionCmd.setRequestContext(reqCtx);
 
 		result = (ActionResult) dispatcher.dispatch(actionCmd);
 
 		return result;
 
-	}
-
-	/**
-	 * Abstracts away session info since SecurityContextHolder doesn't work in a
-	 * separate thread.
-	 * 
-	 * @return
-	 */
-	private SessionInfo buildSessionInfo() {
-		SessionInfo sInfo = new SessionInfo();
-
-		HttpSession session = ((ServletRequestAttributes) RequestContextHolder
-				.getRequestAttributes()).getRequest().getSession();
-
-		session = securitySessionUtil.getSession();
-
-		User user = (User) securitySessionUtil.getUser();
-
-		MswsAssert.mswsAssert(user != null, "User is null");
-
-		String userName = user.getUsername();
-		Collection<GrantedAuthority> authorities = user.getAuthorities();
-
-		Set<String> roles = new HashSet<String>();
-
-		for (GrantedAuthority grantedAuth : authorities) {
-			roles.add(grantedAuth.getAuthority());
-		}
-
-		int ttl = session.getMaxInactiveInterval();
-
-		sInfo.setTtl(ttl);
-		sInfo.setRoles(roles);
-		sInfo.setUsername(userName);
-		return sInfo;
 	}
 
 	private Map<String, Object> pullPostParametersFromRequest(

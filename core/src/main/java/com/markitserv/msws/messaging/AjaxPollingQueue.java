@@ -63,12 +63,11 @@ public class AjaxPollingQueue implements DisposableBean, InitializingBean,
 	// props
 	private String inputChannelName;
 	private long timeout = 30000; // defaults to 30 seconds
-	private boolean blocks = true;
 
 	private QueueChannel queue;
 	private EventDrivenConsumer _bridgeConsumer;
 
-	public List<AjaxPollingEvent<?>> receive() {
+	public List<AjaxPollingEvent<?>> receive(Boolean blocks) {
 
 		checkIsSessionBean();
 
@@ -88,13 +87,9 @@ public class AjaxPollingQueue implements DisposableBean, InitializingBean,
 			// empty the queue. Timeout of 0 returns instantly if the queue is
 			// empty
 			if (queue.getQueueSize() > 0) {
-				// why 10 second timeout? Because the underlying queue
-				// implementation does not
-				// necessarily have the next element ready directly after we
-				// call receive. Adding
-				// the timeout ensures that it's there. It should never even
-				// reach close to a 10 second wait.
-				//while ((msg = queue.receive(10000)) != null) {
+				// note! that sometimes that will return null even when there
+				// are messages. The client will need to re-query for the
+				// remaining. This is an issue with the underlying queue.
 				while ((msg = queue.receive(0)) != null) {
 					msgs.addLast(getAjaxPollingEventFromMessage(msg));
 				}
@@ -102,8 +97,12 @@ public class AjaxPollingQueue implements DisposableBean, InitializingBean,
 
 			return msgs;
 		} else {
-			// TODO! doesn't block
-			throw new NotImplementedException();
+			List<Message<?>> allMessages = queue.clear();
+			for (Message<?> message : allMessages) {
+				msgs.addLast(getAjaxPollingEventFromMessage(message));
+			}
+
+			return msgs;
 		}
 	}
 
@@ -235,17 +234,6 @@ public class AjaxPollingQueue implements DisposableBean, InitializingBean,
 	 */
 	public void setTimeout(long timeout) {
 		this.timeout = timeout;
-	}
-
-	/**
-	 * If true, the receive calls will block until they get a message or until
-	 * they timeout. If false, will return immediately with an empty collection
-	 * if there are no elements in the queue.
-	 * 
-	 * @param blocks
-	 */
-	public void setBlocks(boolean blocks) {
-		this.blocks = blocks;
 	}
 
 	@Override
