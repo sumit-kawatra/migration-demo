@@ -8,6 +8,7 @@ public class Constants {
 	 */
 	public final static int INTEGER_NOT_SET = Integer.MIN_VALUE;
 	
-	public static final String UUID = "UUID";
+	public static final String HTTP_ATTRIB_UUID = "uuid";
+	public static final String HTTP_ATTRIB_TIMESTAMP = "timestamp";
 
 }

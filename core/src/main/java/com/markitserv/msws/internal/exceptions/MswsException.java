@@ -8,6 +8,8 @@ package com.markitserv.msws.internal.exceptions;
  */
 public class MswsException extends RuntimeException {
 
+	private static final long serialVersionUID = 1L;
+	
 	private String errorMessage;
 	
 	public MswsException() {
@@ -53,6 +55,7 @@ public class MswsException extends RuntimeException {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private static MswsException standardException() {
 		return new MswsException("Unknown Web Services Exception");
 	}

@@ -2,8 +2,6 @@ package com.markitserv.msws.action.paginated;
 
 import static com.markitserv.msws.util.MswsAssert.mswsAssert;
 
-import java.util.Stack;
-
 import com.markitserv.msws.action.AbstractAction;
 import com.markitserv.msws.action.ActionCommand;
 import com.markitserv.msws.action.CommonParamKeys;

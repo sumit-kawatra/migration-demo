@@ -1,6 +1,5 @@
 package com.markitserv.msws.action;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,8 @@ public class ParamsAndFiltersDefinition {
 	private Map<String, List<AbstractValidation>> validations = new HashMap<String, List<AbstractValidation>>();
 	private Map<String, Object> defaults = new HashMap<String, Object>();
 
-	public void addValidation(String key, AbstractValidation value) {
+	public ParamsAndFiltersDefinition addValidation(String key,
+			AbstractValidation value) {
 
 		String firstLetter = StringUtils.left(key, 1);
 		MswsAssert.mswsAssert(firstLetter.equals(firstLetter.toUpperCase()),
@@ -42,10 +42,15 @@ public class ParamsAndFiltersDefinition {
 				.get(key);
 		v.push(value);
 		validations.put(key, v);
+
+		return this;
 	}
-	
-	public void addValidationForEachListElement(String key, AbstractValidation validation) {
+
+	public ParamsAndFiltersDefinition addValidationForEachListElement(
+			String key, AbstractValidation validation) {
 		this.addValidation(key, new ForEachValidator(validation));
+
+		return this;
 	}
 
 	@Deprecated
@@ -54,6 +59,7 @@ public class ParamsAndFiltersDefinition {
 		this.addValidation(key.toString(), value);
 	}
 
+	@Deprecated
 	public void addValidationAndConversion(String key,
 			AbstractOptionalValidation value) {
 
@@ -85,8 +91,10 @@ public class ParamsAndFiltersDefinition {
 		defaults.put(key, value);
 	}
 
-	public void addDefaultParamValue(String key, Object value) {
+	public ParamsAndFiltersDefinition addDefaultParamValue(String key,
+			Object value) {
 		defaults.put(key, value);
+		return this;
 	}
 
 	/**
@@ -114,7 +122,8 @@ public class ParamsAndFiltersDefinition {
 		this.addAll(otherDefinition);
 	}
 
-	public void addAll(ParamsAndFiltersDefinition otherDefinition) {
+	public ParamsAndFiltersDefinition addAll(
+			ParamsAndFiltersDefinition otherDefinition) {
 
 		// Merge other validations
 		Map<String, List<AbstractValidation>> otherValidations = otherDefinition
@@ -141,5 +150,7 @@ public class ParamsAndFiltersDefinition {
 						otherDefaults.get(otherDefaultKey));
 			}
 		}
+
+		return this;
 	}
 }

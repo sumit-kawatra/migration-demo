@@ -2,7 +2,6 @@ package com.markitserv.msws.internal.action.resp;
 
 import java.util.HashMap;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class HealthCheckResponse {

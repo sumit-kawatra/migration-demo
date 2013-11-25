@@ -3,8 +3,6 @@ package com.markitserv.msws.validation;
 import java.util.Collection;
 import java.util.Map;
 
-import com.markitserv.msws.internal.exceptions.ProgrammaticException;
-
 @Deprecated
 public class CollectionSizeValidation extends AbstractOptionalValidation {
 

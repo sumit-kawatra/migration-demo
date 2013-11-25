@@ -2,9 +2,7 @@ package com.markitserv.msws.filters;
 
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import com.markitserv.msws.internal.exceptions.ProgrammaticException;
 

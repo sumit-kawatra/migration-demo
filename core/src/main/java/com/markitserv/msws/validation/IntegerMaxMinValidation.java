@@ -1,9 +1,6 @@
 package com.markitserv.msws.validation;
 
-import java.util.Collection;
 import java.util.Map;
-
-import com.markitserv.msws.internal.exceptions.ProgrammaticException;
 
 public class IntegerMaxMinValidation extends
 		AbstractOptionalValidation {

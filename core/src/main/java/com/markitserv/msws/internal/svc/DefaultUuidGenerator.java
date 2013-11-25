@@ -2,8 +2,6 @@ package com.markitserv.msws.internal.svc;
 
 import java.util.UUID;
 
-import org.springframework.stereotype.Service;
-
 import com.markitserv.msws.svc.UuidGenerator;
 
 /**

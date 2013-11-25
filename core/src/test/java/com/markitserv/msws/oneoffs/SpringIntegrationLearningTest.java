@@ -3,6 +3,7 @@ package com.markitserv.msws.oneoffs;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.core.SubscribableChannel;
+import org.springframework.integration.endpoint.EventDrivenConsumer;
 import org.springframework.integration.handler.LoggingHandler;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
@@ -74,6 +76,7 @@ public class SpringIntegrationLearningTest implements ApplicationContextAware {
 		template.send("events", msg);
 	}
 	
+	@Ignore
 	@Test
 	public void sendEventUsingNonExplictMessageServiceProvider() {
 		fail();
@@ -103,6 +106,7 @@ public class SpringIntegrationLearningTest implements ApplicationContextAware {
 		log.error("Got response : " + resp.getPayload());
 	}
 	
+	@Ignore
 	@Test
 	public void sendSyncReqRespCommandOnPubSubUsingExplictMessageWithServiceActivator() {
 		
@@ -117,6 +121,7 @@ public class SpringIntegrationLearningTest implements ApplicationContextAware {
 		
 	}
 	
+	@Ignore
 	@Test
 	public void sendReqRespCommandOnPubSubUsingExplictMessageWithSubscribe() {
 		
@@ -125,6 +130,7 @@ public class SpringIntegrationLearningTest implements ApplicationContextAware {
 	}
 	
 	
+	@Ignore
 	@Test
 	public void sendNoRespCommandOnQueueUsingNonExplictMessageWithServiceActivator() {
 		fail();
@@ -143,6 +149,11 @@ public class SpringIntegrationLearningTest implements ApplicationContextAware {
 		log.error("DONE");
 		
 		Thread.sleep(1000);
+	}
+	
+	@Test
+	public void createQueues() {
+		
 	}
 	
 	private MessageChannel getChannel(String name) {

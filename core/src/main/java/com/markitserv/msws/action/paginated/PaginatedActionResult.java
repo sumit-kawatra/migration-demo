@@ -3,10 +3,7 @@ package com.markitserv.msws.action.paginated;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.markitserv.msws.action.resp.ActionResult;
-import com.markitserv.msws.internal.Constants;
 import com.markitserv.msws.internal.action.ResponseMetadata;
 import com.markitserv.msws.internal.action.paginated.PaginatedActionResponseMetaData;
 

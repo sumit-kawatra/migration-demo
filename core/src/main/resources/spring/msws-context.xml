@@ -20,8 +20,8 @@
 	<!-- START MVC -->
 
 	<mvc:interceptors>
-		<!--  adds a UUID to every request -->
-		<bean class="com.markitserv.msws.internal.web.AddRequestUuidInterceptor" />
+		<!--  Adds UUID and timestamp to every request -->
+		<bean class="com.markitserv.msws.internal.web.AddRequestMetadataInterceptor" />
 	</mvc:interceptors>
 
 	<mvc:annotation-driven />

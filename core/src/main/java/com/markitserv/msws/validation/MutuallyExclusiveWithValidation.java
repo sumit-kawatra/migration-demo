@@ -5,8 +5,6 @@ package com.markitserv.msws.validation;
 
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * @author kiran.gogula
  * 

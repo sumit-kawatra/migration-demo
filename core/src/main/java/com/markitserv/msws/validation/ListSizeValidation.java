@@ -3,8 +3,6 @@ package com.markitserv.msws.validation;
 import java.util.Collection;
 import java.util.Map;
 
-import com.markitserv.msws.internal.exceptions.ProgrammaticException;
-
 public class ListSizeValidation extends AbstractOptionalValidation {
 
 	public static final int UNLIMITED = -1;

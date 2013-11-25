@@ -11,8 +11,8 @@ public class DescribeSession extends AbstractAction {
 
 	@Override
 	protected ActionResult performAction(ActionCommand command) {
-		
-		return new ActionResult(command.getSessionInfo());
+
+		return new ActionResult(command.getRequestContext().getSession());
 	}
 
 	@Override

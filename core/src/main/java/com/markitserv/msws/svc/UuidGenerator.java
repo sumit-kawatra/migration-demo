@@ -1,7 +1,5 @@
 package com.markitserv.msws.svc;
 
-import java.util.UUID;
-
 import org.springframework.stereotype.Service;
 
 /**

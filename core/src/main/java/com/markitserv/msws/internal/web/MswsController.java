@@ -13,6 +13,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +35,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.markitserv.msws.action.ActionCommand;
 import com.markitserv.msws.action.resp.ActionResult;
+import com.markitserv.msws.beans.RequestContext;
+import com.markitserv.msws.beans.RequestInfo;
 import com.markitserv.msws.beans.SessionInfo;
 import com.markitserv.msws.beans.UploadedFile;
 import com.markitserv.msws.internal.Constants;
@@ -41,15 +48,10 @@ import com.markitserv.msws.internal.exceptions.ProgrammaticException;
 import com.markitserv.msws.util.MswsAssert;
 import com.markitserv.msws.util.SecurityAndSessionUtil;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.lang3.StringUtils;
-
 @Controller
 @RequestMapping(value = "/svc")
 public class MswsController implements ServletContextAware {
-	
+
 	Logger log = LoggerFactory.getLogger(MswsController.class);
 
 	@Autowired
@@ -60,7 +62,7 @@ public class MswsController implements ServletContextAware {
 	private SecurityAndSessionUtil securitySessionUtil;
 
 	private ServletContext servletContext;
-	
+
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public @ResponseBody
 	AbstractWebserviceResult performActionReqPost(NativeWebRequest req) {
@@ -73,19 +75,19 @@ public class MswsController implements ServletContextAware {
 		return safeHandleRequest(RequestMethod.GET, req);
 	}
 
-	private AbstractWebserviceResult safeHandleRequest(RequestMethod m,
+	private AbstractWebserviceResult safeHandleRequest(RequestMethod reqMethod,
 			NativeWebRequest req) {
-		
-		String uuid = (String) req.getAttribute(Constants.UUID,
+
+		String reqId = (String) req.getAttribute(Constants.HTTP_ATTRIB_UUID,
 				RequestAttributes.SCOPE_REQUEST);
 
-		MswsAssert.mswsAssert(uuid != null && !StringUtils.isBlank(uuid),
+		MswsAssert.mswsAssert(reqId != null && !StringUtils.isBlank(reqId),
 				"UUID not found on the request.");
-		
+
 		AbstractWebserviceResult res = null;
-		
+
 		try {
-			res =  handleRequest(m, req);
+			res = handleRequest(reqId, reqMethod, req);
 		} catch (Exception e) {
 
 			if (!(e instanceof MswsException)) {
@@ -95,34 +97,37 @@ public class MswsController implements ServletContextAware {
 
 			// Internal errors should be logged / notified
 			if (e instanceof ProgrammaticException) {
-				
+
 				log.error("Server Sider Error", e);
 
 				// TODO we're ignoreing errors!
-				//this.dispatcher.dispatchAsyncCommand(new ErrorCommand(e));
+				// this.dispatcher.dispatchAsyncCommand(new ErrorCommand(e));
 			}
-			
+
 			AbstractWebserviceResult errorResult = new ExceptionResult(
 					(MswsException) e);
-			
+
 			res = errorResult;
 		}
-		
-		res.getMetaData().setRequestId(uuid);
+
+		res.getMetaData().setRequestId(reqId);
 		return res;
 
 	}
 
-	private AbstractWebserviceResult handleRequest(RequestMethod m,
+	private AbstractWebserviceResult handleRequest(String reqId, RequestMethod reqMethod,
 			NativeWebRequest req) throws Exception {
 
 		AbstractWebserviceResult result = null;
 
+		DateTime reqTimestamp = (DateTime) req.getAttribute(
+				Constants.HTTP_ATTRIB_TIMESTAMP,
+				RequestAttributes.SCOPE_REQUEST);
 
 		ActionCommand actionCmd = actionCmdBuilder
 				.buildActionCommandFromHttpParams(req.getParameterMap());
 
-		if (m == RequestMethod.POST) {
+		if (reqMethod == RequestMethod.POST) {
 			Map<String, Object> postFields;
 			postFields = pullPostParametersFromRequest(req
 					.getNativeRequest(HttpServletRequest.class));
@@ -130,19 +135,26 @@ public class MswsController implements ServletContextAware {
 			actionCmd.addParameters(postFields);
 		}
 
-		SessionInfo sInfo = buildSessionInfo();
-		actionCmd.setSessionInfo(sInfo);
+		// Build request context
+		RequestInfo reqInfo = new RequestInfo();
+		reqInfo.setRequestId(reqId);
+		reqInfo.setTimestamp(reqTimestamp);
 		
-		result = (ActionResult) dispatcher.dispatch(actionCmd);
+		RequestContext reqCtx = new RequestContext();
+		reqCtx.setSession(buildSessionInfo());
+		
+		actionCmd.setRequestContext(reqCtx);
 
+		result = (ActionResult) dispatcher.dispatch(actionCmd);
 
 		return result;
 
 	}
 
 	/**
-	 * Abstracts away session info since SecurityContextHolder doesn't work in 
-	 * a separate thread.
+	 * Abstracts away session info since SecurityContextHolder doesn't work in a
+	 * separate thread.
+	 * 
 	 * @return
 	 */
 	private SessionInfo buildSessionInfo() {

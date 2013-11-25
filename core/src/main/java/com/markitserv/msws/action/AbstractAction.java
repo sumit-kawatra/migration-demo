@@ -46,7 +46,7 @@ public abstract class AbstractAction implements InitializingBean {
 		// action is run.
 		this.getFilterDefinition();
 		this.getParameterDefinition();
-		
+
 		// ensures that description is set if necessary
 		this.getDescription();
 	}
@@ -283,6 +283,8 @@ public abstract class AbstractAction implements InitializingBean {
 	 * @return
 	 */
 	protected SortingParamsDefinition createSortingParametersDefinition() {
+		// DONT LIKE THIS! if someone calls super they'll expect something to be
+		// here!
 		return null;
 	}
 
