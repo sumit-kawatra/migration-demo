@@ -20,6 +20,6 @@ public class RequiredValidation extends AbstractValidation {
 
 	@Override
 	public String getDescription() {
-		return "Is required";
+		return "Required";
 	}
 }

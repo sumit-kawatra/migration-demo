@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.markitserv.msws.beans.SessionInfo;
+
 /**
  * Wraps Security and Session information. Since spring exposes a lot of this
  * information with static methods, this classes allows that information to be
@@ -22,11 +24,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 
 @Service
-public class SecurityAndSessionUtil {
-	
+public class SecurityAndSessionHelper {
+
 	public static final String SESSION_ATTRIB_SESSION_INFO = "SESSION_INFO";
 
-	public Authentication getAuthentication() {
+	private Authentication getAuthentication() {
 		return SecurityContextHolder.getContext().getAuthentication();
 	}
 
@@ -57,6 +59,15 @@ public class SecurityAndSessionUtil {
 		}
 
 		return false;
+	}
+
+	public <T extends SessionInfo> T getSessionInfo(Class<T> type) {
+
+		@SuppressWarnings("unchecked")
+		T sInfo = (T) this.getSession().getAttribute(
+				SecurityAndSessionHelper.SESSION_ATTRIB_SESSION_INFO);
+
+		return sInfo;
 	}
 
 	public HttpSession getSession() {

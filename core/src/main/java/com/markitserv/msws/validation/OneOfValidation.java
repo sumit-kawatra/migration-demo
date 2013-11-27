@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.markitserv.msws.util.MswsAssert;
@@ -44,23 +45,23 @@ public class OneOfValidation extends AbstractOptionalValidation {
 
 		if (!found) {
 
-			StringBuffer sb = new StringBuffer(
-					"Expected value to be one of the following : [");
-			for (String validValue : validValues) {
-				sb.append(validValue);
-				sb.append(", ");
-			}
+			String valuesAsStrings = ArrayUtils.toString(validValues);
 
-			String msg = sb.toString();
-			StringUtils.removeEnd(msg, ", ");
+			String msg = String.format("Expected value to be one of "
+					+ " the following :%s.  Instead got %s", valuesAsStrings, targetStr);
 
-			resp = ValidationResponse.createInvalidResponse(String.format(
-					"%s].  Instead got '%s'.", msg, targetStr));
+			resp = ValidationResponse.createInvalidResponse(msg);
 		} else {
 			resp = ValidationResponse.createValidConvertedResponse(target);
 		}
 
 		return resp;
+	}
+
+	@Override
+	public String getDescription() {
+		return "Is one of the following values: "
+				+ ArrayUtils.toString(validValues);
 	}
 
 }

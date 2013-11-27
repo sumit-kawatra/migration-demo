@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Stack;
 
 import com.markitserv.msws.util.MswsAssert;
+import com.markitserv.msws.validation.EnumValidation;
 import com.markitserv.msws.validation.ForEachValidator;
 import com.markitserv.msws.validation.ListSizesMatchValidation;
 import com.markitserv.msws.validation.ListValidation;
@@ -68,22 +69,25 @@ public class SortingParamsDefinition {
 				defaultSortBy != null && defaultSortOrder != null,
 				"If you're using sorting you need to specify a default sort");
 
-		def.addValidation(CommonParamKeys.PARAM_SORT_BY, new ForEachValidator(
-				new SortByValidation(validSortByValues)));
+		def.addValidationForEachListElement(CommonParamKeys.PARAM_SORT_BY,
+				new SortByValidation(validSortByValues))
+				.addValidationForEachListElement(
+						CommonParamKeys.PARAM_SORT_ORDER,
+						new EnumValidation<Enum>(SortOrder.Asc))
+				.addValidation(
+						CommonParamKeys.PARAM_SORT_ORDER,
+						new ListSizesMatchValidation(
+								CommonParamKeys.PARAM_SORT_BY.toString()));
 
 		// ensure that they have the correct values and count for sort order
-		String[] sortOrders = { SortOrder.Asc.toString(),
-				SortOrder.Desc.toString() };
-		def.addValidation(CommonParamKeys.PARAM_SORT_ORDER,
-				new ForEachValidator(new OneOfValidation(sortOrders)));
-
-		def.addValidation(
-				CommonParamKeys.PARAM_SORT_ORDER,
-				new ListSizesMatchValidation(CommonParamKeys.PARAM_SORT_BY
-						.toString()));
+		// String[] sortOrders = { SortOrder.Asc.toString(),
+		// SortOrder.Desc.toString() };
+		// def.addValidation(CommonParamKeys.PARAM_SORT_ORDER,
+		// new ForEachValidator(new OneOfValidation(sortOrders)));
 
 		// Add default sorts
 		List<String> defaultSortByValues = new ArrayList<String>(1);
+
 		defaultSortByValues.add(0, defaultSortBy);
 		def.addDefaultParamValue(CommonParamKeys.PARAM_SORT_BY,
 				defaultSortByValues);

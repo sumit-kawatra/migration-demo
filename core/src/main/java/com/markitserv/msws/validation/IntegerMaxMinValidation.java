@@ -2,8 +2,7 @@ package com.markitserv.msws.validation;
 
 import java.util.Map;
 
-public class IntegerMaxMinValidation extends
-		AbstractOptionalValidation {
+public class IntegerMaxMinValidation extends AbstractOptionalValidation {
 
 	public static final int UNLIMITED = -1;
 
@@ -47,10 +46,10 @@ public class IntegerMaxMinValidation extends
 
 	@Override
 	public String getDescription() {
-		
-		String top = (this.max == UNLIMITED) ? "(unlimited)" : ""+this.max;
-		String bottom = (this.min == UNLIMITED) ? "(unlimited)" : ""+this.min;
-		
-		return "Is integer between " + bottom + " and " + top + ", inclusive";
+
+		String top = (this.max == UNLIMITED) ? "(unlimited)" : "" + this.max;
+		String bottom = (this.min == UNLIMITED) ? "(unlimited)" : "" + this.min;
+
+		return "Integer between " + bottom + " and " + top + ", inclusive";
 	}
 }

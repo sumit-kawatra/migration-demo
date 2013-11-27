@@ -47,7 +47,7 @@ import com.markitserv.msws.internal.action.ExceptionResult;
 import com.markitserv.msws.internal.exceptions.MswsException;
 import com.markitserv.msws.internal.exceptions.ProgrammaticException;
 import com.markitserv.msws.util.MswsAssert;
-import com.markitserv.msws.util.SecurityAndSessionUtil;
+import com.markitserv.msws.util.SecurityAndSessionHelper;
 import com.markitserv.msws.web.AbstractSessionInfoBuilder;
 
 @Controller
@@ -61,7 +61,7 @@ public class MswsController implements ServletContextAware {
 	@Autowired
 	private ActionDispatcher dispatcher;
 	@Autowired
-	private SecurityAndSessionUtil securitySessionUtil;
+	private SecurityAndSessionHelper securitySessionUtil;
 	@Resource(name = "sessionInfoBuilder")
 	private AbstractSessionInfoBuilder sessionBuilder;
 

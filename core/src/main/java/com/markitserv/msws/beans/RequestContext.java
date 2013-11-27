@@ -2,6 +2,11 @@ package com.markitserv.msws.beans;
 
 import java.io.Serializable;
 
+/**
+ * Intended to be passed around to messages when they need context
+ * @author roy.truelove
+ *
+ */
 public class RequestContext implements Serializable {
 
 	private static final long serialVersionUID = 1L;

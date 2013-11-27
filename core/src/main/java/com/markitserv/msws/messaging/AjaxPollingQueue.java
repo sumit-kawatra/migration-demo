@@ -13,6 +13,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.AbstractBeanFactory;
@@ -22,13 +23,17 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.integration.Message;
+import org.springframework.integration.MessageChannel;
 import org.springframework.integration.MessageHeaders;
+import org.springframework.integration.channel.PublishSubscribeChannel;
 import org.springframework.integration.channel.QueueChannel;
+import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.core.SubscribableChannel;
 import org.springframework.integration.endpoint.EventDrivenConsumer;
 import org.springframework.integration.handler.BridgeHandler;
 
 import com.markitserv.msws.beans.AjaxPollingEvent;
+import com.markitserv.msws.exceptions.InvalidActionParamValueException;
 import com.markitserv.msws.internal.exceptions.PollingTimeoutException;
 import com.markitserv.msws.internal.exceptions.ProgrammaticException;
 import com.markitserv.msws.util.MswsAssert;
@@ -63,47 +68,85 @@ public class AjaxPollingQueue implements DisposableBean, InitializingBean,
 	// props
 	private String inputChannelName;
 	private long timeout = 30000; // defaults to 30 seconds
+	private boolean allowMultipleConnectionsPerSession = false;
 
-	private QueueChannel queue;
+	// @Autowired
+	// private MessagingTemplate msgTemplate;
+
+	private MessageChannel perSessionChannel;
 	private EventDrivenConsumer _bridgeConsumer;
 
 	public List<AjaxPollingEvent<?>> receive(Boolean blocks) {
 
 		checkIsSessionBean();
 
+		if (!allowMultipleConnectionsPerSession) {
+			if (blocks) {
+				return receiveBlockedQueueMessages();
+			} else {
+				return receiveUnblockedQueueMessages();
+			}
+		} else {
+			throw new NotImplementedException(
+					"Multiple Session Queues not yet supported");
+			// if (blocks) {
+			// } else {
+			// throw new InvalidActionParamValueException(
+			// "Blocking on this action is required as it can have multiple connections per session.");
+			// }
+		}
+	}
+
+	// private LinkedList<AjaxPollingEvent<?>> receiveBlockedPubsubMessages() {
+	//
+	// PublishSubscribeChannel channel = (PublishSubscribeChannel)
+	// perSessionChannel;
+	//
+	// QueueChannel q = new QueueChannel();
+	// q.
+	//
+	// msgTemplate.receive(channel);
+	//
+	// }
+
+	private LinkedList<AjaxPollingEvent<?>> receiveUnblockedQueueMessages() {
+
+		QueueChannel channel = (QueueChannel) perSessionChannel;
+
+		LinkedList<AjaxPollingEvent<?>> msgs = new LinkedList<AjaxPollingEvent<?>>();
+		List<Message<?>> allMessages = channel.clear();
+		for (Message<?> message : allMessages) {
+			msgs.addLast(getAjaxPollingEventFromMessage(message));
+		}
+		return msgs;
+	}
+
+	private LinkedList<AjaxPollingEvent<?>> receiveBlockedQueueMessages() {
 		LinkedList<AjaxPollingEvent<?>> msgs = new LinkedList<AjaxPollingEvent<?>>();
 
-		if (blocks) {
+		QueueChannel channel = (QueueChannel) perSessionChannel;
 
-			// wait for the first message. Unf. there's no way to peek.
-			Message<?> msg = queue.receive(timeout);
+		// wait for the first message. Unf. there's no way to peek.
+		// Blocks.
+		Message<?> msg = channel.receive(timeout);
 
-			if (msg == null) {
-				throw PollingTimeoutException.standardException();
-			}
-
-			msgs.addLast(getAjaxPollingEventFromMessage(msg));
-
-			// empty the queue. Timeout of 0 returns instantly if the queue is
-			// empty
-			if (queue.getQueueSize() > 0) {
-				// note! that sometimes that will return null even when there
-				// are messages. The client will need to re-query for the
-				// remaining. This is an issue with the underlying queue.
-				while ((msg = queue.receive(0)) != null) {
-					msgs.addLast(getAjaxPollingEventFromMessage(msg));
-				}
-			}
-
-			return msgs;
-		} else {
-			List<Message<?>> allMessages = queue.clear();
-			for (Message<?> message : allMessages) {
-				msgs.addLast(getAjaxPollingEventFromMessage(message));
-			}
-
-			return msgs;
+		if (msg == null) {
+			throw PollingTimeoutException.standardException();
 		}
+
+		msgs.addLast(getAjaxPollingEventFromMessage(msg));
+
+		// empty the queue. Timeout of 0 returns instantly if the queue is
+		// empty
+		if (channel.getQueueSize() > 0) {
+			// note! that sometimes that will return null even when there
+			// are messages. The client will need to re-query for the
+			// remaining. This is an issue with the underlying queue.
+			while ((msg = channel.receive(0)) != null) {
+				msgs.addLast(getAjaxPollingEventFromMessage(msg));
+			}
+		}
+		return msgs;
 	}
 
 	private AjaxPollingEvent<?> getAjaxPollingEventFromMessage(Message<?> msg) {
@@ -152,15 +195,21 @@ public class AjaxPollingQueue implements DisposableBean, InitializingBean,
 
 	private void setupQueue() {
 
-		// inputChannelName = "fxoe.longPollingEvents";
-
+		// get the ajax pubsub channel
 		SubscribableChannel inputChannel = (SubscribableChannel) ctx
 				.getBean(inputChannelName);
 
-		queue = new QueueChannel();
+		// if we allow multiple connections for a given session we cannot use a
+		// queue. Has to be a pubsub.
+		if (!this.allowMultipleConnectionsPerSession) {
+			perSessionChannel = new QueueChannel();
+		} else {
+			perSessionChannel = new PublishSubscribeChannel();
+		}
+
 		BridgeHandler bh = new BridgeHandler();
 
-		bh.setOutputChannel(queue);
+		bh.setOutputChannel(perSessionChannel);
 		_bridgeConsumer = new EventDrivenConsumer(inputChannel, bh);
 		_bridgeConsumer.start();
 
@@ -208,6 +257,11 @@ public class AjaxPollingQueue implements DisposableBean, InitializingBean,
 		String scope = def.getScope();
 	}
 
+	@Override
+	public void setBeanName(String name) {
+		this.beanName = name;
+	}
+
 	// ************************************************* INJECTED PROPERTIES
 
 	/**
@@ -236,9 +290,9 @@ public class AjaxPollingQueue implements DisposableBean, InitializingBean,
 		this.timeout = timeout;
 	}
 
-	@Override
-	public void setBeanName(String name) {
-		this.beanName = name;
+	public void setAllowMultipleConnectionsPerSession(
+			boolean allowMultipleConnectionsPerSession) {
+		this.allowMultipleConnectionsPerSession = allowMultipleConnectionsPerSession;
 	}
 
 }

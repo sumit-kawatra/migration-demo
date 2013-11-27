@@ -32,6 +32,6 @@ public class IntegerValidation extends AbstractOptionalValidation {
 
 	@Override
 	public String getDescription() {
-		return "Is convertable to integer value";
+		return "Integer";
 	}
 }

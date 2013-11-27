@@ -19,6 +19,6 @@ public class ListValidation extends AbstractOptionalValidation {
 
 	@Override
 	public String getDescription() {
-		return "Is a list";
+		return "List";
 	}
 }

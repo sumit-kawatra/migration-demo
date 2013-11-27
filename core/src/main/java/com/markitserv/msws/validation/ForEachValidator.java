@@ -43,7 +43,7 @@ public class ForEachValidator extends AbstractOptionalValidation {
 
 	@Override
 	public String getDescription() {
-		return "List where every element meets the following criteria: "
+		return "Every element must meet the following criteria: "
 				+ forEachElement.getDescription();
 	}
 }

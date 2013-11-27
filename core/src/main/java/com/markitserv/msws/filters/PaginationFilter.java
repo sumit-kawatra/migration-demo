@@ -18,17 +18,18 @@ public class PaginationFilter<T> extends AbstractFilter<T> {
 
 	/**
 	 * @param Collection
-	 *           to filter
+	 *            to filter
 	 * @param Starting
-	 *           index. First element is index # 1
+	 *            index. First element is index # 1
 	 * @param Size
-	 *           of the page to return
+	 *            of the page to return
 	 * @return
 	 */
 	public static <T> List<T> filter(List<T> toFilter, int pageStartIndex,
 			int pageSize) {
 
-		PaginationFilter<T> f = new PaginationFilter<T>(pageStartIndex, pageSize);
+		PaginationFilter<T> f = new PaginationFilter<T>(pageStartIndex,
+				pageSize);
 		return f.filter(toFilter);
 	}
 
@@ -57,4 +58,6 @@ public class PaginationFilter<T> extends AbstractFilter<T> {
 
 		return subList;
 	}
+	
+	
 }

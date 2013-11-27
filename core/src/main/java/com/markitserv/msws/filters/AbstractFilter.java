@@ -24,10 +24,21 @@ public abstract class AbstractFilter<T> {
 				newList.push(item);
 			}
 		}
-		return newList;
+
+		return this.postProcessor(newList);
 	}
 
 	protected boolean shouldBeFilteredOut(T item) {
 		return false;
+	}
+
+	/**
+	 * Override if the subclass wants to do something after the filter
+	 * 
+	 * @param toFilter
+	 * @return
+	 */
+	protected List<T> postProcessor(List<T> toFilter) {
+		return toFilter;
 	}
 }

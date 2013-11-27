@@ -10,7 +10,8 @@ import com.google.common.base.Objects;
 import com.markitserv.msws.util.MswsAssert;
 
 /**
- * Encapsulates filters for an action. Delegates some of the Map functions
+ * Encapsulates list of all filters for an action. Delegates some of the Map
+ * functions
  * 
  * @author roy.truelove
  * 
@@ -38,26 +39,26 @@ public class ActionFilters {
 	public boolean isFilterSet(String key) {
 		return filters.containsKey(key);
 	}
-	
+
 	@Deprecated
 	public List<String> getFilter(String key) {
-		
+
 		return this.getFilter(key, String.class);
-		
+
 	}
 
 	public <T> List<T> getFilter(String key, Class<T> type) {
-		
+
 		List<Object> filt = filters.get(key);
 		Stack<T> convertedFilters = new Stack<T>();
-		
+
 		for (Object filter : filt) {
-			convertedFilters.push((T)filter);
+			convertedFilters.push((T) filter);
 		}
-		
+
 		return convertedFilters;
 	}
-	
+
 	@Deprecated
 	public String getSingleFilter(String key) {
 		return this.getSingleFilter(key, String.class);
@@ -75,7 +76,7 @@ public class ActionFilters {
 		MswsAssert.mswsAssert(filtersForKey.size() == 1,
 				"Expected filter '%s' to have only one value.", key);
 
-		return (T)filtersForKey.get(0);
+		return (T) filtersForKey.get(0);
 	}
 
 	@Override
@@ -93,8 +94,8 @@ public class ActionFilters {
 		final int maxLen = 10;
 		StringBuilder builder = new StringBuilder();
 		builder.append("ActionFilters [filters=")
-				.append(filters != null ? toString(filters.entrySet(), maxLen) : null)
-				.append("]");
+				.append(filters != null ? toString(filters.entrySet(), maxLen)
+						: null).append("]");
 		return builder.toString();
 	}
 
@@ -102,7 +103,8 @@ public class ActionFilters {
 		StringBuilder builder = new StringBuilder();
 		builder.append("[");
 		int i = 0;
-		for (Iterator<?> iterator = collection.iterator(); iterator.hasNext() && i < maxLen; i++) {
+		for (Iterator<?> iterator = collection.iterator(); iterator.hasNext()
+				&& i < maxLen; i++) {
 			if (i > 0)
 				builder.append(", ");
 			builder.append(iterator.next());
