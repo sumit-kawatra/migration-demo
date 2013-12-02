@@ -27,10 +27,16 @@ import org.springframework.integration.MessageChannel;
 import org.springframework.integration.MessageHeaders;
 import org.springframework.integration.channel.PublishSubscribeChannel;
 import org.springframework.integration.channel.QueueChannel;
+import org.springframework.integration.core.MessageHandler;
+import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.core.SubscribableChannel;
 import org.springframework.integration.endpoint.EventDrivenConsumer;
+import org.springframework.integration.filter.MessageFilter;
 import org.springframework.integration.handler.BridgeHandler;
+import org.springframework.integration.handler.MessageHandlerChain;
+import org.springframework.integration.transformer.MessageTransformingHandler;
+import org.springframework.integration.transformer.Transformer;
 
 import com.markitserv.msws.beans.AjaxPollingEvent;
 import com.markitserv.msws.exceptions.InvalidActionParamValueException;
@@ -69,6 +75,7 @@ public class AjaxPollingQueue implements DisposableBean, InitializingBean,
 	private String inputChannelName;
 	private long timeout = 30000; // defaults to 30 seconds
 	private boolean allowMultipleConnectionsPerSession = false;
+	private AjaxPollingPreFilterMessageSelector preFilter = null;
 
 	// @Autowired
 	// private MessagingTemplate msgTemplate;
@@ -150,67 +157,46 @@ public class AjaxPollingQueue implements DisposableBean, InitializingBean,
 	}
 
 	private AjaxPollingEvent<?> getAjaxPollingEventFromMessage(Message<?> msg) {
-
-		Object payload = msg.getPayload();
-
-		// it's either an instance of LongPollingEvent already, or..
-		if (payload instanceof AjaxPollingEvent) {
-			return (AjaxPollingEvent<?>) payload;
-		}
-
-		// it has a header with the event type and we build the Event.
-		MessageHeaders headers = msg.getHeaders();
-		String eventType = headers.get(MSG_HEADER_AJAX_POLLING_EVENT_TYPE,
-				String.class);
-
-		if (eventType == null) {
-			throw new ProgrammaticException(
-					"All messages on Ajax event pubsub channels must "
-							+ "either be an instance of AjaxPollingEvent, or, must have the "
-							+ MSG_HEADER_AJAX_POLLING_EVENT_TYPE
-							+ " header set to the event type.");
-		}
-
-		return this.buildLongPollingEvent(msg);
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private AjaxPollingEvent<?> buildLongPollingEvent(Message msg) {
-
-		MessageHeaders headers = msg.getHeaders();
-		String eventType = headers.get(MSG_HEADER_AJAX_POLLING_EVENT_TYPE,
-				String.class);
-		long time = headers.getTimestamp();
-
-		AjaxPollingEvent env = new AjaxPollingEvent();
-
-		env.setPayload(msg.getPayload());
-		env.setEventType(eventType);
-		// TODO convert this to UTC!
-		env.setTimestamp(new DateTime(time));
-
-		return env;
-
+		// expects that the transformer has already converted it to an
+		// AjaxPollingEvent.
+		return (AjaxPollingEvent<?>) msg.getPayload();
 	}
 
 	private void setupQueue() {
 
-		// get the ajax pubsub channel
-		SubscribableChannel inputChannel = (SubscribableChannel) ctx
-				.getBean(inputChannelName);
-
+		// Create queue
 		// if we allow multiple connections for a given session we cannot use a
 		// queue. Has to be a pubsub.
 		if (!this.allowMultipleConnectionsPerSession) {
 			perSessionChannel = new QueueChannel();
 		} else {
-			perSessionChannel = new PublishSubscribeChannel();
+			throw new NotImplementedException();
+			// perSessionChannel = new PublishSubscribeChannel();
 		}
 
-		BridgeHandler bh = new BridgeHandler();
+		// get the ajax pubsub channel
+		SubscribableChannel inputChannel = (SubscribableChannel) ctx
+				.getBean(inputChannelName);
 
-		bh.setOutputChannel(perSessionChannel);
-		_bridgeConsumer = new EventDrivenConsumer(inputChannel, bh);
+		LinkedList<MessageHandler> handlers = new LinkedList<MessageHandler>();
+
+		MessageTransformingHandler toAjaxEventTransformingHandler = new MessageTransformingHandler(
+				new AjaxPollingEventMessageTransformer());
+
+		handlers.addLast(toAjaxEventTransformingHandler);
+
+		// Create prefilter
+		if (this.preFilter != null) {
+			MessageFilter f = new MessageFilter(preFilter);
+			handlers.addLast(f);
+		}
+
+		MessageHandlerChain handlerChain = new MessageHandlerChain();
+		handlerChain.setHandlers(handlers);
+
+		handlerChain.setOutputChannel(perSessionChannel);
+
+		_bridgeConsumer = new EventDrivenConsumer(inputChannel, handlerChain);
 		_bridgeConsumer.start();
 
 	}
@@ -293,6 +279,10 @@ public class AjaxPollingQueue implements DisposableBean, InitializingBean,
 	public void setAllowMultipleConnectionsPerSession(
 			boolean allowMultipleConnectionsPerSession) {
 		this.allowMultipleConnectionsPerSession = allowMultipleConnectionsPerSession;
+	}
+
+	public void setPreFilter(AjaxPollingPreFilterMessageSelector preFilter) {
+		this.preFilter = preFilter;
 	}
 
 }

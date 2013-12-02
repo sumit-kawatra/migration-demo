@@ -288,15 +288,18 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			<!-- TODO clean this up. PT#42134179 -->
+			<!-- Needed for reporting, below -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
-				<configuration>
-					<packagesheader>myPackageHeader</packagesheader>
-					<aggregate>true</aggregate>
-				</configuration>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.3</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-ssh</artifactId>
+						<version>2.5</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 		<pluginManagement>
@@ -304,6 +307,39 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<reportSets>
+					<reportSet>
+						<id>aggregate</id>
+						<configuration>
+						</configuration>
+						<reports>
+							<report>aggregate</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.4</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>index</report>
+							<report>scm</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
 
 	<distributionManagement>
 		<repository>
@@ -317,8 +353,12 @@
 			<url> http://devsrca01.mserv.local:8083/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 
-	</distributionManagement>
+		<site>
+			<id>developer-docs-server</id>
+			<url>scp://devsrca01.mserv.local/var/www/html/devDocs/common/msws/${project.version}/</url>
+		</site>
 
+	</distributionManagement>
 
 	<profiles>
 		<!-- See http://goo.gl/IgvL2 for more information on test sizing -->

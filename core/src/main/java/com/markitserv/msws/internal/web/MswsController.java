@@ -47,7 +47,7 @@ import com.markitserv.msws.internal.action.ExceptionResult;
 import com.markitserv.msws.internal.exceptions.MswsException;
 import com.markitserv.msws.internal.exceptions.ProgrammaticException;
 import com.markitserv.msws.util.MswsAssert;
-import com.markitserv.msws.util.SecurityAndSessionHelper;
+import com.markitserv.msws.util.SessionHelper;
 import com.markitserv.msws.web.AbstractSessionInfoBuilder;
 
 @Controller
@@ -60,10 +60,8 @@ public class MswsController implements ServletContextAware {
 	private HttpParamsToActionCommand actionCmdBuilder;
 	@Autowired
 	private ActionDispatcher dispatcher;
-	@Autowired
-	private SecurityAndSessionHelper securitySessionUtil;
 	@Resource(name = "sessionInfoBuilder")
-	private AbstractSessionInfoBuilder sessionBuilder;
+	private AbstractSessionInfoBuilder<?> sessionBuilder;
 
 	private ServletContext servletContext;
 
@@ -145,7 +143,8 @@ public class MswsController implements ServletContextAware {
 		reqInfo.setTimestamp(reqTimestamp);
 
 		RequestContext reqCtx = new RequestContext();
-		SessionInfo sessionInfo = this.sessionBuilder.buildSessionInfo();
+		SessionInfo sessionInfo = this.sessionBuilder
+				.buildAndPopulateSessionInfo();
 		reqCtx.setSession(sessionInfo);
 
 		actionCmd.setRequestContext(reqCtx);

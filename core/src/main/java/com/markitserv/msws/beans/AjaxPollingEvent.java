@@ -47,4 +47,9 @@ public class AjaxPollingEvent<T> {
 		this.timestamp = timestamp;
 	}
 
+	@Override
+	public String toString() {
+		return "AjaxPollingEvent [eventType=" + eventType + ", payload="
+				+ payload + ", timestamp=" + timestamp + "]";
+	}
 }

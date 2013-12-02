@@ -1,5 +1,8 @@
 package com.markitserv.msws.internal.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.markitserv.msws.beans.SessionInfo;
 import com.markitserv.msws.web.AbstractSessionInfoBuilder;
 
@@ -13,13 +16,22 @@ import com.markitserv.msws.web.AbstractSessionInfoBuilder;
 public class DefaultSessionInfoBuilder extends
 		AbstractSessionInfoBuilder<SessionInfo> {
 
+	Logger log = LoggerFactory.getLogger(this.getClass());
+
 	@Override
-	protected SessionInfo populateSessionInfo(SessionInfo originalSessionInfo) {
+	protected SessionInfo postPopulateSessionInfo(
+			SessionInfo originalSessionInfo) {
+
 		return originalSessionInfo;
 	}
 
 	@Override
-	protected SessionInfo createNewSessionInfo() {
+	protected SessionInfo createSessionInfoInstance() {
+
+		log.info("Using DefaultSessionInfoBuilder, which "
+				+ "does not augment session info with any application-specific information.");
+
 		return new SessionInfo();
 	}
+
 }
