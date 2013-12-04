@@ -3,6 +3,7 @@ package com.markitserv.msws.messaging;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.NotImplementedException;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ import com.markitserv.msws.beans.AjaxPollingEvent;
 import com.markitserv.msws.exceptions.InvalidActionParamValueException;
 import com.markitserv.msws.internal.exceptions.PollingTimeoutException;
 import com.markitserv.msws.internal.exceptions.ProgrammaticException;
+import com.markitserv.msws.internal.messaging.AjaxPollingEventMessageTransformer;
 import com.markitserv.msws.util.MswsAssert;
 
 /**
@@ -138,7 +140,8 @@ public class AjaxPollingQueue implements DisposableBean, InitializingBean,
 		Message<?> msg = channel.receive(timeout);
 
 		if (msg == null) {
-			throw PollingTimeoutException.standardException();
+			return msgs; // when it times out, will return an empty array of
+							// messages.
 		}
 
 		msgs.addLast(getAjaxPollingEventFromMessage(msg));
@@ -180,12 +183,14 @@ public class AjaxPollingQueue implements DisposableBean, InitializingBean,
 
 		LinkedList<MessageHandler> handlers = new LinkedList<MessageHandler>();
 
+		// Converts the payload of this message to an instance of
+		// AjaxPollingEvent, if it isn't already one.
 		MessageTransformingHandler toAjaxEventTransformingHandler = new MessageTransformingHandler(
 				new AjaxPollingEventMessageTransformer());
 
 		handlers.addLast(toAjaxEventTransformingHandler);
 
-		// Create prefilter
+		// If there's a prefilter selector, this will filter it.
 		if (this.preFilter != null) {
 			MessageFilter f = new MessageFilter(preFilter);
 			handlers.addLast(f);

@@ -20,6 +20,7 @@ public class AjaxPollingEvent<T> {
 	private String eventType;
 	private T payload;
 	private DateTime timestamp;
+	private String id;
 
 	public String getEventType() {
 		return eventType;
@@ -29,6 +30,7 @@ public class AjaxPollingEvent<T> {
 		this.eventType = eventType;
 	}
 
+	@JsonInclude(Include.NON_NULL)
 	public T getPayload() {
 		return payload;
 	}
@@ -37,7 +39,6 @@ public class AjaxPollingEvent<T> {
 		this.payload = payload;
 	}
 
-	@JsonInclude(Include.NON_NULL)
 	@JsonSerialize(using = JsonTimeStampSerializer.class)
 	public DateTime getTimestamp() {
 		return timestamp;
@@ -51,5 +52,20 @@ public class AjaxPollingEvent<T> {
 	public String toString() {
 		return "AjaxPollingEvent [eventType=" + eventType + ", payload="
 				+ payload + ", timestamp=" + timestamp + "]";
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
 	}
 }

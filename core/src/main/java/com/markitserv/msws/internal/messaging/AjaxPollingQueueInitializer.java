@@ -1,4 +1,4 @@
-package com.markitserv.msws.messaging;
+package com.markitserv.msws.internal.messaging;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,8 @@ import org.springframework.integration.handler.BridgeHandler;
  * When starting up, ajax queues have no subscribers until a session is created
  * that subscribes to them. Spring Integration doesn't like this, so this
  * initializer will give them a single subscribed to a null channel. I hate
- * this, open to ways around it.
+ * this, open to ways around it. You have to pass in the name of every pubsub
+ * queue.
  * 
  * @author roy.truelove
  * 
@@ -49,7 +50,8 @@ public class AjaxPollingQueueInitializer implements InitializingBean,
 			BridgeHandler bh = new BridgeHandler();
 
 			bh.setOutputChannel(queue);
-			EventDrivenConsumer consumer = new EventDrivenConsumer(inputChannel, bh);
+			EventDrivenConsumer consumer = new EventDrivenConsumer(
+					inputChannel, bh);
 			consumer.start();
 			consumers.add(consumer);
 		}
