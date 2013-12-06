@@ -1,11 +1,9 @@
 package com.markitserv.msws.messaging;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.core.MessageSelector;
 
 import com.markitserv.msws.beans.AjaxPollingEvent;
-import com.markitserv.msws.util.SessionHelper;
 
 /**
  * Pre filter that can be used to ensure that some messages don't even make it
@@ -20,9 +18,6 @@ import com.markitserv.msws.util.SessionHelper;
  */
 public abstract class AjaxPollingPreFilterMessageSelector implements
 		MessageSelector {
-
-	@Autowired
-	SessionHelper helper;
 
 	@Override
 	public boolean accept(Message<?> message) {

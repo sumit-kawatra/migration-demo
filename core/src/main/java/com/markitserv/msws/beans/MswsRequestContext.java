@@ -4,10 +4,11 @@ import java.io.Serializable;
 
 /**
  * Intended to be passed around to messages when they need context
+ * 
  * @author roy.truelove
- *
+ * 
  */
-public class RequestContext implements Serializable {
+public class MswsRequestContext implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

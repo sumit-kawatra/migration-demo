@@ -1,6 +1,8 @@
 package com.markitserv.msws.beans;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -14,69 +16,53 @@ public class SessionInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public class UserData {
+	private String userName;
+	private Set<String> roles;
+	private int sessionTtl;
+	private Map<String, Object> attributes = new HashMap<String, Object>();
 
-		private String userName;
-		private Set<String> roles;
-
-		public Set<String> getRoles() {
-			return roles;
-		}
-
-		public void setRoles(Set<String> roles) {
-			this.roles = roles;
-		}
-
-		public String getUserName() {
-			return userName;
-		}
-
-		public void setUserName(String userName) {
-			this.userName = userName;
-		}
-	}
-
-	public class SessionData {
-
-		private int sessionTtl;
-
-		public int getTtl() {
-			return sessionTtl;
-		}
-
-		public void setTtl(int sessionTtl) {
-			this.sessionTtl = sessionTtl;
-		}
-	}
-
-	private UserData userData;
-	private SessionData sessionData;
-
-	public SessionInfo() {
-
-		userData = new UserData();
-		sessionData = new SessionData();
-
-	}
-
-	public void setTtl(int ttl) {
-		sessionData.sessionTtl = ttl;
-	}
-
-	public void setRoles(Set<String> roles) {
-		userData.setRoles(roles);
+	public String getUsername() {
+		return userName;
 	}
 
 	public void setUsername(String userName) {
-		userData.setUserName(userName);
+		this.userName = userName;
 	}
 
-	public UserData getUser() {
-		return userData;
+	public Set<String> getRoles() {
+		return roles;
 	}
 
-	public SessionData getSession() {
-		return sessionData;
+	public void setRoles(Set<String> roles) {
+		this.roles = roles;
 	}
 
+	public int getSessionTtl() {
+		return sessionTtl;
+	}
+
+	public void setSessionTtl(int sessionTtl) {
+		this.sessionTtl = sessionTtl;
+	}
+
+	public <T> void setAttribute(String key, T value) {
+		this.attributes.put(key, value);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T getAttribute(String key, Class<T> clazz) {
+		return (T) this.attributes.get(key);
+	}
+
+	public Map<String, Object> getAttributes() {
+		return this.attributes;
+	}
+
+	public boolean isAttributeSet(String key) {
+		return attributes.containsKey(key);
+	}
+
+	public void addAllAttributes(Map<String, Object> attribs) {
+		this.attributes.putAll(attribs);
+	}
 }

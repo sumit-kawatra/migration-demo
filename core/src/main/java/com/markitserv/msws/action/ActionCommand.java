@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.markitserv.msws.beans.RequestContext;
+import com.markitserv.msws.beans.MswsRequestContext;
 import com.markitserv.msws.util.MswsAssert;
 
 public class ActionCommand {
@@ -17,7 +17,6 @@ public class ActionCommand {
 	private String action;
 	private ActionParameters params;
 	private ActionFilters filters;
-	private RequestContext requestContext;
 
 	public ActionCommand() {
 		super();
@@ -76,14 +75,6 @@ public class ActionCommand {
 
 	public void addParameters(Map<String, Object> newParams) {
 		params.addParameters(newParams);
-	}
-
-	public RequestContext getRequestContext() {
-		return requestContext;
-	}
-
-	public void setRequestContext(RequestContext requestContext) {
-		this.requestContext = requestContext;
 	}
 
 	@Override

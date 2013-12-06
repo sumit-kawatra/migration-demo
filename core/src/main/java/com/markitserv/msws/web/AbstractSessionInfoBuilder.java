@@ -1,93 +1,105 @@
 package com.markitserv.msws.web;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import com.markitserv.msws.beans.SessionInfo;
-import com.markitserv.msws.internal.exceptions.ProgrammaticException;
+import com.markitserv.msws.internal.web.SpringSessionAndSecurityWrappers;
 import com.markitserv.msws.util.MswsAssert;
-import com.markitserv.msws.util.SessionHelper;
 
 /**
- * Used if a client wants to augment the session info with anything that's
+ * Subclass this if you want to augment the session info with anything that's
  * specific to its implementation. For instance, adding the company id of the
- * user, etc.
+ * user, etc. Need to register the instance in Spring with id
+ * 'sessionInfoBuilder'
  * 
  * @author roy.truelove
  * 
  */
-public abstract class AbstractSessionInfoBuilder<T extends SessionInfo> {
+public abstract class AbstractSessionInfoBuilder {
 
 	@Autowired
-	private SessionHelper sessionUtil;
+	private SpringSessionAndSecurityWrappers springReqCtxHolder;
 
-	@SuppressWarnings("unchecked")
-	public T buildAndPopulateSessionInfo() {
+	private static String SESSION_PARAM_SESSION_INFO = "SESSION_INFO";
 
-		HttpSession session = sessionUtil.getHttpSession();
+	public SessionInfo buildSessionInfo() {
 
-		T sInfo = (T) sessionUtil.getSessionInfoFromHttpSession();
+		SessionInfo sInfo = this.getExistingSessionInfoIfExists();
 
-		// null means it's not yet on the session. Need to create
-		if (sInfo == null) {
-
-			sInfo = (T) this.createSessionInfoInstance();
-
-			User user = (User) sessionUtil.getUser();
-
-			MswsAssert.mswsAssert(user != null, "User is null");
-
-			String userName = user.getUsername();
-			Collection<GrantedAuthority> authorities = user.getAuthorities();
-
-			Set<String> roles = new HashSet<String>();
-
-			for (GrantedAuthority grantedAuth : authorities) {
-				roles.add(grantedAuth.getAuthority());
-			}
-
-			int ttl = session.getMaxInactiveInterval();
-
-			sInfo.setTtl(ttl);
-			sInfo.setRoles(roles);
-			sInfo.setUsername(userName);
-
-			// Add application-specific details, if there are any.
-			this.postPopulateSessionInfo((T) sInfo);
-
-			// Set it on the session in case it's needed later, but generally
-			// users shoudl be popping it off of the ActionCommand
-
-			sessionUtil.setSessionInfoToHttpSession(sInfo);
+		if (sInfo != null) {
+			return sInfo;
 		}
+
+		sInfo = new SessionInfo();
+
+		User user = this.getUser();
+
+		MswsAssert.mswsAssert(user != null, "User is null");
+
+		String userName = user.getUsername();
+		Collection<GrantedAuthority> authorities = user.getAuthorities();
+
+		Set<String> roles = new HashSet<String>();
+
+		for (GrantedAuthority grantedAuth : authorities) {
+			roles.add(grantedAuth.getAuthority());
+		}
+
+		int ttl = springReqCtxHolder.getCurrentHttpSession()
+				.getMaxInactiveInterval();
+
+		sInfo.setSessionTtl(ttl);
+		sInfo.setRoles(roles);
+		sInfo.setUsername(userName);
+
+		// Add application-specific details, if there are any.
+		Map<String, Object> attribs = sInfo.getAttributes();
+		attribs = this.addAttributes(attribs);
+		sInfo.addAllAttributes(attribs);
+
+		// register the SessionInfo with the HTTP session so that we only create
+		// it once per session.
+		this.springReqCtxHolder.getCurrentHttpSession().setAttribute(
+				SESSION_PARAM_SESSION_INFO, sInfo);
 
 		return sInfo;
 
 	}
 
-	/**
-	 * Overriden by subclass to create an instance of the application-specific
-	 * SessionInfo.
-	 * 
-	 * @return
-	 */
-	protected abstract SessionInfo createSessionInfoInstance();
+	private SessionInfo getExistingSessionInfoIfExists() {
+
+		return (SessionInfo) springReqCtxHolder.getCurrentHttpSession()
+				.getAttribute(SESSION_PARAM_SESSION_INFO);
+
+	}
+
+	public User getUser() {
+
+		Authentication auth = springReqCtxHolder.getSecurityContext()
+				.getAuthentication();
+
+		if (auth != null) {
+			return (User) auth.getPrincipal();
+		}
+
+		else
+			return null;
+	}
 
 	/**
-	 * Populates the session info with application specific fields, after it's
-	 * already been populated with the standards
+	 * Populates the session info with application-specific attributes.
 	 * 
 	 * @param originalSessionInfo
 	 * @return
 	 */
-	protected abstract T postPopulateSessionInfo(T originalSessionInfo);
+	protected abstract Map<String, Object> addAttributes(
+			Map<String, Object> attribs);
 
 }
