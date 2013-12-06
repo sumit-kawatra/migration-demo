@@ -18,7 +18,7 @@ public class DescribeSession extends AbstractAction {
 	@Override
 	protected ActionResult performAction(ActionCommand command) {
 
-		SessionInfo session = ctxHolder.getRequestContext().getSession();
+		SessionInfo session = ctxHolder.getRequestContext().getSessionInfo();
 
 		return new ActionResult(session);
 	}

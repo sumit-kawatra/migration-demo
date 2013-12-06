@@ -22,9 +22,9 @@ import com.markitserv.msws.request.MswsRequestContextHolder;
  * @author roy.truelove
  * 
  */
-@Service(value = "pushMswsRequestContextToMessagingTransformer")
-public class PushMswsRequestContextToMessagingTransformer extends
-		AbstractTransformer {
+@Service(value = "pushMswsRequestContextToMessagingInterceptor")
+public class PushMswsRequestContextToMessagingInterceptor extends
+		ChannelInterceptorAdapter {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -32,13 +32,13 @@ public class PushMswsRequestContextToMessagingTransformer extends
 	MswsRequestContextHolder holder;
 
 	@Override
-	protected Object doTransform(Message<?> message) throws Exception {
+	public Message<?> preSend(Message<?> message, MessageChannel channel) {
 		Message<?> newMsg = MessageBuilder
 				.fromMessage(message)
 				.setHeader(MswsRequestContextHelper.MSG_HEADER_MSWS_REQ_CTX,
 						holder.getRequestContext()).build();
 
-		log.info("Added MswsRequestContext to message: " + newMsg.toString());
+		log.debug("Added MswsRequestContext to message: " + newMsg.toString());
 
 		return newMsg;
 	}

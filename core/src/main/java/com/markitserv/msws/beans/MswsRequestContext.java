@@ -15,19 +15,19 @@ public class MswsRequestContext implements Serializable {
 	private RequestInfo request;
 	private SessionInfo session;
 
-	public RequestInfo getRequest() {
+	public RequestInfo getRequestInfo() {
 		return request;
 	}
 
-	public void setRequest(RequestInfo request) {
+	public void setRequestInfo(RequestInfo request) {
 		this.request = request;
 	}
 
-	public SessionInfo getSession() {
+	public SessionInfo getSessionInfo() {
 		return session;
 	}
 
-	public void setSession(SessionInfo session) {
+	public void setSessionInfo(SessionInfo session) {
 		this.session = session;
 	}
 

@@ -41,6 +41,9 @@ public class PullMswsRequestContextFromMessagingTransformer extends
 						+ "pushMswsRequestContextToMessagingTransformer "
 						+ "transformer before crossing thread boundaries.");
 
+		logger.info("Registering context with thread"
+				+ Thread.currentThread().getId());
+
 		helper.registerRequestContextWithThread(ctx);
 
 		return message;

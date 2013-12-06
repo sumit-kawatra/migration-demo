@@ -165,8 +165,8 @@ public class MswsController implements ServletContextAware {
 
 			SessionInfo sessionInfo = this.sessionBuilder.buildSessionInfo();
 
-			requestContext.setRequest(reqInfo);
-			requestContext.setSession(sessionInfo);
+			requestContext.setRequestInfo(reqInfo);
+			requestContext.setSessionInfo(sessionInfo);
 
 			this.registerRequestContext(requestContext);
 
