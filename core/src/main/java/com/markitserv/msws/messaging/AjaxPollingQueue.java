@@ -44,6 +44,7 @@ import com.markitserv.msws.exceptions.InvalidActionParamValueException;
 import com.markitserv.msws.internal.exceptions.PollingTimeoutException;
 import com.markitserv.msws.internal.exceptions.ProgrammaticException;
 import com.markitserv.msws.internal.messaging.AjaxPollingEventMessageTransformer;
+import com.markitserv.msws.request.MswsRequestContextHolder;
 import com.markitserv.msws.util.MswsAssert;
 
 /**
@@ -79,8 +80,8 @@ public class AjaxPollingQueue implements DisposableBean, InitializingBean,
 	private boolean allowMultipleConnectionsPerSession = false;
 	private AjaxPollingPreFilterMessageSelector preFilter = null;
 
-	// @Autowired
-	// private MessagingTemplate msgTemplate;
+	@Autowired
+	private MswsRequestContextHolder reqCtxHolder;
 
 	private MessageChannel perSessionChannel;
 	private EventDrivenConsumer _bridgeConsumer;
@@ -192,6 +193,8 @@ public class AjaxPollingQueue implements DisposableBean, InitializingBean,
 
 		// If there's a prefilter selector, this will filter it.
 		if (this.preFilter != null) {
+			preFilter.registerMswsRequestContext(reqCtxHolder
+					.getRequestContext());
 			MessageFilter f = new MessageFilter(preFilter);
 			handlers.addLast(f);
 		}
