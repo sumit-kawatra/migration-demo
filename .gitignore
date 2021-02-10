@@ -5,3 +5,4 @@ target
 .settings
 *sublime*
 core/bin
+.metadata
